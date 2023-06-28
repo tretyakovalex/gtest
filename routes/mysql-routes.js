@@ -109,7 +109,24 @@ router.get('/getLastRegistration', async (req, res) => {
     } catch (err) {
         console.error(err)
     }
-})
+});
+
+router.post('/searchRegistration', async (req, res) => {
+    try {
+        const registration = req.body;
+        console.log(registration.Sample_No);
+        pool.query('SELECT * FROM registration2 WHERE Sample_No = ? AND Sample_No NOT IN (SELECT Sample_No FROM results)', [registration.Sample_No], async (err, result) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+            
+            res.status(200).json({ registrations: result });
+        })
+    } catch (err) {
+        console.error(err)
+    }
+});
 
 router.get('/getPrices', async (req, res) => {
     try {
@@ -162,6 +179,45 @@ router.get('/getElements', async (req, res) => {
                 return res.status(500).send('Internal Server Error');
             }
             res.json({elements: element});
+        })
+    } catch (error) {
+        console.error(error);
+    }
+})
+
+
+router.post('/addResult', async (req, res) => {
+    try {
+        const data = req.body;
+
+        console.log("Printing data:");
+        console.log(data);
+
+        // Extract the column names and values from the data object
+        const columns = Object.keys(data);
+        const values = Object.values(data);
+
+        console.log("Printing columns:");
+        console.log(columns);
+
+        console.log("Printing values:");
+        console.log(values);
+
+        // Prepare the INSERT query dynamically based on available data
+        const insertQuery = `
+        INSERT INTO results
+        (${columns.join(', ')})
+        VALUES
+        (${Array(columns.length).fill('?').join(', ')})
+        `;
+
+        pool.query(insertQuery, values, (error, results) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.status(200).json('successfully added data into table results');
         })
     } catch (error) {
         console.error(error);
