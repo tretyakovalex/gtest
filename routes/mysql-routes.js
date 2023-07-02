@@ -65,7 +65,7 @@ router.post('/addRegistration', async (req, res) => {
         // Prepare the INSERT query dynamically based on available data
         const insertQuery = `
         INSERT INTO registration2
-        (${columns.join(', ')})
+        (${columns.map(column => column === 'Lead' ? '`Lead`' : column).join(', ')})
         VALUES
         (${Array(columns.length).fill('?').join(', ')})
         `;
