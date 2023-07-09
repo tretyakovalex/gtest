@@ -97,13 +97,38 @@ router.get('/getRegistrations', async (req, res) => {
     }
 });
 
-router.get('/getLastRegistration', async (req, res) => {
+router.get('/getSampleNoRegistration', async (req, res) => {
     try {
-        pool.query('SELECT * FROM registration2 ORDER BY `Registration_id` DESC LIMIT 1', (err, registration) => {
+        const sampleNo = req.query.Sample_No;
+        console.log(sampleNo);
+        
+        const query = `SELECT * FROM registration2 WHERE Sample_No = ?`;
+        pool.query(query, [sampleNo], async (err, registration) => {
             if(err){
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
             }
+            res.json({ registrations: registration });
+        })
+        
+    } catch (error) {
+        console.error(error);
+    }
+})
+
+router.get('/getLastRegistration', async (req, res) => {
+    try {
+        const query = `SELECT * FROM registration2 WHERE Sample_No = (SELECT MAX(Sample_No) FROM registration2);`;
+        pool.query(query, async (err, registration) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (registration.length === 0) {
+                return res.status(404).json('Sample number not found!');
+              }
+
             res.json({ registrations: registration });
         })
     } catch (err) {
@@ -115,18 +140,73 @@ router.post('/searchRegistration', async (req, res) => {
     try {
         const registration = req.body;
         console.log(registration.Sample_No);
-        pool.query('SELECT * FROM registration2 WHERE Sample_No = ? AND Sample_No NOT IN (SELECT Sample_No FROM results)', [registration.Sample_No], async (err, result) => {
-            if(err){
-                console.error(err);
+
+        // Check if sample_no exists in ** registration2 ** table
+        const checkRegistrationQuery = `SELECT sample_no FROM registration2 WHERE sample_no = ?`;
+        pool.query(checkRegistrationQuery, [registration.Sample_No], (selectErrorRegistration2, selectResultsRegistration2) => {
+            if (selectErrorRegistration2) {
+                console.log(selectErrorRegistration2);
                 return res.status(500).send('Internal Server Error');
             }
-            
-            res.status(200).json({ registrations: result });
-        })
+
+            if (selectResultsRegistration2.length === 0) {
+                // If sample_no doesn't exist in registration2 table, return an error message
+                return res.status(404).json('Sample number not Registered!');
+            }
+
+            // Check if sample_no exists in ** Results ** table
+            const checkResultsQuery = `SELECT sample_no FROM results WHERE sample_no = ?`;
+            pool.query(checkResultsQuery, [registration.Sample_No], (selectError, selectResults) => {
+                if (selectError) {
+                    console.log(selectError);
+                    return res.status(500).send('Internal Server Error');
+                }
+
+                if (selectResults.length > 0) {
+                    // If sample_no already exists, return an error message
+                    return res.status(400).json('Data for this sample number already filled in');
+                }
+
+                pool.query('SELECT * FROM registration2 WHERE Sample_No = ? AND Sample_No NOT IN (SELECT Sample_No FROM results)', [registration.Sample_No], async (err, result) => {
+                    if(err){
+                        console.error(err);
+                        return res.status(500).send('Internal Server Error');
+                    }
+                    
+                    res.status(200).json({ registrations: result });
+                })
+
+            });
+        });
+        
     } catch (err) {
         console.error(err)
     }
 });
+
+router.get('/searchResults', async (req, res) => {
+    try {
+      const sampleNo = req.query.Sample_No;
+      console.log(sampleNo);
+
+      const resultsQuery = `SELECT * FROM results WHERE Sample_No = ?`;
+      pool.query(resultsQuery, [sampleNo], async (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send('Internal Server Error');
+          }
+
+          if (result.length === 0) {
+            return res.status(404).json('Sample number not found!');
+          }
+  
+          res.status(200).json({ results: result });
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  });
 
 router.get('/getPrices', async (req, res) => {
     try {
@@ -210,16 +290,17 @@ router.post('/addResult', async (req, res) => {
         VALUES
         (${Array(columns.length).fill('?').join(', ')})
         `;
-        
 
+        // If sample_no doesn't exist, insert the data into results table
         pool.query(insertQuery, values, (error, results) => {
             if (error) {
                 console.log(error);
                 return res.status(500).send('Internal Server Error');
             }
 
-            res.status(200).json('successfully added data into table results');
+            res.status(200).json('Successfully added data');
         })
+        
     } catch (error) {
         console.error(error);
     }

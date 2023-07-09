@@ -26,13 +26,12 @@ router.post('/register', async (req, res) => {
 
             const jwt = utils.issueJWT(user);
 
-            res.json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
-            console.log("User Registered!");
-        })
+            res.json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires, message: "User Registered!" })
+        });
     } catch (error) {
         console.error(error);
     }
-})
+});
 
 router.post('/login', async (req, res) => {
     const username = req.body.username;
