@@ -1,6 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const moment = require('moment-timezone');
+
 const express = require('express');
 const router = express.Router();
 
@@ -90,7 +92,13 @@ router.get('/getRegistrations', async (req, res) => {
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
             }
-            res.json({registrations: registration});
+
+            const formattedResults = registration.map(row => {
+                const dateWithoutTimezone = moment.utc(row.Date).format('YYYY-MM-DD');
+                return { ...row, Date: dateWithoutTimezone };
+            });
+        
+            res.json({ registrations: formattedResults });
         })
     } catch (error) {
         console.error(error);
@@ -108,7 +116,12 @@ router.get('/getSampleNoRegistration', async (req, res) => {
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
             }
-            res.json({ registrations: registration });
+            const formattedResults = registration.map(row => {
+                const dateWithoutTimezone = moment.utc(row.Date).format('YYYY-MM-DD');
+                return { ...row, Date: dateWithoutTimezone };
+            });
+        
+            res.json({ registrations: formattedResults });
         })
         
     } catch (error) {
@@ -127,9 +140,14 @@ router.get('/getLastRegistration', async (req, res) => {
 
             if (registration.length === 0) {
                 return res.status(404).json('Sample number not found!');
-              }
+            }
 
-            res.json({ registrations: registration });
+            const formattedResults = registration.map(row => {
+                const dateWithoutTimezone = moment.utc(row.Date).format('YYYY-MM-DD');
+                return { ...row, Date: dateWithoutTimezone };
+            });
+        
+            res.json({ registrations: formattedResults });
         })
     } catch (err) {
         console.error(err)
@@ -241,7 +259,7 @@ router.get('/getMethods', async (req, res) => {
     try {
         pool.query('SELECT * FROM methods', (err, method) => {
             if(err){
-                console.error(error);
+                console.error(err);
                 return res.status(500).send('Internal Server Error');
             }
             res.json({methods: method});
