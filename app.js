@@ -16,6 +16,7 @@ app.use(cors());
 // === Routes: ===
 // ===============
 
+app.use(require('./routes/getCertificate-route'));
 app.use(require('./routes/mysql-routes'));
 app.use(require('./routes/user-routes'));
 app.use(require('./routes/uploadImages'));
