@@ -301,6 +301,10 @@ router.post('/addResult', async (req, res) => {
         console.log("Printing values:");
         console.log(values);
 
+        if (values[1] === ''){
+            return res.status(403).send('Please enter the Date of Lab');
+        }
+
         // Prepare the INSERT query dynamically based on available data
         const insertQuery = `
         INSERT INTO results
