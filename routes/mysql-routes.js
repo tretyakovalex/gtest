@@ -301,8 +301,9 @@ router.post('/addResult', async (req, res) => {
         console.log("Printing values:");
         console.log(values);
 
-        if (values[1] === ''){
-            return res.status(403).send('Please enter the Date of Lab');
+        // Check if 'date_of_lab' is empty or not provided
+        if (!data.hasOwnProperty('date_of_lab') || data.date_of_lab === '') {
+            return res.status(400).send('Please enter the Date of Lab');
         }
 
         // Prepare the INSERT query dynamically based on available data
