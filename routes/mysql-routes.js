@@ -66,7 +66,7 @@ router.post('/addRegistration', async (req, res) => {
 
         // Prepare the INSERT query dynamically based on available data
         const insertQuery = `
-        INSERT INTO registration2
+        INSERT INTO registration_test
         (${columns.map(column => column === 'Lead' ? '`Lead`' : column).join(', ')})
         VALUES
         (${Array(columns.length).fill('?').join(', ')})
@@ -87,7 +87,7 @@ router.post('/addRegistration', async (req, res) => {
 
 router.get('/getRegistrations', async (req, res) => {
     try {
-        pool.query('SELECT * FROM registration2', (err, registration) => {
+        pool.query('SELECT * FROM registration_test', (err, registration) => {
             if(err){
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
@@ -110,7 +110,7 @@ router.get('/getSampleNoRegistration', async (req, res) => {
         const sampleNo = req.query.Sample_No;
         console.log(sampleNo);
         
-        const query = `SELECT * FROM registration2 WHERE Sample_No = ?`;
+        const query = `SELECT * FROM registration_test WHERE Sample_No = ?`;
         pool.query(query, [sampleNo], async (err, registration) => {
             if(err){
                 console.error(err);
@@ -131,7 +131,7 @@ router.get('/getSampleNoRegistration', async (req, res) => {
 
 router.get('/getLastRegistration', async (req, res) => {
     try {
-        const query = `SELECT * FROM registration2 WHERE Sample_No = (SELECT MAX(Sample_No) FROM registration2);`;
+        const query = `SELECT * FROM registration_test WHERE Sample_No = (SELECT MAX(Sample_No) FROM registration_test);`;
         pool.query(query, async (err, registration) => {
             if(err){
                 console.error(err);
@@ -159,8 +159,8 @@ router.post('/searchRegistration', async (req, res) => {
         const registration = req.body;
         console.log(registration.Sample_No);
 
-        // Check if sample_no exists in ** registration2 ** table
-        const checkRegistrationQuery = `SELECT sample_no FROM registration2 WHERE sample_no = ?`;
+        // Check if sample_no exists in ** registration_test ** table
+        const checkRegistrationQuery = `SELECT sample_no FROM registration_test WHERE sample_no = ?`;
         pool.query(checkRegistrationQuery, [registration.Sample_No], (selectErrorRegistration2, selectResultsRegistration2) => {
             if (selectErrorRegistration2) {
                 console.log(selectErrorRegistration2);
@@ -168,7 +168,7 @@ router.post('/searchRegistration', async (req, res) => {
             }
 
             if (selectResultsRegistration2.length === 0) {
-                // If sample_no doesn't exist in registration2 table, return an error message
+                // If sample_no doesn't exist in registration_test table, return an error message
                 return res.status(404).json('Sample number not Registered!');
             }
 
@@ -185,7 +185,7 @@ router.post('/searchRegistration', async (req, res) => {
                     return res.status(400).json('Data for this sample number already filled in');
                 }
 
-                pool.query('SELECT * FROM registration2 WHERE Sample_No = ? AND Sample_No NOT IN (SELECT Sample_No FROM results)', [registration.Sample_No], async (err, result) => {
+                pool.query('SELECT * FROM registration_test WHERE Sample_No = ? AND Sample_No NOT IN (SELECT Sample_No FROM results)', [registration.Sample_No], async (err, result) => {
                     if(err){
                         console.error(err);
                         return res.status(500).send('Internal Server Error');
