@@ -1,0 +1,132 @@
+@page {
+    size: A4;
+    margin: 0;    
+}
+
+
+
+.page {
+    width: 210mm; /* A4 width */
+    height: 297mm; /* A4 height */
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 20mm;
+    page-break-after: always;
+    position: relative;
+    background-color: white;
+}
+
+.logo {
+    margin: 0;
+    padding: 0;
+    margin-top: 10px;
+    width: 300px;
+}
+
+.title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h3 {
+        text-decoration: underline;
+    }
+
+    .bottom {
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+}
+
+.header {
+    margin-top: 200px;
+
+    p {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.table-container {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+
+    table {
+        text-align: center;
+        border-collapse: collapse;
+    
+
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            min-width: 300px;
+            text-align: left;
+        }
+
+        td {
+            margin: 2px;
+            padding: 2px;
+        }
+
+        th.table-row-label {
+            max-width: 100px;
+            font-weight: bold;
+        }
+
+        th.table-data {
+            min-width: 200px;
+            font-weight: 400;
+        }
+    }
+}
+
+.agreement-container {
+    margin-top: 50px;
+
+    .agreement-container-content {
+        margin-top: 40px;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    
+        .left, .right {
+            h4 {
+                margin: 0;
+                padding: 0;
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.footer {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    p {
+        margin: 0;
+        padding: 2px;
+        color: gray;
+    }
+}
+
+.measurementData {
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+}
+    
+

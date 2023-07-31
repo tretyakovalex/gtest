@@ -4,6 +4,12 @@ const router = express.Router();
 const { pool } = require('../configs/mysql');
 
 
+// SELECT r.Sample_No FROM results r 
+// LEFT JOIN gsa_certificate gc 
+// ON r.Sample_No = gc.sample_no 
+// WHERE gc.sample_no IS NULL;
+
+
 router.get('/getResults', async (req, res) => {
     try {
         const result = req.body;
@@ -15,6 +21,24 @@ router.get('/getResults', async (req, res) => {
         console.error(error);
     }
 });
+
+router.get('/getResultsNotInGsaCertificate', async (req, res) => {
+    
+    const query = `SELECT r.Sample_No FROM results r LEFT JOIN gsa_certificate gc ON r.Sample_No = gc.sample_no WHERE gc.sample_no IS NULL`;
+
+    try {
+        pool.query(query, (err, sample_no) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+        
+            res.json({ sample_nums: sample_no });
+        })
+    } catch (error) {
+        console.error(error);
+    }
+})
 
 router.get('/searchResults', async (req, res) => {
     try {

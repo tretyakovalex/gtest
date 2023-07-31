@@ -41,6 +41,24 @@ router.post('/addRegistration', async (req, res) => {
     } catch (error) {
         console.error(error);
     }
+});
+
+router.get('/getRegistrationsNotInResults', async (req, res) => {
+    
+    const query = `SELECT r2.Sample_No FROM registration2 r2 LEFT JOIN results r ON r2.Sample_No = r.Sample_No WHERE r.Sample_No IS NULL`;
+
+    try {
+        pool.query(query, (err, sample_no) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+        
+            res.json({ sample_nums: sample_no });
+        })
+    } catch (error) {
+        console.error(error);
+    }
 })
 
 router.get('/getRegistrations', async (req, res) => {

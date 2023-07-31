@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="./gsa-contract.css">
+</head>
+<body>
+    <div class="page">
+        <div class="title">
+            <img src="../../public/assets/logo.png" class="logo">
+            <h3>Contact Form for Measurement Services</h3>
+            <div class="bottom">
+                <p><strong>Document Number:</strong> GSA‐FR‐CFMS‐{{paddedNum}}</p>
+                <p><strong>Date:</strong> {{date | date: "dd.MM.YYYY"}}</p>
+            </div>
+        </div>
+    
+        <div class="header">
+            <div class="customer" *ngFor="let c of customer">
+                <h3>Customer Details:</h3>
+                <p *ngIf="!c.name"><strong>Name or Company:</strong> {{c.company}}</p>
+                <p *ngIf="!c.company"><strong>Name or Company:</strong> {{c.name}}</p>
+                <p *ngIf="c.name"><strong>Name or Company:</strong> {{c.name}}</p>
+                <p><strong>TIN:</strong> {{c.tin}}</p>
+                <p *ngIf="c.address"><strong>Address:</strong> {{c.address}}</p>
+                <p *ngIf="c.phone"><strong>Phone Number:</strong> {{c.phone}}</p>
+                <!-- <p><strong>Customer ID:</strong> {{c.customer_id}}</p> -->
+            </div>
+            <div class="weight" *ngFor="let r of registration">
+                <p style="margin-top: 20px;"><strong>Sample weight (in grams):</strong> {{r.Sample_weight}}</p>
+            </div>
+        </div>
+    
+        <div class="table-container">
+            <table>
+                <tbody>
+                        <tr *ngFor="let r of registration">
+                            <th class="table-row-label">Sample Name</th>
+                            <th class="table-data">{{r.Customer_sample_name}}</th>
+                        </tr>
+                        <tr *ngFor="let r of registration">
+                            <th class="table-row-label">GSA Sample ID</th>
+                            <th class="table-data">{{r.gsa_sample_id}}</th>
+                        </tr>
+                        <!-- <tr *ngFor="let m of method; let isFirst = first"> -->
+                        <tr >
+                            <!-- <ng-container *ngIf="isFirst"> -->
+                                <th class="table-row-label">Measurement Service</th>
+                                <th class="table-data">
+                                    <p class="measurementData">{{measurementService.join(', ')}}</p>
+                                    <!-- <p class="measurementData">{{measurementService}}</p> -->
+                                </th>
+                            <!-- </ng-container> -->
+                        </tr>
+                        <tr>
+                            <th class="table-row-label">Assigned Method</th>
+                            <th class="table-data">
+                                <p class="measurementData">{{selectedMethodTypes.join(', ')}}</p>
+                            </th>
+                        </tr>
+                        <tr *ngFor="let r of registration">
+                            <th class="table-row-label">Approved Quotation Value</th>
+                            <th class="table-data">{{r.Approved_Quotation_Value}} RWF</th>
+                        </tr>
+                        <tr *ngFor="let r of registration">
+                            <th class="table-row-label">Approximate Dates of Work Completion</th>
+                            <th class="table-data">{{r.Approx_days}}</th>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+    
+        <div class="agreement-container">
+            <p><strong>Agreed between:</strong></p>
+            <div class="agreement-container-content">
+                <div class="left">
+                    <h4>Company or customer representative:</h4>
+                    <h4>[Name and Signature]</h4>
+                </div>
+                <div class="right">
+                    <h4>GSA representative:</h4>
+                    <h4>[Name and Signature]</h4>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Document Number: GSA‐FR‐CFMS‐{{paddedNum}} Rev: 00, Page: 1-1</p>
+        </div>
+    </div>
+
+    <script src="gsa-contract.js"></script>
+</body>
+</html>
