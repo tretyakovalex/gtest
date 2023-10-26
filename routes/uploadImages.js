@@ -21,13 +21,13 @@ const storage = multer.diskStorage({
   
 const upload = multer({ storage: storage });
 
-router.post('/api/upload', upload.array('image', 26), (req, res) => {
+router.post('/api/upload', upload.array('image', 27), (req, res) => {
     console.log('Received ' + req.files.length + ' files');
     res.status(200).json({message: 'Images Successfully Uploaded!'});
 });
 
 router.get('/api/images', (req, res) => {
-  const images = ["assets/images/23.PNG", "assets/images/24.PNG", "assets/images/25.PNG", "assets/images/26.PNG"];
+  const images = ["assets/images/23.PNG", "assets/images/24.PNG", "assets/images/25.PNG", "assets/images/26.PNG", "assets/images/27.PNG"];
   const existingImages = [];
   for(let i = 0; i < images.length; i++){
     if(fs.existsSync(path.join(__dirname, '../public/', images[i]))){
