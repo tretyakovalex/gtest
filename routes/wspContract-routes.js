@@ -30,7 +30,8 @@ router.post('/addWSPContract', async (req, res) => {
             time: data.time,
             date: data.date, 
             compound: data.compound,
-            service: data.service
+            service: data.service,
+            surveyor: data.surveyor
         }
         
         const query = `INSERT INTO wsp_contract SET ?`;
