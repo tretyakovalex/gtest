@@ -24,6 +24,7 @@ app.use(require('./routes/gsaCertificate-routes'));
 app.use(require('./routes/compound-routes'));
 app.use(require('./routes/price-routes'));
 app.use(require('./routes/method-routes'));
+app.use(require('./routes/wspContract-routes'));
 
 app.use(require('./routes/getCertificate-route'));
 // app.use(require('./routes/mysql-routes'));

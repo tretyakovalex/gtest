@@ -29,7 +29,7 @@ router.post('/addGSACertificate', async (req, res) => {
             sample_no: data.sample_no,
             release_date: data.release_date
         }
-        
+
         const query = `INSERT INTO gsa_certificate SET ?`;
 
         pool.query(query, certificate, (err, gsaCertificate) => {
