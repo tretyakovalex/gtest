@@ -31,6 +31,9 @@ app.use(require('./routes/getCertificate-route'));
 app.use(require('./routes/user-routes'));
 app.use(require('./routes/uploadImages'));
 
+// accounting routes:
+app.use(require('./routes/accounting/personnel-routes'));
+
 // === Frontend: ===
 // =================
 
