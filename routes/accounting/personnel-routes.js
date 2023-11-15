@@ -18,4 +18,29 @@ router.get('/getPersonnels', async (req, res) => {
     }
 });
 
+router.post('/addPersonnel', async (req, res) => {
+    try {
+        const data = req.body;
+
+        const personnel = {
+            name: data.name,
+            position: data.position,
+            phone: data.phone
+        }
+
+        const query = `INSERT INTO personnel_data SET ?`;
+
+        pool.query(query, personnel, (err, personnel) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.json({ personnel: personnel });
+        })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
 module.exports = router;

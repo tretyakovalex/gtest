@@ -33,6 +33,8 @@ app.use(require('./routes/uploadImages'));
 
 // accounting routes:
 app.use(require('./routes/accounting/personnel-routes'));
+app.use(require('./routes/accounting/requisition-routes'));
+app.use(require('./routes/accounting/purchaseOrder-routes'));
 
 // === Frontend: ===
 // =================

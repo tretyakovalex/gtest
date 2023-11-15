@@ -138,13 +138,13 @@ router.post('/searchRegistration', async (req, res) => {
 
         // Check if sample_no exists in ** registration ** table
         const checkRegistrationQuery = `SELECT sample_no FROM registration WHERE sample_no = ?`;
-        pool.query(checkRegistrationQuery, [registration.Sample_No], (selectErrorregistration, selectResultsregistration) => {
-            if (selectErrorregistration) {
-                console.log(selectErrorregistration);
+        pool.query(checkRegistrationQuery, [registration.Sample_No], (selectErrorRegistration2, selectResultsRegistration2) => {
+            if (selectErrorRegistration2) {
+                console.log(selectErrorRegistration2);
                 return res.status(500).send('Internal Server Error');
             }
 
-            if (selectResultsregistration.length === 0) {
+            if (selectResultsRegistration2.length === 0) {
                 // If sample_no doesn't exist in registration table, return an error message
                 return res.status(404).json('Sample number not Registered!');
             }
