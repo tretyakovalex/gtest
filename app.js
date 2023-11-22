@@ -32,6 +32,7 @@ app.use(require('./routes/user-routes'));
 app.use(require('./routes/uploadImages'));
 
 // accounting routes:
+app.use(require('./routes/accounting/admin-export-routes'));
 app.use(require('./routes/accounting/personnel-routes'));
 app.use(require('./routes/accounting/requisition-routes'));
 app.use(require('./routes/accounting/purchaseOrder-routes'));
