@@ -63,7 +63,9 @@ router.post('/createPurchaseOrderDocNum', async (req, res) => {
 
         const purchaseOrderForm = {
             document_number: data.document_number,
-            created_at: data.created_at
+            created_at: data.created_at,
+            grand_total_price: data.grand_total_price,
+            grand_total_price_vat: data.grand_total_price_vat
         }
 
         const query = `INSERT INTO purchase_order_form SET ?`;
