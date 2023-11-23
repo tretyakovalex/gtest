@@ -19,6 +19,44 @@ router.get('/getLastRequisition', async (req, res) => {
     }
 });
 
+router.get('/getAllRequisitions', async (req, res) => {
+    try {
+        const query = `SELECT * FROM requisition_form;`
+        pool.query(query, (err, requisition) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.json({ requisitions: requisition });
+        })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.get('/selectRequisitonByDocNum', async (req, res) => {
+    try {
+        const docNum = req.query.docNum; // Accessing the 'docNum' parameter from the query
+
+        const query = `SELECT * FROM requisition_items AS ri 
+                       INNER JOIN requisition_form AS rf ON ri.requisition_form_id = rf.id
+                       INNER JOIN personnel_data AS pd ON ri.personnel_id = pd.personnel_data_id
+                       WHERE rf.document_number = "${docNum}";`;
+
+        pool.query(query, (err, requisition) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.json({ requisition: requisition });
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
 router.post('/createRequisitionDocNum', async (req, res) => {
     try {
         const data = req.body;

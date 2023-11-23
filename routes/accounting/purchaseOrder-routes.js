@@ -19,6 +19,44 @@ router.get('/getLastPurchaseOrder', async (req, res) => {
     }
 });
 
+router.get('/getAllPurchaseOrders', async (req, res) => {
+    try {
+        const query = `SELECT * FROM purchase_order_form;`
+        pool.query(query, (err, purchaseOrder) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.json({ purchaseOrders: purchaseOrder });
+        })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.get('/selectPurchaseOrderByDocNum', async (req, res) => {
+    try {
+        const docNum = req.query.docNum; // Accessing the 'docNum' parameter from the query
+
+        const query = `SELECT * FROM purchase_order_items AS poi 
+                       INNER JOIN purchase_order_form AS pof ON poi.purchase_order_form_id = pof.id
+                       INNER JOIN personnel_data AS pd ON poi.personnel_id = pd.personnel_data_id
+                       WHERE pof.document_number = "${docNum}";`;
+
+        pool.query(query, (err, purchaseOrder) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.json({ purchaseOrder: purchaseOrder });
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
 router.post('/createPurchaseOrderDocNum', async (req, res) => {
     try {
         const data = req.body;
@@ -49,12 +87,11 @@ router.post('/createPurchaseOrderTable', async (req, res) => {
 
         console.log(data);
 
-        const insertQuery = `INSERT INTO purchase_order_items (personnel_id, purchase_order_form_id, number, items, quantity, unit_price, total_price, total_price_vat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const insertQuery = `INSERT INTO purchase_order_items (personnel_id, purchase_order_form_id, items, quantity, unit_price, total_price, total_price_vat) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
         const values = data.tableData.map((tableDataRow) => [
             data.personnel_id,
             data.purchase_order_form_id,
-            tableDataRow.number,
             tableDataRow.items,
             tableDataRow.quantity,
             tableDataRow.unit_price,
