@@ -31,7 +31,7 @@ app.use(require('./routes/getCertificate-route'));
 app.use(require('./routes/user-routes'));
 app.use(require('./routes/uploadImages'));
 
-// accounting routes:
+// Accounting routes:
 app.use(require('./routes/accounting/admin-export-routes'));
 app.use(require('./routes/accounting/personnel-routes'));
 app.use(require('./routes/accounting/requisition-routes'));
