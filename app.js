@@ -37,6 +37,10 @@ app.use(require('./routes/accounting/personnel-routes'));
 app.use(require('./routes/accounting/requisition-routes'));
 app.use(require('./routes/accounting/purchaseOrder-routes'));
 
+// Admin routes:
+app.use(require('./routes/admin/select-database-route'));
+app.use(require('./routes/admin/get-databases-routes.js'));
+
 // === Frontend: ===
 // =================
 
