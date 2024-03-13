@@ -59,7 +59,7 @@ router.get('/getRegistrationsNotInResults', async (req, res) => {
     } catch (error) {
         console.error(error);
     }
-})
+});
 
 router.get('/getRegistrations', async (req, res) => {
     try {
