@@ -33,7 +33,10 @@ router.post('/addGSACertificate', async (req, res) => {
         const query = `INSERT INTO gsa_certificate SET ?`;
 
         pool.query(query, certificate, (err, gsaCertificate) => {
-            if(err){
+            if (err) {
+                if (err.code === 'ER_DUP_ENTRY') {
+                    return res.status(409).json({ message: 'Duplicate entry: a certificate with this sample number already exists.' });
+                }
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
             }

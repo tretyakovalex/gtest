@@ -179,5 +179,39 @@ router.post('/searchRegistration', async (req, res) => {
     }
 });
 
+router.get('/selectRegistrationBySampleNo', async (req, res) => {
+    const sample_no = req.query.Sample_No;
+
+    try {
+        pool.query(`SELECT * FROM registration WHERE Sample_No = ?`, sample_no, async (err, results) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+        
+            res.json({ registration: results });
+        })
+    } catch (err) {
+        console.error(err)
+    }
+});
+
+
+router.get('/getRegistrationSampleNumbers', async (req, res) => {
+    try {
+        const query = `SELECT Sample_No FROM registration ORDER BY Sample_No DESC;`;
+        pool.query(query, async (err, results) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+        
+            res.json({ Sample_No: results });
+        })
+    } catch (err) {
+        console.error(err)
+    }
+});
+
 
 module.exports = router;
