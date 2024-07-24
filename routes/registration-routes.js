@@ -188,8 +188,17 @@ router.get('/selectRegistrationBySampleNo', async (req, res) => {
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
             }
+
+            const processedResults = results.map(row => {
+                for (let key in row) {
+                  if (Buffer.isBuffer(row[key])) {
+                    row[key] = row[key][0] === 1;
+                  }
+                }
+                return row;
+              });
         
-            res.json({ registration: results });
+            res.json({ registration: processedResults });
         })
     } catch (err) {
         console.error(err)
@@ -210,6 +219,28 @@ router.get('/getRegistrationSampleNumbers', async (req, res) => {
         })
     } catch (err) {
         console.error(err)
+    }
+});
+
+router.put('/updateRegistration', async (req, res) => {
+    try {
+        const data = req.body;
+
+        const query = `UPDATE registration SET ? WHERE Sample_No=?`;
+
+        console.log(data);
+
+        pool.query(query, [data, data.Sample_No], async (err, purchase) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({"error": "Internal Server Error"});
+            }
+
+            res.json("Registration was successfully updated!");
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({"error": "Internal Server Error"});
     }
 });
 

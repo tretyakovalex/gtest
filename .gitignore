@@ -5,3 +5,4 @@ id_rsa_pub.pem
 package-lock.json
 routes.rest
 configs/mysql.js
+public/assets
