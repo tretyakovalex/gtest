@@ -16,6 +16,8 @@ app.use(cors());
 // === Routes: ===
 // ===============
 
+app.use(require('./routes/testHandlebars'));
+
 app.use(require('./routes/registration-routes'));
 app.use(require('./routes/result-routes'));
 app.use(require('./routes/customer-routes'));
