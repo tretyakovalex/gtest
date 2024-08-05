@@ -12,7 +12,7 @@ const { sendMessageToClients } = require('../../handlebars/websocket');
 
 router.get('/getGsaInvoices', async (req, res) => {
     try {
-        let files = fs.readdirSync(path.join(__dirname, '..', '..', 'handlebars'));
+        let files = fs.readdirSync(path.join(__dirname, '..', '..', 'handlebars', 'gsa-invoices'));
         const file_path = files.filter(file => file.endsWith('.pdf'));
         console.log("file paths: ", file_path)
 
@@ -29,7 +29,7 @@ router.get('/getInvoiceByName', async (req, res) => {
     try {
         const file_name = req.query.file_name;
         
-        const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "..", "handlebars", file_name));
+        const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "..", "handlebars", 'gsa-invoices', file_name));
 
         sendMessageToClients(pdfData);
 
@@ -43,7 +43,7 @@ router.get('/getInvoiceByDate', async (req, res) => {
     try {
         const date = req.query.date;
         
-        let files = fs.readdirSync(path.join(__dirname, '..', '..', 'handlebars'));
+        let files = fs.readdirSync(path.join(__dirname, '..', '..', 'handlebars', 'gsa-invoices'));
         const file_path = files.filter(file => file.endsWith('.pdf'));
         console.log("file paths: ", file_path);
 
@@ -69,7 +69,7 @@ router.get('/getInvoiceByDate', async (req, res) => {
 
 async function getFileCreatedDate(file_path){
     let pdf_files = await Promise.all(file_path.map(async (file) => {
-        const file_path = path.join(__dirname, '..', '..', 'handlebars', file);
+        const file_path = path.join(__dirname, '..', '..', 'handlebars', 'gsa-invoices', file);
         const stat = await fs.stat(file_path);
         if (stat) {
             return { file_name: file, created: stat.birthtime };
