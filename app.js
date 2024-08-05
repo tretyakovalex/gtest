@@ -16,7 +16,7 @@ app.use(cors());
 // === Routes: ===
 // ===============
 
-app.use(require('./routes/testHandlebars'));
+app.use(require('./routes/accounting/invoice-routes'));
 
 app.use(require('./routes/registration-routes'));
 app.use(require('./routes/result-routes'));
@@ -38,6 +38,7 @@ app.use(require('./routes/accounting/admin-export-routes'));
 app.use(require('./routes/accounting/personnel-routes'));
 app.use(require('./routes/accounting/requisition-routes'));
 app.use(require('./routes/accounting/purchaseOrder-routes'));
+app.use(require('./routes/accounting/service-prices-routes'));
 
 // Admin routes:
 app.use(require('./routes/admin/select-database-route'));

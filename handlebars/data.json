@@ -1,0 +1,46 @@
+{
+    "customer_details": {
+        "company_name": "Ferticole Industries Ltd",
+        "company_address": "1008A Shing Chuen Ind.Bldg, 25-27 Shing Wan Road, Shatin, N.T, Hong Kong",
+        "company_phone": "852-26010129",
+        "company_email": "admin01@ferticore.com"
+    },
+    "sampled_request": [
+        {
+            "date":"07.03.2024",
+            "item":"1",
+            "certificate_number":"GSA-Sn-2024-0071",
+            "service_description":"Sn",
+            "unit_price":"150",
+            "quantity":"1",
+            "total_price": "150"
+        },
+        {
+            "date":"",
+            "item":"",
+            "certificate_number":"Sample Management fee GSA-Sn-2024-0071",
+            "service_description":"Sample Management",
+            "unit_price":"50",
+            "quantity":"1",
+            "total_price": "50"
+        },
+        {
+            "date":"25.07.2024",
+            "item":"2",
+            "certificate_number":"GSA-Sn-2024-0072",
+            "service_description":"Sn",
+            "unit_price":"150",
+            "quantity":"1",
+            "total_price": "150"
+        },
+        {
+            "date":"",
+            "item":"",
+            "certificate_number":"Sample Management fee GSA-Sn-2024-0072",
+            "service_description":"Sample Management",
+            "unit_price":"50",
+            "quantity":"1",
+            "total_price": "50"
+        }
+    ]
+}

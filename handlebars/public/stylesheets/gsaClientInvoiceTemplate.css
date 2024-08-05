@@ -1,0 +1,106 @@
+.page {
+    width: 210mm; /* A4 width */
+    height: 297mm; /* A4 height */
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 15mm;
+    page-break-after: always;
+    position: relative;
+    background-color: white;
+  
+    /* border: 1px solid black; */
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 400px;
+}
+  
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.customer_details h4 {
+    text-decoration: underline;
+}
+
+.customer_details p {
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.customer_details .item {
+    width: 400px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+    gap: 10px;
+}
+
+.title p {
+    margin: 0;
+}
+
+table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+thead tr th, tfoot tr td {
+    font-weight: bold;
+}
+
+th {
+    background-color: rgb(220, 220, 220);
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid black;
+    text-align: center;
+}
+
+tbody td:nth-child(3){
+    border-bottom: 1px solid white;
+}
+
+tbody tr:last-child td:nth-child(3){
+    border-bottom: 1px solid black;
+}
+
+th:first-child {
+    width: 60px;
+}
+
+tbody tr td {
+    padding: 5px;
+}
+
+tfoot tr td {
+    padding: 5px;
+}
+
+
+.bank_details h4 {
+    margin: 0;
+    margin-top: 5px;
+}
+
+.bank_details .item {
+    width: 420px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+    gap: 10px;
+}
