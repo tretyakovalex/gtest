@@ -7,7 +7,7 @@ const moment = require('moment');
 
 const { pool } = require('../../configs/mysql');
 // const { getFileCreatedDate } = require('../testHandlebars.js');
-const { sendMessageToClients } = require('../../handlebars/websocket');
+const { sendMessageForInvoiceComponent } = require('../../handlebars/websocket');
 
 
 router.get('/getGsaInvoices', async (req, res) => {
@@ -31,7 +31,7 @@ router.get('/getInvoiceByName', async (req, res) => {
         
         const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "..", "handlebars", 'gsa-invoices', file_name));
 
-        sendMessageToClients(pdfData);
+        sendMessageForInvoiceComponent(pdfData);
 
         res.status(200).json({ message: 'PDF generated and sent to clients' });
     } catch (error) {

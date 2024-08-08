@@ -8,7 +8,11 @@ const moment = require('moment-timezone');
 const { pool } = require('../configs/mysql');
 
 const { generateInvoice } = require('./testHandlebars');
-const transporter = require('../utils/email-transponder');
+const { generateCertificate } = require('./generateCertificate.js');
+const { generateSamplingCertificatePdf } = require('../handlebars/compileSamplingCertificateTemplate.js');
+// const transporter = require('../utils/email-transponder');
+
+const { sendMessageForCertificateComponent } = require('../handlebars/websocket');
 
 require('dotenv').config();
 
@@ -32,19 +36,23 @@ router.post('/addGSACertificate', async (req, res) => {
     try {
         const data = req.body;
 
+        console.log(data);
+
         const certificate = {
-            sample_no: data.sample_no,
+            sample_no: data.Sample_No,
             release_date: data.release_date
         }
 
         const query = `INSERT INTO gsa_certificate SET ?`;
 
-        await generateInvoice(data.sample_no, data.release_date);
+        let pdfPath = await generateCertificate(data);
+
+        await generateInvoice(data.Sample_No, data.release_date);
 
 
-        let file_name = ""
+        // let file_name = ""
 
-        // pool.query('select gsa_sample_id from registration where Sample_No=?', [data.sample_no], async (err, result) => {
+        // pool.query('select gsa_sample_id from registration where Sample_No=?', [data.Sample_No], async (err, result) => {
         //     if(err){
         //         console.error(err);
         //     }
@@ -80,19 +88,122 @@ router.post('/addGSACertificate', async (req, res) => {
         pool.query(query, certificate, async (err, gsaCertificate) => {
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
-                    return res.status(409).json({ message: 'Duplicate entry: a certificate with this sample number already exists.' });
+                    return res.status(409).json({ message: 'Duplicate entry: a certificate with this sample number already exists.', pdfPath: pdfPath });
                 }
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
             }
             
             
-            res.json({ gsaCertificates: gsaCertificate })
+            res.json({ gsaCertificates: gsaCertificate });
         });
         
     } catch (error) {
         console.error(error);
     }
+});
+
+router.get('/generateCertificate', async (req, res) => {
+    try {
+        const data = req.body;
+        // console.log("Printing data: ", data);
+
+        generateCertificate(data);
+    } catch (error) {
+        console.error(error);
+    }
 })
+
+// === Getting Generated Certificates ===
+router.get('/getAllCertificates', async (req, res) => {
+    try {
+        let files = fs.readdirSync(path.join(__dirname, '..', 'handlebars', 'gsa-certificates'));
+        const file_path = files.filter(file => file.endsWith('.pdf'));
+        console.log("file paths: ", file_path)
+
+        let pdf_files = await getFileCreatedDate(file_path);
+        console.log(pdf_files);
+
+        res.json(pdf_files);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.get('/getCertificateByDate', async (req, res) => {
+    try {
+        const date = req.query.date;
+        
+        let files = fs.readdirSync(path.join(__dirname, '..', 'handlebars', 'gsa-certificates'));
+        const file_path = files.filter(file => file.endsWith('.pdf'));
+        console.log("file paths: ", file_path);
+
+        let pdf_files = await getFileCreatedDate(file_path);
+
+        // console.log(pdf_files);
+        console.log(date);
+
+        let filtered_pdfs = [];
+        pdf_files.forEach((item) => {
+            if(moment(item.created).format('YYYY-MM-DD') === date){
+                filtered_pdfs.push({file_name: item.file_name, created: item.created});
+            }
+        });
+
+        console.log("filtered pdf files: ", filtered_pdfs);
+
+        res.json(filtered_pdfs);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.get('/getCertificateByFileName', async (req, res) => {
+    try {
+        const file_name = req.query.file_name;
+        
+        const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "handlebars", 'gsa-certificates', file_name));
+        // const pdfData = path.join(__dirname, "..", "handlebars", 'gsa-certificates', "GSA-Sn-2024-00071.pdf");
+
+        // const file = path.join(__dirname, "..", "handlebars", 'gsa-certificates', file_name);
+        // console.log("file: ", pdfData);
+
+        sendMessageForCertificateComponent(pdfData);
+
+        // res.status(200).json({ message: 'PDF generated and sent to clients', pdfData: buffer.toString('base64') });
+
+    } catch (error) {
+        console.error(error);
+    }
+});
+// ======================================
+
+// === Helper functions ===
+async function getFileCreatedDate(file_path){
+    let pdf_files = await Promise.all(file_path.map(async (file) => {
+        const file_path = path.join(__dirname, '..', 'handlebars', 'gsa-certificates', file);
+        const stat = await fs.stat(file_path);
+        if (stat) {
+            return { file_name: file, created: stat.birthtime };
+        }
+    }));
+
+    return pdf_files;
+}
+// ========================
+
+
+
+
+
+// === TESTING GSA SAMPLING CERTIFICATE ===
+router.get('/generateSamplingCertficate', async (req, res) => {
+    try {
+        generateSamplingCertificatePdf()
+    } catch (error) {
+        console.error(error);
+    }
+})
+// ========================================
 
 module.exports = router;
