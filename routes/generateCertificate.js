@@ -8,9 +8,10 @@ const moment = require('moment');
 
 
 const { generateCertificatePdf } = require('../handlebars/compileCertificateTemplate.js');
-const { broadcastMessage } = require('../handlebars/websocket');
+const { sendMessageForCertificateComponent } = require('../handlebars/websocket');
 
 const { pool } = require('../configs/mysql');
+const { compileFunction } = require('vm');
 
 async function generateCertificate(data){
     try {
@@ -29,8 +30,21 @@ async function generateCertificate(data){
         // console.log(method);
 
         // Getting method info
-        let result = await getResultsBySampleNo(data.Sample_No, data.selectedElements);
+        let result = await getResultsBySampleNo(data.Sample_No, data.selectedElements, data.RA_present, data.RA_In_Kg);
         // console.log("Printing result: ", result);
+
+        let RA_present;
+        for (let res of result) {
+            // console.log("Priting res of result: ", res);
+            for (let [key, value] of Object.entries(res)) {
+                // console.log("Printing key of res: ", value);
+                if(value === "RA"){
+                    data.RA_present = true;
+                    RA_present = true;
+                    // console.log("Printing data.RA_Present: ", RA_present);
+                }
+            }
+        }
 
         let paddedNum = await numberPadding(data.Sample_No);
 
@@ -49,23 +63,25 @@ async function generateCertificate(data){
             "sampledGSA": data.sampledGSA,
             "addSignatures": data.addSignatures,
             "certificate_file_name":`${registration[0].gsa_sample_id}`,
+            "RA_present": RA_present,
+            "RA_In_Kg": data.RA_In_Kg
         };
 
         console.log("Printing certificateData: ", certificateData);
 
         let pdfPath = await generateCertificatePdf(certificateData);
-        console.log("Printing pdf path: ", pdfPath);
+        // console.log("Printing pdf path: ", pdfPath);
 
         const file_name = pdfPath.match(/[^\/]+$/)[0];
 
-        console.log("Printing file_name: ", file_name);
+        // console.log("Printing file_name: ", file_name);
 
         const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "handlebars", "gsa-certificates", file_name));
 
-        console.log("Printing pdfData: ", pdfData);
-        console.log("Printing clientId: ", data.clientId);
-        // broadcastMessage(pdfData, data.clientId);
-        return pdfData;
+        // console.log("Printing pdfData: ", pdfData);
+
+        sendMessageForCertificateComponent(pdfData);
+
     } catch (error) {
         console.error(error);
     }
@@ -161,7 +177,7 @@ async function getCompoundByCompoundName(compound_name){
     });
 }
 
-async function getResultsBySampleNo(Sample_No, selectedElements){
+async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_In_Kg){
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM results where Sample_No=?;`
         pool.query(query, [Sample_No], async (err, result) => {
@@ -171,6 +187,7 @@ async function getResultsBySampleNo(Sample_No, selectedElements){
             }
 
             let filteredResults = [];
+            let raAndMoistureResults = [];
             for (let res of result) {
                 for (let [key, value] of Object.entries(res)) {
                     if (value !== null && key !== 'Sample_No' && key !== 'date_of_lab') {
@@ -186,16 +203,20 @@ async function getResultsBySampleNo(Sample_No, selectedElements){
                                         filteredResults.push({name: element_info[0].element_symbol, value: value.toFixed(2)});
                                     } else {
                                         if(element_info[0].oxides !== undefined){
-                                            // Find element by name and obtain Element in Oxyde form
+                                            // Find element by name and obtain Element in Oxide form
                                             let oxide_value = value * element_info[0].Factor;
                                             filteredResults.push({name: element_info[0].oxides, value: oxide_value.toFixed(2)});
                                         }
                                     }                                        
                                 } else if (key === 'Moisture'){
-                                    filteredResults.push({name: key, value: value.toFixed(2)});
+                                    raAndMoistureResults.push({name: key, value: `${value.toFixed(2)} %`});
                                 } else if (key === 'RA'){
                                     // Covert RA to bq/kg or bq/g
-                                    filteredResults.push({name: key, value: value.toFixed(2)});
+                                    if(RA_In_Kg === true){
+                                        raAndMoistureResults.push({name: key, value: `${value.toFixed(2)} bq/kg`});
+                                    } else {
+                                        raAndMoistureResults.push({name: key, value: `${value.toFixed(2)} bq/g`});
+                                    }
                                 } 
                             }
                         }
@@ -203,12 +224,19 @@ async function getResultsBySampleNo(Sample_No, selectedElements){
                 }
             }
 
-            filteredResults.sort((a, b) => (b.value - a.value));
+            filteredResults.sort((a, b) => b.value - a.value);
 
-            console.log("Printing filteredResult: ", filteredResults);
+            raAndMoistureResults.sort((a, b) => b.name - a.name);
 
-            resolve(filteredResults);
+            combinedResults = [...filteredResults, ...raAndMoistureResults];
 
+            combinedResults.forEach((result) => {
+                if(result.name !== "RA" && result.name !== "Moisture"){
+                    result.value = `${result.value} %`;
+                }
+            });
+
+            resolve(combinedResults);
         })
     });
 }

@@ -1,0 +1,748 @@
+{{#lte lengthOfDrumsArray 7}}
+    <div class="page" id="packingPage">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+
+            <h2>PACKING AND WEIGHING:</h2>
+            
+            <p class="packing_description">
+                {{packingDescriptionParagraph}}
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>№ of Drums</th>
+                        <th>Gross weight, kg</th>
+                        <th>Tare, kg</th>
+                        <th>Net weight, kg</th>
+                        <th>Seal №</th>
+                        <th>Seal №</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each drums}}
+                        {{#eq @key "page1"}}
+                            <tr {{#each this}}>
+                                <td><strong>{{num}}</strong></td>
+                                <td>{{toFixed grossWeight 1}}</td>
+                                <td>{{toFixed tare 1}}</td>
+                                <td>{{toFixed netWeight 1}}</td>
+                                <td>{{seal1}}</td>
+                                <td>{{seal2}}</td>
+                            </tr {{/each}}>
+                        {{/eq}}
+                    {{/each}}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Total:</td>
+                        <td>{{toFixed drumsTotals.totalGrossWeight 1}}</td>
+                        <td>{{toFixed drumsTotals.totalTare 1}}</td>
+                        <td>{{toFixed drumsTotals.totalNetWeight 1}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="img-container">                
+                {{#each barrelsImage}}
+                    <img src="{{imageSrc}}" alt="barrels img holder">
+                {{/each}}
+            </div>
+        </div>
+        
+        {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page {{packingPageCounter}}/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    {{#each packingImgs}}
+        <div class="page" id="packingPage">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+
+                <div class="img-container">
+                    <img src="{{imageSrc}}" alt="barrels img holder">
+                </div>
+            </div>  
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{../jobReference}}</p>
+                        <p>Date of issue {{../dateOfIssue}} \ Sampling date {{../samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page {{add ../packingPageCounter imgCount}}/{{../totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+            {{!-- ============== --}}
+        </div>
+    {{/each}}
+{{/lte}}
+
+{{#gteAndlte lengthOfDrumsArray 8 24}}
+    <div class="page" id="packingPage">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+
+            <h2>PACKING AND WEIGHING:</h2>
+            
+            <p class="packing_description">
+                {{packingDescriptionParagraph}}
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>№ of Drums</th>
+                        <th>Gross weight, kg</th>
+                        <th>Tare, kg</th>
+                        <th>Net weight, kg</th>
+                        <th>Seal №</th>
+                        <th>Seal №</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each drums}}
+                        {{#eq @key "page1"}}
+                            <tr {{#each this}}>
+                                <td><strong>{{num}}</strong></td>
+                                <td>{{toFixed grossWeight 1}}</td>
+                                <td>{{toFixed tare 1}}</td>
+                                <td>{{toFixed netWeight 1}}</td>
+                                <td>{{seal1}}</td>
+                                <td>{{seal2}}</td>
+                            </tr {{/each}}>
+                        {{/eq}}
+                    {{/each}}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Total:</td>
+                        <td>{{toFixed drumsTotals.totalGrossWeight 1}}</td>
+                        <td>{{toFixed drumsTotals.totalTare 1}}</td>
+                        <td>{{toFixed drumsTotals.totalNetWeight 1}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page {{packingPageCounter}}/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="packingPage">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="img-container">                
+                {{#each barrelsImage}}
+                    <img src="{{imageSrc}}" alt="barrels img holder">
+                {{/each}}
+            </div>
+        </div>  
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page {{add packingPageCounter 1}}/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    {{#each packingImgs}}
+        <div class="page" id="packingPage">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="img-container">
+                    <img src="{{imageSrc}}" alt="barrels img holder">
+                </div>
+            </div>  
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{../jobReference}}</p>
+                        <p>Date of issue {{../dateOfIssue}} \ Sampling date {{../samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page {{sum ../packingPageCounter 1 imgCount}}/{{../totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+            {{!-- ============== --}}
+        </div>
+    {{/each}}
+{{/gteAndlte}}
+
+{{#gteAndlte lengthOfDrumsArray 25 35}}
+    <div class="page" id="packingPage">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+
+            <h2>PACKING AND WEIGHING:</h2>
+            
+            <p class="packing_description">
+                {{packingDescriptionParagraph}}
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>№ of Drums</th>
+                        <th>Gross weight, kg</th>
+                        <th>Tare, kg</th>
+                        <th>Net weight, kg</th>
+                        <th>Seal №</th>
+                        <th>Seal №</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each drums}}
+                        {{#eq @key "page1"}}
+                            <tr {{#each this}}>
+                                <td><strong>{{num}}</strong></td>
+                                <td>{{toFixed grossWeight 1}}</td>
+                                <td>{{toFixed tare 1}}</td>
+                                <td>{{toFixed netWeight 1}}</td>
+                                <td>{{seal1}}</td>
+                                <td>{{seal2}}</td>
+                            </tr {{/each}}>
+                        {{/eq}}
+                    {{/each}}
+                </tbody>
+                {{!-- <tfoot>
+                    <tr {{#each drumsTotals}}>
+                        <td>Total:</td>
+                        <td>{{totalGrossWeight}}</td>
+                        <td>{{totalTare}}</td>
+                        <td>{{totalNetWeight}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr {{/each}}>
+                </tfoot> --}}
+            </table>
+        </div>
+        
+        {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page {{packingPageCounter}}/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="packingPage">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>№ of Drums</th>
+                        <th>Gross weight, kg</th>
+                        <th>Tare, kg</th>
+                        <th>Net weight, kg</th>
+                        <th>Seal №</th>
+                        <th>Seal №</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each drums}}
+                        {{#eq @key "page2"}}
+                            <tr {{#each this}}>
+                                <td><strong>{{num}}</strong></td>
+                                <td>{{toFixed grossWeight 1}}</td>
+                                <td>{{toFixed tare 1}}</td>
+                                <td>{{toFixed netWeight 1}}</td>
+                                <td>{{seal1}}</td>
+                                <td>{{seal2}}</td>
+                            </tr {{/each}}>
+                        {{/eq}}
+                    {{/each}}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Total:</td>
+                        <td>{{toFixed drumsTotals.totalGrossWeight 1}}</td>
+                        <td>{{toFixed drumsTotals.totalTare 1}}</td>
+                        <td>{{toFixed drumsTotals.totalNetWeight 1}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>  
+
+        <div class="img-container">                
+                {{#each barrelsImage}}
+                    <img src="{{imageSrc}}" alt="barrels img holder">
+                {{/each}}
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page {{add packingPageCounter 1}}/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    {{!-- Printing 1 image collage with barrels per page --}}
+    {{#each packingImgs}}
+        <div class="page" id="packingPage">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="img-container">
+                    <img src="{{imageSrc}}" alt="barrels img holder">
+                </div>
+            </div>  
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{../jobReference}}</p>
+                        <p>Date of issue {{../dateOfIssue}} \ Sampling date {{../samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page {{sum ../packingPageCounter 1 imgCount}}/{{../totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+            {{!-- ============== --}}
+        </div>
+    {{/each}}
+{{/gteAndlte}}
+
+{{#gteAndlte lengthOfDrumsArray 36 52}}
+    <div class="page" id="packingPage">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+
+            <h2>PACKING AND WEIGHING:</h2>
+            
+            <p class="packing_description">
+                {{packingDescriptionParagraph}}
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>№ of Drums</th>
+                        <th>Gross weight, kg</th>
+                        <th>Tare, kg</th>
+                        <th>Net weight, kg</th>
+                        <th>Seal №</th>
+                        <th>Seal №</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each drums}}
+                        {{#eq @key "page1"}}
+                            <tr {{#each this}}>
+                                <td><strong>{{num}}</strong></td>
+                                <td>{{toFixed grossWeight 1}}</td>
+                                <td>{{toFixed tare 1}}</td>
+                                <td>{{toFixed netWeight 1}}</td>
+                                <td>{{seal1}}</td>
+                                <td>{{seal2}}</td>
+                            </tr {{/each}}>
+                        {{/eq}}
+                    {{/each}}
+                </tbody>
+                {{!-- <tfoot>
+                    <tr {{#each drumsTotals}}>
+                        <td>Total:</td>
+                        <td>{{totalGrossWeight}}</td>
+                        <td>{{totalTare}}</td>
+                        <td>{{totalNetWeight}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr {{/each}}>
+                </tfoot> --}}
+            </table>
+        </div>
+        
+        {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page {{packingPageCounter}}/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="packingPage">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>№ of Drums</th>
+                        <th>Gross weight, kg</th>
+                        <th>Tare, kg</th>
+                        <th>Net weight, kg</th>
+                        <th>Seal №</th>
+                        <th>Seal №</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each drums}}
+                        {{#eq @key "page2"}}
+                            <tr {{#each this}}>
+                                <td><strong>{{num}}</strong></td>
+                                <td>{{toFixed grossWeight 1}}</td>
+                                <td>{{toFixed tare 1}}</td>
+                                <td>{{toFixed netWeight 1}}</td>
+                                <td>{{seal1}}</td>
+                                <td>{{seal2}}</td>
+                            </tr {{/each}}>
+                        {{/eq}}
+                    {{/each}}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Total:</td>
+                        <td>{{toFixed drumsTotals.totalGrossWeight 1}}</td>
+                        <td>{{toFixed drumsTotals.totalTare 1}}</td>
+                        <td>{{toFixed drumsTotals.totalNetWeight 1}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>  
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page {{add packingPageCounter 1}}/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="packingPage">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="img-container">                
+                {{#each barrelsImage}}
+                    <img src="{{imageSrc}}" alt="barrels img holder">
+                {{/each}}
+            </div>
+        </div>  
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page {{add packingPageCounter 2}}/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    {{!-- Printing 1 image collage with barrels per page --}}
+    {{#each packingImgs}}
+        <div class="page" id="packingPage">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="img-container">
+                    <img src="{{imageSrc}}" alt="barrels img holder">
+                </div>
+            </div>  
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page {{sum ../packingPageCounter 2 imgCount}}/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+            {{!-- ============== --}}
+        </div>
+    {{/each}}
+{{/gteAndlte}}

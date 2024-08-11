@@ -45,9 +45,9 @@ router.post('/addGSACertificate', async (req, res) => {
 
         const query = `INSERT INTO gsa_certificate SET ?`;
 
-        let pdfPath = await generateCertificate(data);
+        await generateCertificate(data);
 
-        await generateInvoice(data.Sample_No, data.release_date);
+        // await generateInvoice(data.Sample_No, data.release_date);
 
 
         // let file_name = ""
@@ -88,14 +88,14 @@ router.post('/addGSACertificate', async (req, res) => {
         pool.query(query, certificate, async (err, gsaCertificate) => {
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
-                    return res.status(409).json({ message: 'Duplicate entry: a certificate with this sample number already exists.', pdfPath: pdfPath });
+                    return res.status(409).json({ message: 'Duplicate entry: a certificate with this sample number already exists.'});
                 }
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
             }
             
             
-            res.json({ gsaCertificates: gsaCertificate });
+            res.json({ gsaCertificates: gsaCertificate});
         });
         
     } catch (error) {
@@ -191,19 +191,5 @@ async function getFileCreatedDate(file_path){
     return pdf_files;
 }
 // ========================
-
-
-
-
-
-// === TESTING GSA SAMPLING CERTIFICATE ===
-router.get('/generateSamplingCertficate', async (req, res) => {
-    try {
-        generateSamplingCertificatePdf()
-    } catch (error) {
-        console.error(error);
-    }
-})
-// ========================================
 
 module.exports = router;

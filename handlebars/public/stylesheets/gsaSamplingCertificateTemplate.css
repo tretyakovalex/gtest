@@ -1,0 +1,520 @@
+.page {
+    width: 210mm; /* A4 width */
+    height: 297mm; /* A4 height */
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 20mm;
+    page-break-after: always;
+    position: relative;
+
+    font-family: Arial,sans-serif;
+}
+
+img.background {
+    position: absolute;
+    top: 170px;
+    left: 20px;
+    z-index: -1;
+    width: 200mm;
+}
+
+/* --- Title styling --- */
+.title-component {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+img {
+    margin: 0;
+    padding: 0;
+    width: 357px;
+}
+
+hr {
+    width: 100%;
+    border: 2px solid #529adf;
+    padding: 0;
+    margin: 0;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+/* --- END Title styling --- */
+
+/* --- Footer styling --- */
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+footer hr {
+    width: 100%;
+    border: 2px solid #529adf;
+    padding: 0;
+    margin: 0;
+}
+
+footer .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+footer .container .left {
+    font-size: 8px;
+    width: 30%;
+    margin: 10px;
+}
+
+footer .container .left p {
+    margin: 0;
+}
+
+footer .container .mid {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container h4 {
+    margin: 0;
+    font-size: 10px;
+}
+
+.container p {
+    margin: 0;
+    font-size: 8px;
+}
+
+.container .page_num p {
+    margin: 10px;
+    font-size: 12px;
+}
+
+.container .right {
+    width: 30%;
+}
+/* --- END Footer styling --- */
+
+/* === First page === */
+
+h2.sub-title{
+    text-align: center;
+    margin-top: 70px;
+    margin-bottom: 120px;
+    font-size: 26px;
+}
+
+.content {
+    z-index: 2;
+    text-align: right;   
+    font-size: 14px;
+    margin-right: -20px;
+}
+
+.content .data {
+    margin: -5px;
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.prepared-by {
+    margin-top: 150px;
+    font-size: 18px;
+}
+
+.title-component {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* ================== */
+
+/* === Second page === */
+#page_2 h2.sub-title{
+    text-align: center;
+    margin-top: 70px;
+    margin-bottom: 0;
+    font-size: 24px;
+}
+
+#page_2 .content {
+    text-align: left;
+}
+
+#page_2 .content h2 {
+    text-decoration: underline;
+}
+
+#page_2 .content p {
+    font-size: 20px;
+}
+
+#page_2 .weighting-results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+}
+
+#page_2 .weighting-results p {
+    padding: 0;
+    margin: 2px;
+}
+
+#page_2 .gen-info{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: auto;
+}
+
+#page_2 .gen-info p {
+    padding: 0;
+    margin: 2px;
+}
+
+#page_2 .weighting-results .right p {
+    font-weight: bold;
+}
+/* ================== */
+
+/* === Third page === */
+#page_3 h2.sub-title{
+    margin-top: 50px;
+    text-decoration: underline;
+    margin-bottom: 10px;
+    font-size: 24px;
+    text-align: left;
+}
+
+#page_3 .content {
+    text-align: left;
+}
+#page_3 .content h2 {
+    text-decoration: underline;
+}
+    
+#page_3 .content p {
+    margin-top: 2px;
+    font-size: 18px;
+}
+
+#page_3 .img-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    align-content: center;
+    padding: 10px;
+    margin-left: -50px;
+    gap: 5px;
+}
+
+#page_3 .img-container img {
+    width: 350px;
+    height: 200px;
+    border: 3px solid black;
+}
+
+.granulometryTable {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.granulometryTable p {
+    width: 120px;
+}
+
+.granulometryTable table {
+    border-collapse: collapse;
+}
+
+.granulometryTable table th, .granulometryTable table  td {
+    border: 1px solid black;
+    padding: 2px;
+}
+
+.granulometryTable table th {
+    width: 70px;
+}
+
+.granulometryTable table td {
+    text-align: center;
+}
+
+.granulometryTable table td:first-child {
+    text-align: left;
+}
+/* ================== */
+
+/* === Scaling (4th) page === */
+
+#page_4 h2.sub-title{
+    text-align: center;
+    margin-top: 100px;
+}
+
+#page_4 .content {
+    margin-top: 75px;
+}
+
+#page_4 .content h3 {
+    text-decoration: underline;
+}
+
+#page_4 .content .img-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    align-content: center;
+    padding: 20px;
+    gap: 5px;
+    margin-top: -30px;
+}
+
+#page_4 .content .img-container img {
+    width: 300px;
+    border: 3px solid black;
+}
+
+.scale-info h3 {
+    font-size: 18.72px;
+    text-align: left;
+}
+
+table.scale-info-table {
+    text-align: center;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+table.scale-info-table thead {
+    background-color: rgb(210, 227, 242);
+    border: 1px solid rgb(163, 194, 221);
+    border-bottom: 2px solid rgb(131, 182, 221);
+}
+
+table.scale-info-table th:first-child, .scale-info table td:first-child {
+    width: 200px;
+}
+
+table.scale-info-table th:last-child, .scale-info table td:last-child {
+    width: 250px;
+}
+
+table.scale-info-table th, .scale-info table td {
+    /* width: 250px; */
+    border: 1px solid rgb(163, 194, 221);
+    padding: 2px;
+    padding-left: 5px; 
+    padding-right: 5px;
+}
+
+.before-sampling {
+    margin-top: -20px;
+}
+
+.before-sampling h3 {
+    font-size: 18.72px;
+    text-align: left;
+}
+
+table.bags-table {
+    text-align: center;
+    border-collapse: collapse;
+}
+table.bags-table thead {
+    background-color: rgb(210, 227, 242);
+    border: 1px solid rgb(163, 194, 221);
+    border-bottom: 2px solid rgb(131, 182, 221);
+}
+table.bags-table th, td {
+    border: 1px solid rgb(163, 194, 221);
+    padding: 5px;
+}
+
+/* =================== */
+
+/* === Mixing (5th) page === */
+#mixingPage h2.sub-title{
+    text-align: center;
+    margin-top: 100px;
+    color: gray;
+}
+
+#mixingPage .content {
+    margin-top: 50px;
+    text-align: left;
+}
+#mixingPage .content h3 {
+    text-decoration: underline;
+}
+
+#mixingPage .content p {
+    font-size: 18px;
+    margin: 0;
+}
+
+#mixingPage .content .bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#mixingPage .content .samples-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 80px;
+    justify-content: left;
+    align-content: baseline;
+    margin-top: 20px;
+}
+
+#mixingPage .content .samples-container .samples {
+    margin-top: -30px;
+    padding: 0;
+    margin-left: 20px;
+}
+#mixingPage .content .samples-container .samples p {
+    font-size: 16px;
+    margin: 15px;
+}
+
+#mixingPage .content .samples-desc-img-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mixingPage .content .samples-desc-img-container img {
+    width: 300px;
+    border: 3px solid black;
+}
+
+#mixingPage .content .samples-img-container {
+    margin-top: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mixingPage .content .samples-img-container img {
+    width: 500px;
+    border: 3px solid black;
+}
+
+#mixingPage .content .img-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    align-content: center;
+    gap: 5px;
+    width: 300px;
+}
+
+#mixingPage .content .img-container img {
+    width: 300px;
+    border: 3px solid black;
+}
+
+#mixingPage .samples-container .samples ol li {
+    font-weight: bold;
+}
+/* ========================= */
+
+
+/* === Packing (6th) page === */
+#packingPage .content {
+    margin-top: 75px;
+    text-align: left;
+}
+
+#packingPage .content h2 {
+    text-decoration: underline;
+    font-size: 18px;
+}
+
+#packingPage .content .packing_description {
+    font-size: 18px;
+}
+
+#packingPage .img-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    align-content: center;
+    margin-top: 20px;
+}
+
+#packingPage .img-container img {
+    width: 600px;
+    height: 400px;
+    border: 3px solid black;
+}
+
+#packingPage table {
+    text-align: center;
+    border-collapse: collapse;
+}
+#packingPage table thead {
+    background-color: rgb(210, 227, 242);
+    border: 1px solid rgb(163, 194, 221);
+    border-bottom: 2px solid rgb(131, 182, 221);
+}
+#packingPage table th, td {
+    border: 1px solid rgb(163, 194, 221);
+    padding: 5px;
+    width: 100px;
+}
+#packingPage table tfoot {
+    font-weight: bold;
+}
+
+/* ========================== */
+
+/* === Conclusion Page === */
+#conclusionPage .content {
+    margin-top: 75px;
+    text-align: left;
+}
+
+#conclusionPage .content h2 {
+    text-decoration: underline;
+}
+
+#conclusionPage .content p {
+    font-size: 20px;
+}
+
+#conclusionPage .content .fillout {
+    margin: 50px;
+}
+
+#conclusionPage .content .fillout p {
+    padding: 30px;
+}
+
+#conclusionPage .content p.disclaimer {
+    margin-top: 400px;
+    font-size: 8px;
+}
+/* ======================= */

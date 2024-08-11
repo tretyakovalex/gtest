@@ -1,0 +1,2922 @@
+{{#lte lengthOfBagsArray 7}}
+<div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+         <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="scale-info">
+                <h3>Scale Infromation:</h3>
+    
+                <table class="scale-info-table">
+                    <thead>
+                        <tr>
+                            <th>Scale</th>
+                            <th>{{scale.name}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Serial №</strong></td>
+                            <td>{{scale.serialNum}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Max. Capacity</strong></td>
+                            <td>{{scale.maxCapacity}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Discrete</strong></td>
+                            <td>{{scale.discrete}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Calibration Date</strong></td>
+                            <td>{{scale.calibrationDate}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Calibration Organization</strong></td>
+                            <td>{{scale.calibrationOrg}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Manufacturer of scale</strong></td>
+                            <td>{{scale.manufacturer}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+    
+            <div class="img-container">
+                {{#each page4Images}}
+                    <img src="{{imageSrc}}" alt="sampling img holder">
+                {{/each}}
+            </div>
+    
+            <div class="before-sampling">
+                <h3>Inspection of the bags' gross weight before sampling:</h3>
+            
+                
+                    <table class="bags-table">
+                        <thead>
+                            <tr>
+                                <th>Bag №</th>
+                                <th>Gross weight, kg</th>
+                                <th>Tare (empty bags), kg</th>
+                                <th>Net weight, kg</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each bags}}
+                                    {{#eq @key "page1"}}
+                                        <tr {{#each this}}>
+                                            <td><strong>{{num}}</strong></td>
+                                            <td>{{toFixed grossWeight 1}}</td>
+                                            <td>{{toFixed tare 1}}</td>
+                                            <td>{{toFixed netWeight 1}}</td>
+                                        </tr {{/each}}>
+                                    {{/eq}}
+                            {{/each}}
+                        </tbody>
+                        <tfoot>
+                            {{!-- <tr {{#each bagsTotals}}> --}}
+                            <tr>
+                                <td><strong>Total:</strong></td>
+                                <td><strong>{{toFixed bagsTotals.totalGrossWeight 1}}</strong></td>
+                                <td><strong>{{toFixed bagsTotals.totalTare 1}}</strong></td>
+                                <td><strong>{{toFixed bagsTotals.totalNetWeight 1}}</strong></td>
+                            </tr>
+                            {{!-- </tr {{/each}}> --}}
+                        </tfoot>
+                    </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 4/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+{{/lte}}
+{{#gteAndlte lengthOfBagsArray 8 37}}
+    <div class="page" id="page_4">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="scale-info">
+                    <h3>Scale Infromation:</h3>
+        
+                    <table class="scale-info-table">
+                        <thead>
+                            <tr>
+                                <th>Scale</th>
+                                <th>{{scale.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Serial №</strong></td>
+                                <td>{{scale.serialNum}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Max. Capacity</strong></td>
+                                <td>{{scale.maxCapacity}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discrete</strong></td>
+                                <td>{{scale.discrete}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Date</strong></td>
+                                <td>{{scale.calibrationDate}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Organization</strong></td>
+                                <td>{{scale.calibrationOrg}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manufacturer of scale</strong></td>
+                                <td>{{scale.manufacturer}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        
+                <div class="img-container">
+                    {{#each page4Images}}
+                        <img src="{{imageSrc}}" alt="sampling img holder">
+                    {{/each}}
+                </div>
+        
+                <div class="before-sampling">
+                    <h3>Inspection of the bags' gross weight before sampling:</h3>
+                
+                    
+                        <table class="bags-table">
+                            <thead>
+                                <tr>
+                                    <th>Bag №</th>
+                                    <th>Gross weight, kg</th>
+                                    <th>Tare (empty bags), kg</th>
+                                    <th>Net weight, kg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each bags}}
+                                        {{#eq @key "page1"}}
+                                            <tr {{#each this}}>
+                                                <td><strong>{{num}}</strong></td>
+                                                <td>{{toFixed grossWeight 1}}</td>
+                                                <td>{{toFixed tare 1}}</td>
+                                                <td>{{toFixed netWeight 1}}</td>
+                                            </tr {{/each}}>
+                                        {{/eq}}
+                                {{/each}}
+                            </tbody>
+                            {{!-- <tfoot>
+                                <tr {{#each bagsTotals}}>
+                                    <td><strong>Total:</strong></td>
+                                    <td><strong>{{totalGrossWeight}}</strong></td>
+                                    <td><strong>{{totalTare}}</strong></td>
+                                    <td><strong>{{totalNetWeight}}</strong></td>
+                                </tr {{/each}}>
+                            </tfoot> --}}
+                        </table>
+                </div>
+            </div>
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page 4/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page2"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalGrossWeight 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalTare 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalNetWeight 1}}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 5/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+{{/gteAndlte}}
+
+{{#gteAndlte lengthOfBagsArray 38 67}}
+    <div class="page" id="page_4">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="scale-info">
+                    <h3>Scale Infromation:</h3>
+        
+                    <table class="scale-info-table">
+                        <thead>
+                            <tr>
+                                <th>Scale</th>
+                                <th>{{scale.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Serial №</strong></td>
+                                <td>{{scale.serialNum}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Max. Capacity</strong></td>
+                                <td>{{scale.maxCapacity}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discrete</strong></td>
+                                <td>{{scale.discrete}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Date</strong></td>
+                                <td>{{scale.calibrationDate}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Organization</strong></td>
+                                <td>{{scale.calibrationOrg}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manufacturer of scale</strong></td>
+                                <td>{{scale.manufacturer}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        
+                <div class="img-container">
+                    {{#each page4Images}}
+                        <img src="{{imageSrc}}" alt="sampling img holder">
+                    {{/each}}
+                </div>
+        
+                <div class="before-sampling">
+                    <h3>Inspection of the bags' gross weight before sampling:</h3>
+                
+                    
+                        <table class="bags-table">
+                            <thead>
+                                <tr>
+                                    <th>Bag №</th>
+                                    <th>Gross weight, kg</th>
+                                    <th>Tare (empty bags), kg</th>
+                                    <th>Net weight, kg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each bags}}
+                                        {{#eq @key "page1"}}
+                                            <tr {{#each this}}>
+                                                <td><strong>{{num}}</strong></td>
+                                                <td>{{toFixed grossWeight 1}}</td>
+                                                <td>{{toFixed tare 1}}</td>
+                                                <td>{{toFixed netWeight 1}}</td>
+                                            </tr {{/each}}>
+                                        {{/eq}}
+                                {{/each}}
+                            </tbody>
+                            {{!-- <tfoot>
+                                <tr {{#each bagsTotals}}>
+                                    <td><strong>Total:</strong></td>
+                                    <td><strong>{{totalGrossWeight}}</strong></td>
+                                    <td><strong>{{totalTare}}</strong></td>
+                                    <td><strong>{{totalNetWeight}}</strong></td>
+                                </tr {{/each}}>
+                            </tfoot> --}}
+                        </table>
+                </div>
+            </div>
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page 4/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page2"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 5/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page3"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalGrossWeight 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalTare 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalNetWeight 1}}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 6/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+{{/gteAndlte}}
+
+{{#gteAndlte lengthOfBagsArray 68 97}}
+    <div class="page" id="page_4">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="scale-info">
+                    <h3>Scale Infromation:</h3>
+        
+                    <table class="scale-info-table">
+                        <thead>
+                            <tr>
+                                <th>Scale</th>
+                                <th>{{scale.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Serial №</strong></td>
+                                <td>{{scale.serialNum}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Max. Capacity</strong></td>
+                                <td>{{scale.maxCapacity}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discrete</strong></td>
+                                <td>{{scale.discrete}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Date</strong></td>
+                                <td>{{scale.calibrationDate}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Organization</strong></td>
+                                <td>{{scale.calibrationOrg}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manufacturer of scale</strong></td>
+                                <td>{{scale.manufacturer}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        
+                <div class="img-container">
+                    {{#each page4Images}}
+                        <img src="{{imageSrc}}" alt="sampling img holder">
+                    {{/each}}
+                </div>
+        
+                <div class="before-sampling">
+                    <h3>Inspection of the bags' gross weight before sampling:</h3>
+                
+                    
+                        <table class="bags-table">
+                            <thead>
+                                <tr>
+                                    <th>Bag №</th>
+                                    <th>Gross weight, kg</th>
+                                    <th>Tare (empty bags), kg</th>
+                                    <th>Net weight, kg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each bags}}
+                                        {{#eq @key "page1"}}
+                                            <tr {{#each this}}>
+                                                <td><strong>{{num}}</strong></td>
+                                                <td>{{toFixed grossWeight 1}}</td>
+                                                <td>{{toFixed tare 1}}</td>
+                                                <td>{{toFixed netWeight 1}}</td>
+                                            </tr {{/each}}>
+                                        {{/eq}}
+                                {{/each}}
+                            </tbody>
+                            {{!-- <tfoot>
+                                <tr {{#each bagsTotals}}>
+                                    <td><strong>Total:</strong></td>
+                                    <td><strong>{{totalGrossWeight}}</strong></td>
+                                    <td><strong>{{totalTare}}</strong></td>
+                                    <td><strong>{{totalNetWeight}}</strong></td>
+                                </tr {{/each}}>
+                            </tfoot> --}}
+                        </table>
+                </div>
+            </div>
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page 4/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page2"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 5/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page3"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 6/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page4"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalGrossWeight 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalTare 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalNetWeight 1}}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 7/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+{{/gteAndlte}}
+
+{{#gteAndlte lengthOfBagsArray 98 127}}
+    <div class="page" id="page_4">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="scale-info">
+                    <h3>Scale Infromation:</h3>
+        
+                    <table class="scale-info-table">
+                        <thead>
+                            <tr>
+                                <th>Scale</th>
+                                <th>{{scale.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Serial №</strong></td>
+                                <td>{{scale.serialNum}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Max. Capacity</strong></td>
+                                <td>{{scale.maxCapacity}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discrete</strong></td>
+                                <td>{{scale.discrete}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Date</strong></td>
+                                <td>{{scale.calibrationDate}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Organization</strong></td>
+                                <td>{{scale.calibrationOrg}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manufacturer of scale</strong></td>
+                                <td>{{scale.manufacturer}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        
+                <div class="img-container">
+                    {{#each page4Images}}
+                        <img src="{{imageSrc}}" alt="sampling img holder">
+                    {{/each}}
+                </div>
+        
+                <div class="before-sampling">
+                    <h3>Inspection of the bags' gross weight before sampling:</h3>
+                
+                    
+                        <table class="bags-table">
+                            <thead>
+                                <tr>
+                                    <th>Bag №</th>
+                                    <th>Gross weight, kg</th>
+                                    <th>Tare (empty bags), kg</th>
+                                    <th>Net weight, kg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each bags}}
+                                        {{#eq @key "page1"}}
+                                            <tr {{#each this}}>
+                                                <td><strong>{{num}}</strong></td>
+                                                <td>{{toFixed grossWeight 1}}</td>
+                                                <td>{{toFixed tare 1}}</td>
+                                                <td>{{toFixed netWeight 1}}</td>
+                                            </tr {{/each}}>
+                                        {{/eq}}
+                                {{/each}}
+                            </tbody>
+                            {{!-- <tfoot>
+                                <tr {{#each bagsTotals}}>
+                                    <td><strong>Total:</strong></td>
+                                    <td><strong>{{totalGrossWeight}}</strong></td>
+                                    <td><strong>{{totalTare}}</strong></td>
+                                    <td><strong>{{totalNetWeight}}</strong></td>
+                                </tr {{/each}}>
+                            </tfoot> --}}
+                        </table>
+                </div>
+            </div>
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page 4/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page2"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 5/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page3"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 6/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page4"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 7/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page5"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalGrossWeight 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalTare 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalNetWeight 1}}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 8/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+{{/gteAndlte}}
+
+{{#gteAndlte lengthOfBagsArray 128 157}}
+    <div class="page" id="page_4">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="scale-info">
+                    <h3>Scale Infromation:</h3>
+        
+                    <table class="scale-info-table">
+                        <thead>
+                            <tr>
+                                <th>Scale</th>
+                                <th>{{scale.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Serial №</strong></td>
+                                <td>{{scale.serialNum}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Max. Capacity</strong></td>
+                                <td>{{scale.maxCapacity}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discrete</strong></td>
+                                <td>{{scale.discrete}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Date</strong></td>
+                                <td>{{scale.calibrationDate}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Organization</strong></td>
+                                <td>{{scale.calibrationOrg}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manufacturer of scale</strong></td>
+                                <td>{{scale.manufacturer}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        
+                <div class="img-container">
+                    {{#each page4Images}}
+                        <img src="{{imageSrc}}" alt="sampling img holder">
+                    {{/each}}
+                </div>
+        
+                <div class="before-sampling">
+                    <h3>Inspection of the bags' gross weight before sampling:</h3>
+                
+                    
+                        <table class="bags-table">
+                            <thead>
+                                <tr>
+                                    <th>Bag №</th>
+                                    <th>Gross weight, kg</th>
+                                    <th>Tare (empty bags), kg</th>
+                                    <th>Net weight, kg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each bags}}
+                                        {{#eq @key "page1"}}
+                                            <tr {{#each this}}>
+                                                <td><strong>{{num}}</strong></td>
+                                                <td>{{toFixed grossWeight 1}}</td>
+                                                <td>{{toFixed tare 1}}</td>
+                                                <td>{{toFixed netWeight 1}}</td>
+                                            </tr {{/each}}>
+                                        {{/eq}}
+                                {{/each}}
+                            </tbody>
+                            {{!-- <tfoot>
+                                <tr {{#each bagsTotals}}>
+                                    <td><strong>Total:</strong></td>
+                                    <td><strong>{{totalGrossWeight}}</strong></td>
+                                    <td><strong>{{totalTare}}</strong></td>
+                                    <td><strong>{{totalNetWeight}}</strong></td>
+                                </tr {{/each}}>
+                            </tfoot> --}}
+                        </table>
+                </div>
+            </div>
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page 4/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page2"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 5/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page3"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 6/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page4"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 7/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page5"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 8/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page6"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalGrossWeight 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalTare 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalNetWeight 1}}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 9/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+{{/gteAndlte}}
+
+{{#gteAndlte lengthOfBagsArray 158 187}}
+    <div class="page" id="page_4">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="scale-info">
+                    <h3>Scale Infromation:</h3>
+        
+                    <table class="scale-info-table">
+                        <thead>
+                            <tr>
+                                <th>Scale</th>
+                                <th>{{scale.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Serial №</strong></td>
+                                <td>{{scale.serialNum}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Max. Capacity</strong></td>
+                                <td>{{scale.maxCapacity}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discrete</strong></td>
+                                <td>{{scale.discrete}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Date</strong></td>
+                                <td>{{scale.calibrationDate}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Organization</strong></td>
+                                <td>{{scale.calibrationOrg}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manufacturer of scale</strong></td>
+                                <td>{{scale.manufacturer}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        
+                <div class="img-container">
+                    {{#each page4Images}}
+                        <img src="{{imageSrc}}" alt="sampling img holder">
+                    {{/each}}
+                </div>
+        
+                <div class="before-sampling">
+                    <h3>Inspection of the bags' gross weight before sampling:</h3>
+                
+                    
+                        <table class="bags-table">
+                            <thead>
+                                <tr>
+                                    <th>Bag №</th>
+                                    <th>Gross weight, kg</th>
+                                    <th>Tare (empty bags), kg</th>
+                                    <th>Net weight, kg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each bags}}
+                                        {{#eq @key "page1"}}
+                                            <tr {{#each this}}>
+                                                <td><strong>{{num}}</strong></td>
+                                                <td>{{toFixed grossWeight 1}}</td>
+                                                <td>{{toFixed tare 1}}</td>
+                                                <td>{{toFixed netWeight 1}}</td>
+                                            </tr {{/each}}>
+                                        {{/eq}}
+                                {{/each}}
+                            </tbody>
+                            {{!-- <tfoot>
+                                <tr {{#each bagsTotals}}>
+                                    <td><strong>Total:</strong></td>
+                                    <td><strong>{{totalGrossWeight}}</strong></td>
+                                    <td><strong>{{totalTare}}</strong></td>
+                                    <td><strong>{{totalNetWeight}}</strong></td>
+                                </tr {{/each}}>
+                            </tfoot> --}}
+                        </table>
+                </div>
+            </div>
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page 4/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page2"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 5/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page3"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 6/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page4"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 7/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page5"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 8/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page6"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 9/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page7"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalGrossWeight 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalTare 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalNetWeight 1}}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 10/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+{{/gteAndlte}}
+
+{{#gteAndlte lengthOfBagsArray 188 217}}
+    <div class="page" id="page_4">
+            <img src="./public/assets/background.jpg" alt="" class="background">
+            
+            {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+            {{!-- ============= --}}
+
+            <div class="content">
+                <div class="scale-info">
+                    <h3>Scale Infromation:</h3>
+        
+                    <table class="scale-info-table">
+                        <thead>
+                            <tr>
+                                <th>Scale</th>
+                                <th>{{scale.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Serial №</strong></td>
+                                <td>{{scale.serialNum}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Max. Capacity</strong></td>
+                                <td>{{scale.maxCapacity}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discrete</strong></td>
+                                <td>{{scale.discrete}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Date</strong></td>
+                                <td>{{scale.calibrationDate}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Calibration Organization</strong></td>
+                                <td>{{scale.calibrationOrg}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manufacturer of scale</strong></td>
+                                <td>{{scale.manufacturer}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        
+                <div class="img-container">
+                    {{#each page4Images}}
+                        <img src="{{imageSrc}}" alt="sampling img holder">
+                    {{/each}}
+                </div>
+        
+                <div class="before-sampling">
+                    <h3>Inspection of the bags' gross weight before sampling:</h3>
+                
+                    
+                        <table class="bags-table">
+                            <thead>
+                                <tr>
+                                    <th>Bag №</th>
+                                    <th>Gross weight, kg</th>
+                                    <th>Tare (empty bags), kg</th>
+                                    <th>Net weight, kg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each bags}}
+                                        {{#eq @key "page1"}}
+                                            <tr {{#each this}}>
+                                                <td><strong>{{num}}</strong></td>
+                                                <td>{{toFixed grossWeight 1}}</td>
+                                                <td>{{toFixed tare 1}}</td>
+                                                <td>{{toFixed netWeight 1}}</td>
+                                            </tr {{/each}}>
+                                        {{/eq}}
+                                {{/each}}
+                            </tbody>
+                            {{!-- <tfoot>
+                                <tr {{#each bagsTotals}}>
+                                    <td><strong>Total:</strong></td>
+                                    <td><strong>{{totalGrossWeight}}</strong></td>
+                                    <td><strong>{{totalTare}}</strong></td>
+                                    <td><strong>{{totalNetWeight}}</strong></td>
+                                </tr {{/each}}>
+                            </tfoot> --}}
+                        </table>
+                </div>
+            </div>
+
+            {{!-- === Footer === --}}
+            <footer>
+                <hr>
+                <div class="container">
+                    <div class="left">
+                        <p>Job Reference № {{jobReference}}</p>
+                        <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                    </div>
+                    <div class="mid">
+                        <div class="page_num">
+                            <p>Page 4/{{totalPageCount}}</p>
+                        </div>
+                        <h4>Global Sampling & Analysis Ltd</h4>
+                        <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                        <p>Tel: +250788300142</p>
+                        <p>E-mail: enquiries@globalsagroup.com</p>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page2"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 5/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page3"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 6/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page4"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 7/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page5"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 8/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page6"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 9/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page7"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    {{!-- <tfoot>
+                        <tr {{#each bagsTotals}}>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalGrossWeight}}</strong></td>
+                            <td><strong>{{totalTare}}</strong></td>
+                            <td><strong>{{totalNetWeight}}</strong></td>
+                        </tr {{/each}}>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 10/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_4">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <div class="before-sampling">           
+                <table class="bags-table">
+                    <thead>
+                        <tr>
+                            <th>Bag №</th>
+                            <th>Gross weight, kg</th>
+                            <th>Tare (empty bags), kg</th>
+                            <th>Net weight, kg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each bags}}
+                                {{#eq @key "page8"}}
+                                    <tr {{#each this}}>
+                                        <td><strong>{{num}}</strong></td>
+                                        <td>{{toFixed grossWeight 1}}</td>
+                                        <td>{{toFixed tare 1}}</td>
+                                        <td>{{toFixed netWeight 1}}</td>
+                                    </tr {{/each}}>
+                                {{/eq}}
+                        {{/each}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalGrossWeight 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalTare 1}}</strong></td>
+                            <td><strong>{{toFixed bagsTotals.totalNetWeight 1}}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 11/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+{{/gteAndlte}}

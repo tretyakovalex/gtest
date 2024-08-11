@@ -16,6 +16,8 @@ app.use(cors());
 // === Routes: ===
 // ===============
 
+app.use(require('./routes/gsa-sampling/gsaSamplingCertificate-routes.js'));
+
 app.use(require('./routes/accounting/invoice-routes'));
 
 app.use(require('./routes/registration-routes'));

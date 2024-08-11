@@ -6,6 +6,3 @@ package-lock.json
 routes.rest
 configs/mysql.js
 public/assets
-utils
-routes/gsaCertificate-routes.js
-handlebars

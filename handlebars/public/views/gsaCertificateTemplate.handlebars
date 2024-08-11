@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./public/stylesheets/gsaCertificateTemplate.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="page">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        <div class="title">
+            {{#if certType}}
+            <div class="logo-container" *ngIf="certType !== ''">
+                <img src="./public/assets/logo.png" alt="logo">
+                <!-- <img src="./public/assets/logo.svg" alt="logo"> -->
+                <h3>{{certType}}</h3>
+            </div>
+            {{/if}}
+            {{#unless certType}}
+                <img src="./public/assets/logo.png" alt="logo" *ngIf="certType === ''">
+            {{/unless}}
+            <div class="title-content">
+                <h3 style="text-decoration: underline">Certificate of Analysis</h3>
+                <h5>Certificate No: GSA-FR-CE-{{paddedNum}}{{certNumVersion}}</h5>
+            </div>
+        </div>
+        <div class="content">
+            <div class="data">
+                <div class="left-top" {{#with customer}}>
+                    <p style="text-decoration: underline"><strong>Customer Details:</strong></p>
+                    <div class="item">
+                        <p style="text-align: right; width: 120px;">Name or Company:</p>
+                        {{#if company}}
+                            <p style="color: rgb(69, 69, 69); width: 250px;" *ngIf="company"><strong>{{company}}</strong></p>
+                        {{/if}}
+                        {{#if name}}
+                                <p style="color: rgb(69, 69, 69); width: 250px;" *ngIf="name && !company"><strong>{{name}}</strong></p>
+                        {{/if}}
+                    </div>
+                    <div class="item">
+                        <p style="text-align: right; width: 120px;">Email:</p>
+                        <p style="color: rgb(69, 69, 69); width: 250px;"><strong>{{email}}</strong></p>
+                    </div>
+                    <div class="item">
+                        <p style="text-align: right; width: 120px;">Address:</p>
+                        <p style="color: rgb(69, 69, 69);"><strong>{{address}}</strong></p>
+                    </div>
+                </div {{/with}}>
+                
+                <div class="left-mid1" {{#each registration}}>
+                    <div class="item">
+                        <h4>GSA Reference Number:</h4>
+                        <p>{{gsa_sample_id}}</p>
+                    </div>
+                    <div class="item">
+                        <h4><strong>Client reference name:</strong></h4>
+                        <p>{{Customer_sample_name}}</p>
+                    </div>
+                    {{#if itsci_number}}
+                        <div class="item">
+                            <h4 *ngIf="itsci_number"><strong>iTSCI shipment №:</strong></h4>
+                            <p>{{itsci_number}}</p>    
+                        </div>              
+                    {{/if}}  
+                </div {{/each}}>
+                <!-- <div class="left-mid2">
+                    <h4>Sample Conditions:</h4>
+                    <p>Dry Sample</p>
+                </div> -->
+                <div class="left-bottom1" *ngFor="let data of method" {{#with method}}>
+                    <h4>Sample Pre-treatment:</h4>
+                    <p>{{Sample_Preparation}}</p>
+                </div {{/with}}>
+                <div class="left-bottom2">
+                    <h4>Nature of Sample:</h4>
+                    <p *ngIf="sampledGSA">Sampled by GSA LTD inspector</p>
+                    <p *ngIf="!sampledGSA">As received</p>
+                </div>
+                <div class="right-top">
+                    <p><strong>Release date:</strong></p>
+                    <p>{{releaseDate}}</p>
+                </div>
+                <div class="right-mid-top" *ngFor="let reg of registration" {{#each registration}}>
+                    <h4>Material Description:</h4>
+                    <p>{{Type}}</p>
+                </div {{/each}}>
+                <div class="right-mid">
+                    <div class="item">
+                        <p><strong>Date of Receiving:</strong></p>
+                        <p>{{date}}</p>
+                    </div>
+                    <div class="item">
+                        <p><strong>Date of lab performance:</strong></p>
+                        <p>{{date_of_lab}}</p>
+                    </div>
+                    <div class="item" style="padding-bottom: 2px;" *ngIf="Sampling_date !== 'Invalid date'">
+                        <p><strong>Sampling Date:</strong></p>
+                        <p>{{Sampling_date}}</p>
+                    </div>
+                    <div class="item" *ngIf="!Sampling_date">
+                    </div>
+                    <div class="sampling-condition">
+                        <h4>Sample Conditions:</h4>
+                        <p>Dry Sample</p>    
+                    </div>
+                </div>
+                <div class="right-bottom">
+                    <h4>Method of Assay:</h4>
+                    <ng-container *ngFor="let data of method" {{#with method}}>
+                        <p>{{Methods}}</p>
+                    </ng-container {{/with}}>
+                </div>
+            </div>
+
+            <div class="resultOfAssay">
+                <h3>RESULT OF ASSAY:</h3>
+                <div class="result-data">
+                    {{#each results}}
+                        <div class="item">
+                            <div class="name"><strong>{{name}}</strong></div>
+                            <div class="quantity" style="text-align: left;"><strong>{{value}}</strong></div>
+                        </div>
+                    {{/each}}
+                    {{!-- {{#modifyResults results RA_present RA_In_Kg}}
+                        {{name}} {{value}}
+                    {{/modifyResults}} --}}
+                    {{!-- {{#if RA_present}}
+                        Printing RA is present
+                        {{#each results}}
+                            {{name}}, {{value}}
+                        {{/each}}
+                    {{/if}} --}}
+
+                    {{!-- {{#each results}}
+                        {{#if RA_present}}
+                            if {{../name}}, {{../value}}
+                        {{/if}}
+                        {{#unless RA_present}}
+                            {{log RA_present}}
+                            {{log "logging an error" level="error"}}
+                            unless {{../name}}, {{../value}}
+                        {{/unless}}
+                    {{/each}} --}}
+                    {{!-- {{#each results}}
+                        <div class="item">
+                            <div class="name"><strong>{{name}}</strong></div>
+                            {{#unless RA_present}}
+                                <div class="quantity" style="text-align: left;"><strong>{{value}} %</strong></div>
+                            {{/unless}}
+
+                            {{#if RA_present}}
+                                RA_present
+                            {{/if}}
+
+                            {{#and RA_present RA_In_Kg}}
+                                {{RA_present}} and {{RA_In_Kg}}
+                                <div class="quantity" style="text-align: left;"><strong>{{value}} Bq/Kg</strong></div>
+                            {{/and}}
+
+                            {{#andNot RA_present RA_In_Kg}}
+                                <div class="quantity" style="text-align: left;"><strong>{{value}} Bq/g</strong></div>
+                            {{/andNot}}
+
+                            {{#ifCond RA_present '&&' RA_In_Kg}}
+                                    <div class="quantity" style="text-align: left;"><strong>{{value}} Bq/Kg</strong></div>
+                            {{/ifCond}}
+
+                            {{#ifCond RA_present '&&!' RA_In_Kg}}
+                                    <div class="quantity" style="text-align: left;"><strong>{{value}} Bq/g</strong></div>
+                            {{/ifCond}}
+                                {{else if RA_In_Kg}}
+                                    <div class="quantity" style="text-align: left;"><strong>{{value}} Bq/Kg</strong></div>
+                                {{/if}}
+                                {{#unless RA_In_Kg}}
+                                    <div class="quantity" style="text-align: left;"><strong>{{value}} Bq/g</strong></div>
+                                {{/unless}}
+                        </div>
+                    {{/each}} --}}
+                </div>
+
+                <div class="weight" *ngFor="let reg of registration" {{#each registration}}>
+                    {{#if Lot_weight}}
+                        <div class="div" *ngIf="reg.Lot_weight" >
+                            <p><strong>Net Weight: {{Lot_weight}} kg/wet</strong></p>
+                        </div>
+                    {{/if}}
+                </div {{/each}}>
+            </div>
+            
+            {{#if addSignatures}}
+            <div class="info" *ngIf="addSignatures">
+                <div class="names">
+                    <p><strong>Checked by: Laboratory Supervisor</strong></p>
+                    <p><strong>Approved by: Chief Chemist</strong></p>
+                    <p><strong>For Managing Director</strong></p>
+                    <p style="font-size: 8px; margin-top: 20px;">*Any requests for repeat Analysis will be charged. <br> If the sample is not collected by the owner (or representative) within 30 calendar days it will be discarded.</p>
+                </div>
+                <div class="signatures">
+                    <img class="signature" src="./public/assets/signatures.png">
+                </div>
+                <div class="stamp">
+                    <div class="stamp-container">
+                        <img class="stamp-img" src="./public/assets/stamp.png">
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+            {{#unless addSignatures}}
+            <div class="info" *ngIf="!addSignatures">
+                <div class="names">
+                    <p><strong>Checked by: Laboratory Supervisor</strong></p>
+                    <p><strong>Approved by: Chief Chemist</strong></p>
+                    <p><strong>For Managing Director</strong></p>
+                    <p style="font-size: 8px; margin-top: 5px; width: 450px;">*Any requests for repeat Analysis will be charged. <br> If the sample is not collected by the owner (or representative) within 30 calendar days it will become property of GSA.</p>
+                </div>
+            </div>
+            {{/unless}}
+        </div>
+        
+        <div class="container">
+            <div class="left">
+                <p><strong>Certificate No: GSA-FR-CE-{{paddedNum}}{{certNumVersion}}</strong></p>
+            </div>
+            <div class="mid">
+                <div class="page_num">
+                    <h4>Page 1 of 1</h4>
+                </div>
+                <h4>Global Sampling & Analysis Ltd</h4>
+                <h4>Special Economic Zone, Plot № B2, PO Box: 4149 Kigali, Rwanda</h4>
+                <h4>Tel: +250788300142</h4>
+            </div>
+            <div class="right"></div>
+        </div>
+    </div>
+</body>
+</html>

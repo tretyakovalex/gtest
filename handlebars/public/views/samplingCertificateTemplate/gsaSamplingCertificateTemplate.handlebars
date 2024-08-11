@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./public/stylesheets/gsaSamplingCertificateTemplate.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="page">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+
+        {{!-- === Title === --}}
+        <div class="title-component">
+            <div class="title">
+                {{!-- <img src="./public/assets/logo.png" alt="logo"> --}}
+                {{!-- <img src="../../../../public/assets/images/" alt="logo"> --}}
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <h2 class="sub-title">WEIGHING & SAMPLING REPORT</h2>
+        <div class="content">
+            <p><strong>Prepared for:</strong></p>
+            <p class="data">{{summary.preparedFor}}</p>
+            <p><strong>Job Reference:</strong></p>
+            <p class="data">{{summary.jobReference}}</p>
+            <p><strong>Client Reference:</strong></p>
+            <p class="data">{{summary.clientReference}}</p>
+            <p><strong>iTSCi Shipment Number:</strong></p>
+            <p class="data">{{summary.itsciShipmentNum}}</p>
+            <p><strong>Location:</strong></p>
+            <p class="data">{{summary.location}}</p>
+            <p><strong>Date of Issue:</strong></p>
+            <p class="data">{{summary.dateOfIssue}}</p>
+            <div class="prepared-by">
+                <p>Prepared by <i>{{summary.preparedBy}}</i></p>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 1/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+    </div>
+
+    <div class="page" id="page_2">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+         <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <h2 class="sub-title">WEIGHING & SAMPLING REPORT</h2>
+        <div class="content">
+            <p>
+                This inspection report certifies that Global Sampling & Analysis Ltd as 
+                the inspector supervised sampling, packaging and weighting of the material described to us as 
+                {{genInfo.material}} by the client.
+            </p>
+
+            <h2>GENERAL INFORMATION:</h2>
+            <div class="gen-info">
+                <div class="left">
+                    <p>Material</p>
+                    <p>Packing</p>
+                    <p>Quantity</p>
+                </div>
+                <div class="right">
+                    <p>Described as {{genInfo.material}}</p>
+                    <p>{{genInfo.packing}}</p>
+                    <p>Net weight {{genInfo.quantity}} kg</p>
+                </div>
+            </div>
+            <p>The inspector supervised sampling & packing & weighing into {{numDrums}} {{drumDesc}}.</p>
+
+            <h2>WEIGHING RESULTS:</h2>
+            <div class="weighting-results">
+                <div class="left">
+                    <p>Cleint's lot ref. №:</p>
+                    <p>iTSCi shipment №:</p>
+                    <p>Gross weight before sampling:</p>
+                    <p>Net weight before sampling:</p>
+                    <p>Dust:</p>
+                    <p>Samples:</p>
+                    <p>Gross weight after sampling:</p>
+                    <p>Tare:</p>
+                    <p>Net weight after sampling (packed):</p>
+                </div>
+                <div class="right">
+                    <p>{{clientRefNum}}</p>
+                    <p>{{itsciShipmentNum}}</p>
+                    <p>{{toFixed weighingRes.grossWeightBeforeSampling 1}} kg</p>
+                    <p>{{toFixed weighingRes.netWeightBeforeSampling 1}} kg</p>
+                    <p>{{toFixed weighingRes.dust 1}} kg</p>
+                    <p>{{toFixed weighingRes.samples 1}} kg</p>
+                    <p>{{toFixed weighingRes.grossWeightAfterSampling 1}} kg</p>
+                    <p>{{toFixed weighingRes.tare 1}} kg</p>
+                    <p>{{toFixed weighingRes.netWeightAfterSampling 1}} kg</p>
+                </div>
+            </div>
+        </div>
+
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 2/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+
+    </div>
+
+    <div class="page" id="page_3">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+         <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            <h2 class="sub-title">SAMPLING:</h2>
+            <p>{{samplingDescriptionParagraph}}</p>
+            {{#if granulometry}}
+                <div class="granulometryTable">
+                    <p>Granulometry Results: </p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>+ 5 mm</th>
+                                <th>+ 3 mm</th>
+                                <th>+ 2 mm</th>
+                                <th>+ 1 mm</th>
+                                <th>- 1 mm</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr {{#each granulometryTable}}>
+                                <td>{{row1}}</td>
+                                <td>{{row2}}</td>
+                                <td>{{row3}}</td>
+                                <td>{{row4}}</td>
+                                <td>{{row5}}</td>
+                                <td>{{row6}}</td>
+                                <td><strong>{{row7}}</strong></td>
+                            </tr {{/each}}>
+                        </tbody>
+                    </table>
+                </div>
+            {{/if}}
+            <div class="img-container">
+                {{#each page3Images}}
+                    <img src="{{imageSrc}}" alt="sampling img holder">
+                {{/each}}
+            </div>
+        </div>
+        
+        {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page 3/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+        {{!-- ============== --}}
+
+    </div>
+
+    {{> scale_and_bags_pages}}
+
+    <div class="page" id="mixingPage">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        
+        {{!-- === Title === --}}
+            <div class="title-component">
+                <div class="title">
+                    <img src="./public/assets/logo.png" alt="logo">
+                    <hr>
+                </div>
+            </div>
+        {{!-- ============= --}}
+
+        <div class="content">
+            
+            <p>Mixing was performed four times by coning method.</p>
+            <div class="img-container">
+                {{#each mixingImageSet1}}
+                    <img src="{{imageSrc}}" alt="sampling img holder">
+                {{/each}}
+            </div>
+
+            <p>
+                Mixed material was reduced down by coning and quartering, 
+                discarding opposite sections to be put into drums for weighing. 
+                The remaining sections of material were mixed and reduced again with the same method.
+                The process was repeated until obtaining the bulk sample of ~200kg.
+            </p>
+
+            <div class="img-container">
+                {{#each mixingImageSet2}}
+                    <img src="{{imageSrc}}" alt="sampling img holder">
+                {{/each}}
+            </div>
+        </div>
+
+    {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page {{mixingPageCounter}}/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+    {{!-- ============== --}}
+
+</div>
+<div class="page" id="mixingPage">
+    <img src="./public/assets/background.jpg" alt="" class="background">
+    
+    {{!-- === Title === --}}
+         <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+    {{!-- ============= --}}
+
+    <div class="content">
+        
+        <p>The bulk sample was blended 3 times by coning, then flattened by shovel with one quarter of about 50kg taken for further reduction.</p>
+
+        <div class="samples-desc-img-container">
+            {{#each bulkSampleImage}}
+                <img src="{{imageSrc}}" alt="bulk sample img holder">
+            {{/each}}
+        </div>
+
+        <p>
+            About 12.5 kg of sample was split by Johnson’s riffle Splitter 10mm to produce {{numSamples}} duplicate samples of 1 kg each.
+        </p>
+
+        <div class="samples-desc-img-container">
+            {{#each rifflerImage}}
+                <img src="{{imageSrc}}" alt="riffler img holder">
+            {{/each}}
+        </div>
+
+        <p>Each bag of sample was sealed as follows:</p>
+        <div class="samples-container">
+            <div class="samples">
+                <ol>
+                    {{#each samples}}
+                        <li><strong>{{tagNum}} for {{client}}</strong></li>
+                    {{/each}}
+                </ol>
+            </div>
+        </div>
+
+        <div class="samples-img-container">
+            {{#each samplesBagsImage}}
+                <img src="{{imageSrc}}" alt="samplesBags img holder" class="samples">
+            {{/each}}
+        </div>
+        
+    </div>
+    
+    {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page {{add mixingPageCounter 1}}/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+    {{!-- ============== --}}
+
+</div>
+
+{{> packing_and_weighing}}
+
+<div class="page" id="conclusionPage">
+    <img src="./public/assets/background.jpg" alt="" class="background">
+    
+    {{!-- === Title === --}}
+         <div class="title-component">
+            <div class="title">
+                <img src="./public/assets/logo.png" alt="logo">
+                <hr>
+            </div>
+        </div>
+    {{!-- ============= --}}
+
+    <div class="content">
+
+        <h2>Conclusion:</h2>
+
+        <p {{#if conclusionDrumDesc}}>
+            Inspector {{summary.preparedBy}} was present for supervising sampling, 
+            packing & weighing of <strong>{{toFixed drumsTotals.totalNetWeight 1}} kg</strong> of {{material}} concentrate into <strong>{{lengthOfDrumsArray}}</strong> {{conclusionDrumDesc}}.
+        </p {{/if}}>
+
+        <p {{#unless conclusionDrumDesc}}>
+            Inspector {{summary.preparedBy}} was present for supervising sampling, 
+            packing & weighing of <strong>{{toFixed drumsTotals.totalNetWeight 2}} kg</strong> of {{material}} concentrate into <strong>{{lengthOfDrumsArray}}</strong> second hand drums after which the lids were welded and sealed*.
+        </p {{/unless}}>
+
+        <p>Inspection is done according to GSA terms and conditions.</p>
+
+        <div class="fillout">
+            <p>Inspector: __________________</p>
+            <p>Checked by Lab Supervisor: __________________</p>
+        </div>
+        
+        <p class="disclaimer">
+            *Seals are not security devices and therefore intact seals cannot be solely relied upon as evidence that the material has not been tampered with.  Seals may deter casual attempts of tampering but will not prevent determined efforts.
+        </p>
+    </div>
+
+    {{!-- === Footer === --}}
+        <footer>
+            <hr>
+            <div class="container">
+                <div class="left">
+                    <p>Job Reference № {{jobReference}}</p>
+                    <p>Date of issue {{dateOfIssue}} \ Sampling date {{samplingDate}}</p>
+                </div>
+                <div class="mid">
+                    <div class="page_num">
+                        <p>Page {{totalPageCount}}/{{totalPageCount}}</p>
+                    </div>
+                    <h4>Global Sampling & Analysis Ltd</h4>
+                    <p>Special Economic Zone, Plot No B2, P.B 3251 Kigali, Rwanda</p>
+                    <p>Tel: +250788300142</p>
+                    <p>E-mail: enquiries@globalsagroup.com</p>
+                </div>
+                <div class="right"></div>
+            </div>
+        </footer>
+    {{!-- ============== --}}
+
+</div>
+
+</body>
+</html>

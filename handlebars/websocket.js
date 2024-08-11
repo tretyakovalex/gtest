@@ -61,6 +61,7 @@ const WebSocket = require('ws');
 // Create a separate WebSocket instance for each component
 const invoiceComponentWs = new WebSocket.Server({ port: 4300 });
 const certificateComponentWs = new WebSocket.Server({ port: 4301 });
+const samplingCertificateComponentWs = new WebSocket.Server({ port: 4302 });
 
 // Create arrays to store the clients for each component
 let invoiceComponentClients = [];
@@ -68,11 +69,11 @@ let certificateComponentClients = [];
 
 // Handle connections Invoices
 invoiceComponentWs.on('connection', (ws) => {
-    console.log('File Component 1 client connected');
+    console.log('File Invoice client connected');
     invoiceComponentClients.push(ws);
 
     ws.on('close', () => {
-        console.log('File Component 1 client disconnected');
+        console.log('File Invoice client disconnected');
         invoiceComponentClients = invoiceComponentClients.filter(client => client !== ws);
     });
 });
@@ -90,11 +91,11 @@ const sendMessageForInvoiceComponent = (message) => {
 
 // Handle connections Certificates
 certificateComponentWs.on('connection', (ws) => {
-    console.log('File Component 2 client connected');
+    console.log('File Certificate client connected');
     certificateComponentClients.push(ws);
 
     ws.on('close', () => {
-        console.log('File Component 2 client disconnected');
+        console.log('File Certificate client disconnected');
         certificateComponentClients = certificateComponentClients.filter(client => client !== ws);
     });
 });
@@ -111,4 +112,27 @@ const sendMessageForCertificateComponent = (message) => {
     });
 };
 
-module.exports = { sendMessageForInvoiceComponent, sendMessageForCertificateComponent };
+// Handle connections Sampling certificates
+samplingCertificateComponentWs.on('connection', (ws) => {
+    console.log('File Sampling Certificate client connected');
+    certificateComponentClients.push(ws);
+
+    ws.on('close', () => {
+        console.log('File Sampling Certificate client disconnected');
+        certificateComponentClients = certificateComponentClients.filter(client => client !== ws);
+    });
+});
+
+
+// A function to send messages for certificates
+const sendMessageForSamplingCertificateComponent = (message) => {
+    certificateComponentClients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(message, { binary: true }, (err) => {
+                if (err) console.error('Error sending message:', err);
+            });
+        }
+    });
+};
+
+module.exports = { sendMessageForInvoiceComponent, sendMessageForCertificateComponent, sendMessageForSamplingCertificateComponent };
