@@ -45,7 +45,7 @@ router.post('/addGSACertificate', async (req, res) => {
 
         const query = `INSERT INTO gsa_certificate SET ?`;
 
-        await generateCertificate(data);
+        // await generateCertificate(data);
 
         // await generateInvoice(data.Sample_No, data.release_date);
 
