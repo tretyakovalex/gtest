@@ -59,7 +59,7 @@ async function generateInvoice(Sample_No, date){
             let tempResultsArray = [];
             let tempResultsArray2 = [];
 
-            // console.log(resultsArray);
+            console.log("Printing results array (62): ", resultsArray);
             
 
             if(filteredRegistration){ 
@@ -79,8 +79,15 @@ async function generateInvoice(Sample_No, date){
                         }
                     })
                 } else {
-                    const maxItem = resultsArray.reduce((acc, current) => (current.value > acc.value) ? current : acc);
-                    console.log("maxItem: ", maxItem)
+                    
+                    // const maxItem = resultsArray.reduce((acc, current) => (current.value > acc.value) ? current : acc);
+                    const maxItem = resultsArray.reduce((acc, current) => {
+                        if (["RA", "Moisture"].includes(current.name)) {
+                            return acc;
+                        }
+                        return (current.value > acc.value) ? current : acc;
+                    }, resultsArray[0]);
+                    console.log("maxItem: ", maxItem);
                     tempResultsArray2.push(maxItem);
 
                     tempResultsArray.push({name: filteredRegistration, value: 0});
@@ -408,7 +415,7 @@ async function getElementSymbolAndPrices(tempElements, tempNonElements, country)
     
                     // elementSymbols.sort((a, b) => b.element_value - a.element_value);
 
-                    // console.log("printing elementSymbols: ", elementSymbols);
+                    console.log("printing elementSymbols: ", elementSymbols);
     
                     resolve(elementSymbols);
                 }
