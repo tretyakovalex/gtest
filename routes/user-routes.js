@@ -48,7 +48,13 @@ router.post('/login', async (req, res) => {
                 return res.status(401).send('Could not find user');
             }
 
-            const user = results[0];
+            // const user = results[0];
+            const user = {
+                id: results[0].id,
+                username: results[0].username,
+                password: results[0].password,
+                roles: results.map(row => row.role)
+            };
 
             // Compare the password with the hash stored in the database
             const isMatch = await bcrypt.compare(password, user.password);
@@ -57,7 +63,7 @@ router.post('/login', async (req, res) => {
                 const tokenObject = utils.issueJWT(user);
                 console.log("Login successful");
 
-                return res.status(200).json({ success: true, user: user, token: tokenObject.token, expiresIn: tokenObject.expires });
+                return res.status(200).json({ success: true, user: {username: user.username, roles: user.roles}, token: tokenObject.token, expiresIn: tokenObject.expires });
             } else {
                 return res.status(401).send("Username or password is incorrect");
             }

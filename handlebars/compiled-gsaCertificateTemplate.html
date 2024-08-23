@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./public/stylesheets/gsaCertificateTemplate.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="page">
+        <img src="./public/assets/background.jpg" alt="" class="background">
+        <div class="title">
+            <div class="logo-container" *ngIf="certType !== ''">
+                <img src="./public/assets/logo.png" alt="logo">
+                <!-- <img src="./public/assets/logo.svg" alt="logo"> -->
+                <h3>ORIGINAL</h3>
+            </div>
+            <div class="title-content">
+                <h3 style="text-decoration: underline">Certificate of Analysis</h3>
+                <h5>Certificate No: GSA-FR-CE-00339F</h5>
+            </div>
+        </div>
+        <div class="content">
+            <div class="data">
+                <div class="left-top" >
+                    <p style="text-decoration: underline"><strong>Customer Details:</strong></p>
+                    <div class="item">
+                        <p style="text-align: right; width: 120px;">Name or Company:</p>
+                            <p style="color: rgb(69, 69, 69); width: 250px;" *ngIf="company"><strong>TAWOTIN LTD</strong></p>
+                    </div>
+                    <div class="item">
+                        <p style="text-align: right; width: 120px;">Email:</p>
+                        <p style="color: rgb(69, 69, 69); width: 250px;"><strong>tawotin@gmail.com</strong></p>
+                    </div>
+                    <div class="item">
+                        <p style="text-align: right; width: 120px;">Address:</p>
+                        <p style="color: rgb(69, 69, 69);"><strong>plot B2, Special Economic Zone, Kigali</strong></p>
+                    </div>
+                </div >
+                
+                <div class="left-mid1" >
+                    <div class="item">
+                        <h4>GSA Reference Number:</h4>
+                        <p>GSA-W-2024-00339</p>
+                    </div>
+                    <div class="item">
+                        <h4><strong>Client reference name:</strong></h4>
+                        <p>W-93</p>
+                    </div>
+                        <div class="item">
+                            <h4 *ngIf="itsci_number"><strong>iTSCI shipment №:</strong></h4>
+                            <p>TAW/RW/0000281</p>    
+                        </div>              
+                </div >
+                <!-- <div class="left-mid2">
+                    <h4>Sample Conditions:</h4>
+                    <p>Dry Sample</p>
+                </div> -->
+                <div class="left-bottom1" *ngFor="let data of method" >
+                    <h4>Sample Pre-treatment:</h4>
+                    <p>Miling &amp; Mixing, Fusion</p>
+                </div >
+                <div class="left-bottom2">
+                    <h4>Nature of Sample:</h4>
+                    <p *ngIf="sampledGSA">Sampled by GSA LTD inspector</p>
+                    <p *ngIf="!sampledGSA">As received</p>
+                </div>
+                <div class="right-top">
+                    <p><strong>Release date:</strong></p>
+                    <p>22.08.2024</p>
+                </div>
+                <div class="right-mid-top" *ngFor="let reg of registration" >
+                    <h4>Material Description:</h4>
+                    <p>Tungsten</p>
+                </div >
+                <div class="right-mid">
+                    <div class="item">
+                        <p><strong>Date of Receiving:</strong></p>
+                        <p>29.07.2024</p>
+                    </div>
+                    <div class="item">
+                        <p><strong>Date of lab performance:</strong></p>
+                        <p>22.08.2024</p>
+                    </div>
+                    <div class="item" style="padding-bottom: 2px;" *ngIf="Sampling_date !== 'Invalid date'">
+                        <p><strong>Sampling Date:</strong></p>
+                        <p>29.07.2024</p>
+                    </div>
+                    <div class="item" *ngIf="!Sampling_date">
+                    </div>
+                    <div class="sampling-condition">
+                        <h4>Sample Conditions:</h4>
+                        <p>Dry Sample</p>    
+                    </div>
+                </div>
+                <div class="right-bottom">
+                    <h4>Method of Assay:</h4>
+                    <ng-container *ngFor="let data of method" >
+                        <p>GSA-TTR-SOP-001</p>
+                    </ng-container >
+                </div>
+            </div>
+
+            <div class="resultOfAssay">
+                <h3>RESULT OF ASSAY:</h3>
+                <div class="result-data">
+                        <div class="item">
+                            <div class="name"><strong>Moisture</strong></div>
+                            <div class="quantity" style="text-align: left;"><strong>0.30 %</strong></div>
+                        </div>
+                        <div class="item">
+                            <div class="name"><strong>RA</strong></div>
+                            <div class="quantity" style="text-align: left;"><strong>171.00 bq/g</strong></div>
+                        </div>
+
+                </div>
+
+                <div class="weight" *ngFor="let reg of registration" >
+                        <div class="div" *ngIf="reg.Lot_weight" >
+                            <p><strong>Net Weight: 3873.7 kg/wet</strong></p>
+                        </div>
+                </div >
+            </div>
+            
+            <div class="info" *ngIf="addSignatures">
+                <div class="names">
+                    <p><strong>Checked by: Laboratory Supervisor</strong></p>
+                    <p><strong>Approved by: Chief Chemist</strong></p>
+                    <p><strong>For Managing Director</strong></p>
+                    <p style="font-size: 8px; margin-top: 20px;">*Any requests for repeat Analysis will be charged. <br> If the sample is not collected by the owner (or representative) within 30 calendar days it will be discarded.</p>
+                </div>
+                <div class="signatures">
+                    <img class="signature" src="./public/assets/signatures.png">
+                </div>
+                <div class="stamp">
+                    <div class="stamp-container">
+                        <img class="stamp-img" src="./public/assets/stamp.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="left">
+                <p><strong>Certificate No: GSA-FR-CE-00339F</strong></p>
+            </div>
+            <div class="mid">
+                <div class="page_num">
+                    <h4>Page 1 of 1</h4>
+                </div>
+                <h4>Global Sampling & Analysis Ltd</h4>
+                <h4>Special Economic Zone, Plot № B2, PO Box: 4149 Kigali, Rwanda</h4>
+                <h4>Tel: +250788300142</h4>
+            </div>
+            <div class="right"></div>
+        </div>
+    </div>
+</body>
+</html>

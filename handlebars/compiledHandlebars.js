@@ -7,7 +7,7 @@ const path = require('path');
 const express = require('express');
 const app = express();
 
-const data = require('./data.json');
+// const data = require('./data.json');
 
 // WebSocket server setup
 // const wss = new WebSocket.Server({ port: 8080 });
