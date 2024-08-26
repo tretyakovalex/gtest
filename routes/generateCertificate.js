@@ -153,7 +153,10 @@ async function getMethodData(){
                             //   console.log('Method:', method);
                             filteredMethods.push(method);
 
-                            methods_sample_preparations += method.Sample_Preparation + ' ';
+                            if(method.Sample_Preparation !== null){
+                                methods_sample_preparations += method.Sample_Preparation + ' ';
+                            }
+                            
                             methods_string += method.Methods + ' ';
 
                             method_data = {
