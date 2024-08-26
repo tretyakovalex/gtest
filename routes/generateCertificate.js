@@ -27,7 +27,7 @@ async function generateCertificate(data){
 
         // Getting method info
         let method = await getMethodData();
-        // console.log(method);
+        console.log(method);
 
         // Getting method info
         let result = await getResultsBySampleNo(data.Sample_No, data.selectedElements, data.RA_present, data.RA_In_Kg);
@@ -142,21 +142,30 @@ async function getMethodData(){
 
             let filteredMethods = [];
             let method_data;
+            let methods_sample_preparations = '';
+            let methods_string = '';
 
             methods.filter((method) => {
                 for (const [key, value] of Object.entries(method)) {
                     if (value !== null && Buffer.isBuffer(value) && value.equals(new Buffer.from([0x01]))) {
-                        if (key === element_name) {
+                        if (key === element_name || key === 'Moisture') {
                             //   console.log('Match found:', key);
                             //   console.log('Method:', method);
                             filteredMethods.push(method);
-                            method_data = {Sample_Preparation: method.Sample_Preparation, Methods: method.Methods};
+
+                            methods_sample_preparations += method.Sample_Preparation + ' ';
+                            methods_string += method.Methods + ' ';
+
+                            method_data = {
+                                Sample_Preparation: methods_sample_preparations.trim(),
+                                Methods: methods_string.trim()  // Trimming any extra spaces
+                            };
                         }
                     }
                 }
             });
 
-            // console.log("FilteredMethods: ", filteredMethods);
+            console.log("FilteredMethods: ", filteredMethods);
 
             resolve(method_data);
         })
