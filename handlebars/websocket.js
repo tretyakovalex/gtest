@@ -127,7 +127,7 @@ samplingCertificateComponentWs.on('connection', (ws) => {
 
 // A function to send messages for certificates
 const sendMessageForSamplingCertificateComponent = async (message) => {
-    let fileSize = await getFileSize();
+    // let fileSize = await getFileSize();
 
     certificateComponentClients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {

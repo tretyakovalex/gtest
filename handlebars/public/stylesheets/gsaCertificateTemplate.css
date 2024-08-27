@@ -179,6 +179,10 @@ img.background {
     margin: 0;
     font-size: 12px;
 }
+.data .left-bottom1 p {
+    width: 200px;
+}
+
 .data .left-bottom2 {
     grid-area: leftbottom2;
     padding: 5px;
@@ -197,6 +201,7 @@ img.background {
 }
 .data .right-bottom p {
     font-size: 10px;
+    width: 200px;
 }
 .data .right-bottom .methods {
     display: flex;

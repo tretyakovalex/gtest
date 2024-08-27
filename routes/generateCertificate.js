@@ -25,9 +25,29 @@ async function generateCertificate(data){
         let registration = await getRegistrationData(data.Sample_No);
         // console.log(registration);
 
-        // Getting method info
-        let method = await getMethodData();
+
+        // === Getting method info ===
+        
+        // --- Getting Full Scan value and adding to combinedRemoveList if true ---
+        console.log("Printing value of registration[0].Full_scan: ", Buffer.isBuffer(registration[0].Full_scan));
+        
+        let combinedRemoveList = [];
+        if(Buffer.isBuffer(registration[0].Full_scan) === true){
+            combinedRemoveList = [registration[0].Type];
+            data.selectedElements.push({name: 'Full_scan'});
+        } else {
+            combinedRemoveList = [registration[0].Type];
+        }
+        // ------------------------------------------------------------------------
+        
+        console.log("Printing combinedRemoveList: ", combinedRemoveList);
+        // Remove matching elements
+        let filteredArray = data.selectedElements.filter(item => !combinedRemoveList.includes(item.name)).map(item => item.name);
+        console.log("Printing filteredArray: ", filteredArray);
+        let method = await getMethodData(registration[0].Type, filteredArray);
         console.log(method);
+        
+        // ===========================
 
         // Getting method info
         let result = await getResultsBySampleNo(data.Sample_No, data.selectedElements, data.RA_present, data.RA_In_Kg);
@@ -114,7 +134,7 @@ async function getCustomerData(Sample_No){
 
 async function getRegistrationData(Sample_No){
     return new Promise((resolve, reject) => {
-        const query = `SELECT gsa_sample_id, Customer_sample_name, itsci_number, Type, Lot_weight, date, Sampling_date, Sample_No FROM registration WHERE Sample_No=?;`
+        const query = `SELECT gsa_sample_id, Customer_sample_name, itsci_number, Type, Lot_weight, date, Sampling_date, Sample_No, Full_scan FROM registration WHERE Sample_No=?;`
         pool.query(query, [Sample_No], (err, registration) => {
             if(err){
                 console.error(err);
@@ -126,7 +146,7 @@ async function getRegistrationData(Sample_No){
     });
 }
 
-async function getMethodData(){
+async function getMethodData(Type, filteredArray){
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM methods;`
         pool.query(query, async (err, methods) => {
@@ -135,40 +155,74 @@ async function getMethodData(){
                 reject(err);
             }
 
-            let compound = await getCompoundByCompoundName("Cassiterite Concentrate");
-            // console.log("Printing compound: ", compound);
+            let compound = await getCompoundByCompoundName(Type);
+            console.log("Printing compound: ", compound);
 
             let element_name = compound[0].element_name;
 
             let filteredMethods = [];
-            let method_data;
+            let method_data = {};
             let methods_sample_preparations = '';
             let methods_string = '';
 
+            const excludedMethod = "GSA-TTR-SOP-001";
+
+            // Sets to track unique values
+            const uniqueMethods = new Set();
+            const uniqueSamplePreparations = new Set();
+
             methods.filter((method) => {
                 for (const [key, value] of Object.entries(method)) {
-                    if (value !== null && Buffer.isBuffer(value) && value.equals(new Buffer.from([0x01]))) {
-                        if (key === element_name || key === 'Moisture') {
-                            //   console.log('Match found:', key);
-                            //   console.log('Method:', method);
-                            filteredMethods.push(method);
+                    if (value !== null && Buffer.isBuffer(value) && value.equals(Buffer.from([0x01]))) {
+                        if (key === element_name) {
+                            if (!uniqueMethods.has(method.Methods) || !uniqueSamplePreparations.has(method.Sample_Preparation)) {
+                                filteredMethods.push(method);
 
-                            if(method.Sample_Preparation !== null){
-                                methods_sample_preparations += method.Sample_Preparation + ' ';
+                                if (method.Sample_Preparation !== null && !uniqueSamplePreparations.has(method.Sample_Preparation)) {
+                                    methods_sample_preparations += method.Sample_Preparation + ' ';
+                                    uniqueSamplePreparations.add(method.Sample_Preparation); // Mark Sample_Preparation as seen
+                                }
+
+                                if (!uniqueMethods.has(method.Methods)) {
+                                    methods_string += method.Methods + ' ';
+                                    uniqueMethods.add(method.Methods); // Mark Methods as seen
+                                }
+
+                                method_data = {
+                                    Sample_Preparation: methods_sample_preparations.trim(),
+                                    Methods: methods_string.trim()  // Trimming any extra spaces
+                                };
                             }
-                            
-                            methods_string += method.Methods + ' ';
-
-                            method_data = {
-                                Sample_Preparation: methods_sample_preparations.trim(),
-                                Methods: methods_string.trim()  // Trimming any extra spaces
-                            };
+                        } else if (method.Methods !== excludedMethod){
+                            if (filteredArray.includes(key)) {
+                                let method_exists = false;
+                                while (!method_exists) {
+                                    if (!uniqueMethods.has(method.Methods) || !uniqueSamplePreparations.has(method.Sample_Preparation)) {
+                                        methods_string += method.Methods + ' ';
+    
+                                        if (method.Sample_Preparation !== null && !uniqueSamplePreparations.has(method.Sample_Preparation)) {
+                                            methods_sample_preparations += method.Sample_Preparation + ' ';
+                                            uniqueSamplePreparations.add(method.Sample_Preparation);
+                                        }
+    
+                                        uniqueMethods.add(method.Methods);
+    
+                                        method_data = {
+                                            Sample_Preparation: methods_sample_preparations.trim(),
+                                            Methods: methods_string.trim()
+                                        };
+    
+                                        filteredMethods.push(method);
+                                    }
+                                    method_exists = true;
+                                }
+                            }
                         }
                     }
                 }
             });
 
-            console.log("FilteredMethods: ", filteredMethods);
+            console.log("Method Data: ", method_data);
 
             resolve(method_data);
         })
@@ -217,6 +271,10 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
                                         if(element_info[0].oxides !== undefined){
                                             // Find element by name and obtain Element in Oxide form
                                             let oxide_value = value * element_info[0].Factor;
+                                            // if(oxide_value < 0.01){
+                                            //     filteredResults.push({name: element_info[0].oxides, value: "< 0.01"});
+                                            // } else if (oxide_value >= 0.01){
+                                            // }
                                             filteredResults.push({name: element_info[0].oxides, value: oxide_value.toFixed(2)});
                                         }
                                     }                                        
@@ -237,8 +295,19 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
             }
 
             filteredResults.sort((a, b) => b.value - a.value);
+            
+            filteredResults.forEach(result => {
+                if (result.value < 0.01) {
+                    result.value = "< 0.01";
+                }
+            });
 
-            raAndMoistureResults.sort((a, b) => b.name - a.name);
+            // raAndMoistureResults.sort((a, b) => b.name - a.name);
+            raAndMoistureResults.sort((a, b) => {
+                if (a.name === "Moisture") return -1; // Place "RA" first
+                if (b.name === "Moisture") return 1;  // Place "RA" first
+                return a.name.localeCompare(b.name); // Sort remaining items in ascending order
+            });
 
             combinedResults = [...filteredResults, ...raAndMoistureResults];
 

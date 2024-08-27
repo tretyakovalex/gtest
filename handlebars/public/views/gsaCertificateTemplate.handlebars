@@ -59,8 +59,10 @@
                     </div>
                     {{#if itsci_number}}
                         <div class="item">
-                            <h4 *ngIf="itsci_number"><strong>iTSCI shipment №:</strong></h4>
-                            <p>{{itsci_number}}</p>    
+                            {{#if itsci_number}}
+                                <h4 *ngIf="itsci_number"><strong>iTSCI shipment №:</strong></h4>
+                                <p>{{itsci_number}}</p>    
+                            {{/if}}
                         </div>              
                     {{/if}}  
                 </div {{/each}}>
@@ -74,8 +76,12 @@
                 </div {{/with}}>
                 <div class="left-bottom2">
                     <h4>Nature of Sample:</h4>
-                    <p *ngIf="sampledGSA">Sampled by GSA LTD inspector</p>
-                    <p *ngIf="!sampledGSA">As received</p>
+                    {{#if sampledGSA}}
+                        <p>Sampled by GSA LTD inspector</p>
+                    {{/if}}
+                    {{#unless sampledGSA}}
+                        <p>As received</p>
+                    {{/unless}}
                 </div>
                 <div class="right-top">
                     <p><strong>Release date:</strong></p>
