@@ -17,7 +17,7 @@
             </div>
             <div class="title-content">
                 <h3 style="text-decoration: underline">Certificate of Analysis</h3>
-                <h5>Certificate No: GSA-FR-CE-00360F</h5>
+                <h5>Certificate No: GSA-FR-CE-00361F</h5>
             </div>
         </div>
         <div class="content">
@@ -26,31 +26,27 @@
                     <p style="text-decoration: underline"><strong>Customer Details:</strong></p>
                     <div class="item">
                         <p style="text-align: right; width: 120px;">Name or Company:</p>
-                            <p style="color: rgb(69, 69, 69); width: 250px;" *ngIf="company"><strong>TAWOTIN LTD</strong></p>
+                            <p style="color: rgb(69, 69, 69); width: 250px;" *ngIf="company"><strong>Bukavu CDMC Entite SARL</strong></p>
                     </div>
                     <div class="item">
                         <p style="text-align: right; width: 120px;">Email:</p>
-                        <p style="color: rgb(69, 69, 69); width: 250px;"><strong>tawotin@gmail.com</strong></p>
+                        <p style="color: rgb(69, 69, 69); width: 250px;"><strong>cdmcbukavu@gmail.com</strong></p>
                     </div>
                     <div class="item">
                         <p style="text-align: right; width: 120px;">Address:</p>
-                        <p style="color: rgb(69, 69, 69);"><strong>plot B2, Special Economic Zone, Kigali</strong></p>
+                        <p style="color: rgb(69, 69, 69);"><strong>23 AV.TANGANIKA, quartier Nduba, BUKAVU, DRC</strong></p>
                     </div>
                 </div >
                 
                 <div class="left-mid1" >
                     <div class="item">
                         <h4>GSA Reference Number:</h4>
-                        <p>GSA-W-2024-00360</p>
+                        <p>GSA-Ta-2024-00361</p>
                     </div>
                     <div class="item">
                         <h4><strong>Client reference name:</strong></h4>
-                        <p>W-93</p>
+                        <p>BU-8</p>
                     </div>
-                        <div class="item">
-                                <h4 *ngIf="itsci_number"><strong>iTSCI shipment №:</strong></h4>
-                                <p>TAW/RW/0000281</p>    
-                        </div>              
                 </div >
                 <!-- <div class="left-mid2">
                     <h4>Sample Conditions:</h4>
@@ -66,24 +62,24 @@
                 </div>
                 <div class="right-top">
                     <p><strong>Release date:</strong></p>
-                    <p>01.08.2024</p>
+                    <p>30.07.2024</p>
                 </div>
                 <div class="right-mid-top" *ngFor="let reg of registration" >
                     <h4>Material Description:</h4>
-                    <p>Tungsten</p>
+                    <p>Tantalum</p>
                 </div >
                 <div class="right-mid">
                     <div class="item">
                         <p><strong>Date of Receiving:</strong></p>
-                        <p>29.07.2024</p>
+                        <p>30.07.2024</p>
                     </div>
                     <div class="item">
                         <p><strong>Date of lab performance:</strong></p>
-                        <p>27.08.2024</p>
+                        <p>31.08.2024</p>
                     </div>
                     <div class="item" style="padding-bottom: 2px;" *ngIf="Sampling_date !== 'Invalid date'">
                         <p><strong>Sampling Date:</strong></p>
-                        <p>29.07.2024</p>
+                        <p>Invalid date</p>
                     </div>
                     <div class="item" *ngIf="!Sampling_date">
                     </div>
@@ -95,7 +91,7 @@
                 <div class="right-bottom">
                     <h4>Method of Assay:</h4>
                     <ng-container *ngFor="let data of method" >
-                        <p>GSA-XRF-SOP-001 GSA-XRF-SOP-002 GSA-GRM-SOP-001</p>
+                        <p>GSA-XRF-SOP-001 GSA-XRF-SOP-002</p>
                     </ng-container >
                 </div>
             </div>
@@ -104,40 +100,13 @@
                 <h3>RESULT OF ASSAY:</h3>
                 <div class="result-data">
                         <div class="item">
-                            <div class="name"><strong>CoO</strong></div>
-                            <div class="quantity" style="text-align: left;"><strong>0.92 %</strong></div>
-                        </div>
-                        <div class="item">
-                            <div class="name"><strong>SnO2</strong></div>
-                            <div class="quantity" style="text-align: left;"><strong>0.91 %</strong></div>
-                        </div>
-                        <div class="item">
                             <div class="name"><strong>Ta2O5</strong></div>
-                            <div class="quantity" style="text-align: left;"><strong>0.21 %</strong></div>
-                        </div>
-                        <div class="item">
-                            <div class="name"><strong>U3O8</strong></div>
-                            <div class="quantity" style="text-align: left;"><strong>0.04 %</strong></div>
-                        </div>
-                        <div class="item">
-                            <div class="name"><strong>ThO2</strong></div>
-                            <div class="quantity" style="text-align: left;"><strong>&lt; 0.01 %</strong></div>
-                        </div>
-                        <div class="item">
-                            <div class="name"><strong>Moisture</strong></div>
-                            <div class="quantity" style="text-align: left;"><strong>0.30 %</strong></div>
-                        </div>
-                        <div class="item">
-                            <div class="name"><strong>RA</strong></div>
-                            <div class="quantity" style="text-align: left;"><strong>171.00 bq/g</strong></div>
+                            <div class="quantity" style="text-align: left;"><strong>19.50 %</strong></div>
                         </div>
 
                 </div>
 
                 <div class="weight" *ngFor="let reg of registration" >
-                        <div class="div" *ngIf="reg.Lot_weight" >
-                            <p><strong>Net Weight: 3873.7 kg/wet</strong></p>
-                        </div>
                 </div >
             </div>
             
@@ -161,7 +130,7 @@
         
         <div class="container">
             <div class="left">
-                <p><strong>Certificate No: GSA-FR-CE-00360F</strong></p>
+                <p><strong>Certificate No: GSA-FR-CE-00361F</strong></p>
             </div>
             <div class="mid">
                 <div class="page_num">

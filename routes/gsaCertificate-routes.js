@@ -45,9 +45,16 @@ router.post('/addGSACertificate', async (req, res) => {
 
         const query = `INSERT INTO gsa_certificate SET ?`;
 
-        await generateCertificate(data);
+        const pdfPath = await generateCertificate(data);
 
         await generateInvoice(data.Sample_No, data.release_date);
+
+        let file_name = pdfPath.replace("/Users/karlembeast/builds/projects/gsa-web/backend/handlebars/gsa-certificates/", "");
+        console.log("printing file name: ", file_name);
+
+        // const downloadUrl = `http://localhost/download?file=${encodeURIComponent(file_location)}`;
+        
+        // res.download(file_location);
 
 
         // let file_name = ""
@@ -88,15 +95,17 @@ router.post('/addGSACertificate', async (req, res) => {
         pool.query(query, certificate, async (err, gsaCertificate) => {
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
-                    return res.status(409).json({ message: 'Duplicate entry: a certificate with this sample number already exists.'});
+                    return res.status(409).json({ message: 'Duplicate entry: a certificate with this sample number already exists.', file_name: file_name});
                 }
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
             }
             
             
-            res.json({ gsaCertificates: gsaCertificate});
+            res.json({ gsaCertificates: gsaCertificate, file_name: file_name});
         });
+
+        
         
     } catch (error) {
         console.error(error);
@@ -162,13 +171,14 @@ router.get('/getCertificateByFileName', async (req, res) => {
     try {
         const file_name = req.query.file_name;
         
-        const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "handlebars", 'gsa-certificates', file_name));
-        // const pdfData = path.join(__dirname, "..", "handlebars", 'gsa-certificates', "GSA-Sn-2024-00071.pdf");
+        // const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "handlebars", 'gsa-certificates', file_name));
+        
+        let file_location = path.join(__dirname, '..', 'handlebars', 'gsa-certificates', file_name);
+        console.log("printing file location: ", file_location);
 
-        // const file = path.join(__dirname, "..", "handlebars", 'gsa-certificates', file_name);
-        // console.log("file: ", pdfData);
+        res.download(file_location);
 
-        sendMessageForCertificateComponent(pdfData);
+        // sendMessageForCertificateComponent(pdfData);
 
         // res.status(200).json({ message: 'PDF generated and sent to clients', pdfData: buffer.toString('base64') });
 

@@ -31,7 +31,8 @@ async function generateSamplingCertificate(data){
         const file_name = pdfPath.match(/[^\/]+$/)[0];
         const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "handlebars", "gsa-sampling-certificates", file_name));
 
-        sendMessageForSamplingCertificateComponent(pdfData);
+        console.log("data.clientId: ", data.client_id);
+        // sendMessageForSamplingCertificateComponent(pdfData, data.client_id);
 
     } catch (error) {
         console.error(error);

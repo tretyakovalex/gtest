@@ -28,12 +28,18 @@ router.get('/getGsaInvoices', async (req, res) => {
 router.get('/getInvoiceByName', async (req, res) => {
     try {
         const file_name = req.query.file_name;
+        const clientId = req.query.clientId;
         
-        const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "..", "handlebars", 'gsa-invoices', file_name));
+        // const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "..", "handlebars", 'gsa-invoices', file_name));
+        // sendMessageForInvoiceComponent(pdfData, clientId);
 
-        sendMessageForInvoiceComponent(pdfData);
+        let file_location = path.join(__dirname, '..', '..', 'handlebars', 'gsa-invoices', file_name);
+        console.log("printing file location: ", file_location);
+        
+        res.download(file_location);
+        
 
-        res.status(200).json({ message: 'PDF generated and sent to clients' });
+        // res.status(200).json({ message: 'PDF generated and sent to clients', clientId: clientId });
     } catch (error) {
         console.error(error);
     }

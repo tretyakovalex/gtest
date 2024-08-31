@@ -90,17 +90,19 @@ async function generateCertificate(data){
         console.log("Printing certificateData: ", certificateData);
 
         let pdfPath = await generateCertificatePdf(certificateData);
+
+        return pdfPath;
         // console.log("Printing pdf path: ", pdfPath);
 
-        const file_name = pdfPath.match(/[^\/]+$/)[0];
+        // const file_name = pdfPath.match(/[^\/]+$/)[0];
 
         // console.log("Printing file_name: ", file_name);
 
-        const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "handlebars", "gsa-certificates", file_name));
+        // const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "handlebars", "gsa-certificates", file_name));
 
         // console.log("Printing pdfData: ", pdfData);
 
-        sendMessageForCertificateComponent(pdfData);
+        // sendMessageForCertificateComponent(pdfData);
 
     } catch (error) {
         console.error(error);
