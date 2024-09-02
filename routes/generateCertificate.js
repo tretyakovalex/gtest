@@ -6,12 +6,15 @@ const path = require('path');
 
 const moment = require('moment');
 
+const axios = require('axios');
+require('dotenv').config();
 
-const { generateCertificatePdf } = require('../handlebars/compileCertificateTemplate.js');
-const { sendMessageForCertificateComponent } = require('../handlebars/websocket');
+
+// const { generateCertificatePdf } = require('../handlebars/compileCertificateTemplate.js');
+// const { sendMessageForCertificateComponent } = require('../handlebars/websocket');
 
 const { pool } = require('../configs/mysql');
-const { compileFunction } = require('vm');
+// const { compileFunction } = require('vm');
 
 async function generateCertificate(data){
     try {
@@ -89,9 +92,19 @@ async function generateCertificate(data){
 
         console.log("Printing certificateData: ", certificateData);
 
-        let pdfPath = await generateCertificatePdf(certificateData);
+        // let pdfPath = await generateCertificatePdf(certificateData);
 
-        return pdfPath;
+        // axios.post('http://localhost:4400/generateAssayCertificatePdf', certificateData)
+        axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData)
+            .then(response => {
+                console.log('Data sent successfully:', response.data);
+            })
+            .catch(error => {
+                console.error('Error sending data:', error);
+            });
+
+
+        // return pdfPath;
         // console.log("Printing pdf path: ", pdfPath);
 
         // const file_name = pdfPath.match(/[^\/]+$/)[0];

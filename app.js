@@ -48,6 +48,10 @@ app.use(require('./routes/accounting/service-prices-routes'));
 app.use(require('./routes/admin/select-database-route'));
 app.use(require('./routes/admin/get-databases-routes.js'));
 
+// Receiving pdfs routes:
+app.use(require('./routes/accounting/receive-invoice-routes.js'));
+app.use(require('./routes/assay-certificates/receive-assay-certificate-routes.js'));
+
 // === Frontend: ===
 // =================
 

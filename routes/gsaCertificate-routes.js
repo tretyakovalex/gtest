@@ -49,8 +49,8 @@ router.post('/addGSACertificate', async (req, res) => {
 
         await generateInvoice(data.Sample_No, data.release_date);
 
-        let file_name = pdfPath.replace("/Users/karlembeast/builds/projects/gsa-web/backend/handlebars/gsa-certificates/", "");
-        console.log("printing file name: ", file_name);
+        // let file_name = pdfPath.replace("/Users/karlembeast/builds/projects/gsa-web/backend/handlebars/gsa-certificates/", "");
+        // console.log("printing file name: ", file_name);
 
         // const downloadUrl = `http://localhost/download?file=${encodeURIComponent(file_location)}`;
         
@@ -92,18 +92,18 @@ router.post('/addGSACertificate', async (req, res) => {
         //     console.log("Printing mailOptions: ", mailOptions)
         // });
 
-        pool.query(query, certificate, async (err, gsaCertificate) => {
-            if (err) {
-                if (err.code === 'ER_DUP_ENTRY') {
-                    return res.status(409).json({ message: 'Duplicate entry: a certificate with this sample number already exists.', file_name: file_name});
-                }
-                console.error(err);
-                return res.status(500).send('Internal Server Error');
-            }
+        // pool.query(query, certificate, async (err, gsaCertificate) => {
+        //     if (err) {
+        //         if (err.code === 'ER_DUP_ENTRY') {
+        //             return res.status(409).json({ message: 'Duplicate entry: a certificate with this sample number already exists.', file_name: file_name});
+        //         }
+        //         console.error(err);
+        //         return res.status(500).send('Internal Server Error');
+        //     }
             
             
-            res.json({ gsaCertificates: gsaCertificate, file_name: file_name});
-        });
+        //     res.json({ gsaCertificates: gsaCertificate, file_name: file_name});
+        // });
 
         
         

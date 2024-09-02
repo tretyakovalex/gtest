@@ -4,9 +4,12 @@ const fs = require('fs-extra');
 const path = require('path');
 
 const { generatePdf } = require('../handlebars/compiledHandlebars');
-const { sendMessageToClients } = require('../handlebars/websocket');
+// const { sendMessageToClients } = require('../handlebars/websocket');
 
 const { pool } = require('../configs/mysql');
+
+const axios = require('axios');
+require('dotenv').config();
 
 async function generateInvoice(Sample_No, date){
     try {
@@ -303,7 +306,16 @@ async function generateInvoice(Sample_No, date){
 
                 // console.log("printing client invoice data: ", clientInvoiceData);
 
-                generatePdf(clientInvoiceData);
+                // generatePdf(clientInvoiceData);
+
+                // axios.post('http://localhost:4400/generateInvoicePdf', clientInvoiceData)
+                axios.post(`${process.env.PDF_GENERATOR_URL}/generateInvoicePdf`, clientInvoiceData)
+                    .then(response => {
+                        console.log('Data sent successfully:', response.data);
+                    })
+                    .catch(error => {
+                        console.error('Error sending data:', error);
+                    });
             });
             
         })
