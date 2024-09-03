@@ -8,6 +8,22 @@ const { sendMessageForSamplingCertificateComponent } = require('../../handlebars
 
 const { generateSamplingCertificatePdf } = require('../../handlebars/compileSamplingCertificateTemplate.js');
 
+const axios = require('axios');
+require('dotenv').config();
+
+const https = require('https');
+
+// Load the certificates from files
+const serverCert = fs.readFileSync(path.join(__dirname, '..', '..', 'cert', 'cert.pem'));
+const intermediateCert = fs.readFileSync(path.join(__dirname, '..', '..', 'cert', 'chain.pem'));
+
+// Create the CA bundle array
+const MY_CA_BUNDLE = [serverCert, intermediateCert];
+
+const httpsAgent = new https.Agent({
+    ca: MY_CA_BUNDLE
+});  
+
 // === TESTING GSA SAMPLING CERTIFICATE ===
 // router.get('/generateSamplingCertficate', async (req, res) => {
 //     try {
@@ -18,6 +34,18 @@ const { generateSamplingCertificatePdf } = require('../../handlebars/compileSamp
 // })
 // ========================================
 
+router.get('/getGeneratedSamplingCertificate', async (req, res) => {
+    try {
+        const file_name = "gsaSamplingCertificateTemplate.pdf"
+        let file_location = path.join(__dirname, '..', '..', 'handlebars', 'gsa-sampling-certificates', file_name);
+        console.log("printing file location: ", file_location);
+        
+        res.download(file_location);
+    } catch (error) {
+        console.error("Error: ", error);
+    }
+})
+
 // === TESTING GSA SAMPLING CERTIFICATE with Data ===
 router.post('/generateSamplingCertficate', async (req, res) => {
     try {
@@ -27,9 +55,21 @@ router.post('/generateSamplingCertficate', async (req, res) => {
 
         // generateSamplingCertificate(data);
 
-        let pdfPath = await generateSamplingCertificatePdf(data);
+        // let pdfPath = await generateSamplingCertificatePdf(data);
 
-        const file_name = pdfPath.match(/[^\/]+$/)[0];
+        file_name = '';
+
+        axios.post(`${process.env.PDF_GENERATOR_URL}/generateSamplingCertficate`, clientInvoiceData, { httpsAgent })
+            .then(response => {
+                console.log('Data sent successfully:', response.data);
+                file_name = response.file_name;
+            })
+            .catch(error => {
+                console.error('Error sending data:', error);
+            });
+
+        
+        const file_name = file_name.match(/[^\/]+$/)[0];
         let file_location = path.join(__dirname, '..', '..', 'handlebars', 'gsa-sampling-certificates', file_name);
         console.log("printing file location: ", file_location);
         
