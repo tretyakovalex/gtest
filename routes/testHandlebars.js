@@ -11,6 +11,19 @@ const { pool } = require('../configs/mysql');
 const axios = require('axios');
 require('dotenv').config();
 
+const https = require('https');
+
+// Load the certificates from files
+const serverCert = fs.readFileSync(path.join(__dirname, '..', 'cert', 'cert.pem'));
+const intermediateCert = fs.readFileSync(path.join(__dirname, '..', 'cert', 'chain.pem'));
+
+// Create the CA bundle array
+const MY_CA_BUNDLE = [serverCert, intermediateCert];
+
+const httpsAgent = new https.Agent({
+    ca: MY_CA_BUNDLE
+});    
+
 async function generateInvoice(Sample_No, date){
     try {
         const data = {Sample_No: Sample_No, date, date}; 
@@ -309,7 +322,7 @@ async function generateInvoice(Sample_No, date){
                 // generatePdf(clientInvoiceData);
 
                 // axios.post('http://localhost:4400/generateInvoicePdf', clientInvoiceData)
-                axios.post(`${process.env.PDF_GENERATOR_URL}/generateInvoicePdf`, clientInvoiceData)
+                axios.post(`${process.env.PDF_GENERATOR_URL}/generateInvoicePdf`, clientInvoiceData, { httpsAgent })
                     .then(response => {
                         console.log('Data sent successfully:', response.data);
                     })

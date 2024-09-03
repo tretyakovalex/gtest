@@ -9,7 +9,18 @@ const moment = require('moment');
 const axios = require('axios');
 require('dotenv').config();
 
+const https = require('https');
 
+// Load the certificates from files
+const serverCert = fs.readFileSync(path.join(__dirname, '..', 'cert', 'cert.pem'));
+const intermediateCert = fs.readFileSync(path.join(__dirname, '..', 'cert', 'chain.pem'));
+
+// Create the CA bundle array
+const MY_CA_BUNDLE = [serverCert, intermediateCert];
+
+const httpsAgent = new https.Agent({
+    ca: MY_CA_BUNDLE
+});    
 // const { generateCertificatePdf } = require('../handlebars/compileCertificateTemplate.js');
 // const { sendMessageForCertificateComponent } = require('../handlebars/websocket');
 
@@ -95,7 +106,7 @@ async function generateCertificate(data){
         // let pdfPath = await generateCertificatePdf(certificateData);
 
         // axios.post('http://localhost:4400/generateAssayCertificatePdf', certificateData)
-        axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData)
+        axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData, { httpsAgent })
             .then(response => {
                 console.log('Data sent successfully:', response.data);
             })
