@@ -51,6 +51,7 @@ app.use(require('./routes/admin/get-databases-routes.js'));
 // Receiving pdfs routes:
 app.use(require('./routes/accounting/receive-invoice-routes.js'));
 app.use(require('./routes/assay-certificates/receive-assay-certificate-routes.js'));
+app.use(require('./routes/gsa-sampling/receive-sampling-certificate-route.js'));
 
 // === Frontend: ===
 // =================
