@@ -13,3 +13,5 @@ handlebars/compiled-gsaCertificateTemplate.html
 handlebars/compiled-gsaClientInvoiceTemplate.html
 handlebars/events.js
 handlebars/websocket.js
+cert/cert.pem
+cert/chain.pem

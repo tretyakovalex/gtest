@@ -49,6 +49,11 @@ router.post('/addGSACertificate', async (req, res) => {
 
         await generateInvoice(data.Sample_No, data.release_date);
 
+        if(pdfPath){
+            console.log("Generate pdfPath before sending to client: ", pdfPath);
+            res.download(pdfPath);
+        }
+
         // let file_name = pdfPath.replace("/Users/karlembeast/builds/projects/gsa-web/backend/handlebars/gsa-certificates/", "");
         // console.log("printing file name: ", file_name);
 

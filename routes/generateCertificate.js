@@ -105,17 +105,64 @@ async function generateCertificate(data){
 
         // let pdfPath = await generateCertificatePdf(certificateData);
 
-        // axios.post('http://localhost:4400/generateAssayCertificatePdf', certificateData)
-        axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData, { httpsAgent })
-            .then(response => {
-                console.log('Data sent successfully:', response.data);
-            })
-            .catch(error => {
-                console.error('Error sending data:', error);
+        // Define the folder where you want to save the PDF
+        const saveFolder = path.join(__dirname, '..', 'handlebars', 'gsa-certificates');
+        
+        // Ensure the folder exists
+        if (!fs.existsSync(saveFolder)) {
+            fs.mkdirSync(saveFolder);
+        }
+
+        // let file_name = '';
+
+        const response = await axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData, {
+            httpsAgent: new https.Agent({ ca: MY_CA_BUNDLE }), // Use your custom CA if needed
+            responseType: 'stream' // Important: Treat the response as a stream
+        });
+
+        let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
+        console.log("Printing received file_name: ", file_name);
+        const pdfFilePath = path.join(saveFolder, file_name);
+        console.log("Printing pdfFilePath: ", pdfFilePath);
+        // Create a write stream to save the PDF
+        const writer = fs.createWriteStream(pdfFilePath);
+
+        // Create a Promise to handle the file writing
+        return new Promise((resolve, reject) => {
+            const writer = fs.createWriteStream(pdfFilePath);
+
+            // Pipe the response stream to the file
+            response.data.pipe(writer);
+
+            // Handle the 'finish' event to know when the file is written
+            writer.on('finish', () => {
+                console.log('PDF saved successfully to', pdfFilePath);
+                resolve(pdfFilePath); // Resolve with the PDF file path
             });
 
+            // Handle errors during the file write process
+            writer.on('error', (error) => {
+                console.error('Error saving PDF:', error);
+                reject(error); // Reject the promise if there's an error
+            });
+        });
 
-        // return pdfPath;
+        // axios.post('http://localhost:4400/generateAssayCertificatePdf', certificateData)
+        // axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData, { httpsAgent })
+        //     .then(response => {
+        //         console.log('Data sent successfully:', response.data);
+        //         // file_name = response.data.match(/[^\/]+$/)[0];
+        //         // let file_location = path.join(__dirname, '..', '..', 'handlebars', 'gsa-sampling-certificates', file_name);
+        //         // console.log("printing file location: ", file_location);
+
+
+        //     })
+        //     .catch(error => {
+        //         console.error('Error sending data:', error);
+        //     });
+
+
+        
         // console.log("Printing pdf path: ", pdfPath);
 
         // const file_name = pdfPath.match(/[^\/]+$/)[0];
