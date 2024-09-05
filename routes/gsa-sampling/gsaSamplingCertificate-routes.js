@@ -36,7 +36,7 @@ const httpsAgent = new https.Agent({
 
 router.get('/getGeneratedSamplingCertificate', async (req, res) => {
     try {
-        const file_name = "gsaSamplingCertificateTemplate.pdf"
+        const file_name = 'gsaSamplingCertificateTemplate.pdf';
         let file_location = path.join(__dirname, '..', '..', 'handlebars', 'gsa-sampling-certificates', file_name);
         console.log("printing file location: ", file_location);
         
@@ -51,29 +51,85 @@ router.post('/generateSamplingCertficate', async (req, res) => {
     try {
         const data = req.body;
 
-        console.log(data);
+        console.log("Sending data to generate PDF:", data);
+
+        // Define the folder where you want to save the PDF
+        const saveFolder = path.join(__dirname, '..', '..', 'handlebars', 'gsa-sampling-certificates');
+        
+        // Ensure the folder exists
+        if (!fs.existsSync(saveFolder)) {
+            fs.mkdirSync(saveFolder);
+        }
+
+        // Set up the file path to save the PDF
+        const pdfFilePath = path.join(saveFolder, 'gsaSamplingCertificateTemplate.pdf');
+        
+        // Make the POST request to the PDF generator server
+        const response = await axios.post(`${process.env.PDF_GENERATOR_URL}/generateSamplingCertficate`, data, {
+            httpsAgent: new https.Agent({ ca: MY_CA_BUNDLE }), // Use your custom CA if needed
+            responseType: 'stream' // Important: Treat the response as a stream
+        });
+
+        // Create a write stream to save the PDF
+        const writer = fs.createWriteStream(pdfFilePath);
+
+        // Pipe the response stream to the file
+        response.data.pipe(writer);
+
+        // Handle the 'finish' event to know when the file is written
+        writer.on('finish', () => {
+            console.log('PDF saved successfully to', pdfFilePath);
+
+            // Optionally, send a response to the client
+            // res.json({ message: 'PDF saved successfully', filePath: pdfFilePath });
+            // res.download(pdfFilePath);
+
+            // Send the file to the client for download
+            res.download(pdfFilePath, 'generateSamplingCertficate.pdf', (err) => {
+                if (err) {
+                    console.error('Error sending file to client:', err);
+                    res.status(500).send('Error downloading the PDF');
+                } else {
+                    console.log('PDF sent successfully to the client');
+                }
+            });
+        });
+
+        // Handle errors during the file write process
+        writer.on('error', (error) => {
+            console.error('Error saving PDF:', error);
+            res.status(500).send('Failed to save PDF');
+        });
 
         // generateSamplingCertificate(data);
 
         // let pdfPath = await generateSamplingCertificatePdf(data);
 
-        file_name = '';
+        // let file_name = '';
 
-        axios.post(`${process.env.PDF_GENERATOR_URL}/generateSamplingCertficate`, clientInvoiceData, { httpsAgent })
-            .then(response => {
-                console.log('Data sent successfully:', response.data);
-                file_name = response.file_name;
-            })
-            .catch(error => {
-                console.error('Error sending data:', error);
-            });
+        // axios.post(`${process.env.PDF_GENERATOR_URL}/generateSamplingCertficate`, data, { httpsAgent })
+        //     .then(response => {
+        //         // console.log('Data sent successfully:', response.data);
+
+        //         console.log('Data sent successfully, downloading PDF...');
+
+        //         // Send the PDF back to the client as a download
+        //         res.setHeader('Content-Type', 'application/pdf');
+        //         res.setHeader('Content-Disposition', 'attachment; filename=gsaSamplingCertificateTemplate.pdf');
+        //         response.data.pipe(res);
+
+        //         // file_name = response.data.match(/[^\/]+$/)[0];
+        //         // let file_location = path.join(__dirname, '..', '..', 'handlebars', 'gsa-sampling-certificates', file_name);
+        //         // console.log("printing file location: ", file_location);
+                
+        //         // res.download(file_location);
+        //     })
+        //     .catch(error => {
+        //         console.error('Error sending data:', error);
+        //     });
 
         
-        const file_name = file_name.match(/[^\/]+$/)[0];
-        let file_location = path.join(__dirname, '..', '..', 'handlebars', 'gsa-sampling-certificates', file_name);
-        console.log("printing file location: ", file_location);
         
-        res.download(file_location);
         
     } catch (error) {
         console.error(error);
