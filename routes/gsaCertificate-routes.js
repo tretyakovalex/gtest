@@ -43,17 +43,41 @@ router.post('/addGSACertificate', async (req, res) => {
             release_date: data.release_date
         }
 
-        const query = `INSERT INTO gsa_certificate SET ?`;
-
         const pdfPath = await generateCertificate(data);
+        
+        if(pdfPath){
+            console.log("Printing pdfPath: ", pdfPath);
+        }
 
         await generateInvoice(data.Sample_No, data.release_date);
 
-        if(pdfPath){
-            console.log("Generate pdfPath before sending to client: ", pdfPath);
-            res.download(pdfPath);
-        }
+        // Query to insert or update if sample_no already exists
+        const query = `
+            INSERT INTO gsa_certificate (sample_no, release_date) 
+            VALUES (?, ?) 
+            ON DUPLICATE KEY UPDATE release_date = VALUES(release_date)`;
 
+        // Insert into DB or update if exists
+        pool.query(query, [certificate.sample_no, certificate.release_date], async (err, result) => {
+            if(err){
+                console.error(err);
+                res.json({error: err});
+            } 
+
+            if (pdfPath) {
+                console.log("Generated pdfPath before sending to client: ", pdfPath);
+                return res.download(pdfPath);
+            } else {
+                return res.status(500).json({ message: 'Failed to generate PDF.' });
+            }
+        })
+
+        
+
+        // const query = `INSERT INTO gsa_certificate SET ?`;
+        
+
+        // ===== Will be used in future to send emails:  ======
         // let file_name = pdfPath.replace("/Users/karlembeast/builds/projects/gsa-web/backend/handlebars/gsa-certificates/", "");
         // console.log("printing file name: ", file_name);
 
@@ -96,7 +120,9 @@ router.post('/addGSACertificate', async (req, res) => {
 
         //     console.log("Printing mailOptions: ", mailOptions)
         // });
+        // ====================================================
 
+        
         // pool.query(query, certificate, async (err, gsaCertificate) => {
         //     if (err) {
         //         if (err.code === 'ER_DUP_ENTRY') {
@@ -109,11 +135,11 @@ router.post('/addGSACertificate', async (req, res) => {
             
         //     res.json({ gsaCertificates: gsaCertificate, file_name: file_name});
         // });
-
         
         
     } catch (error) {
         console.error(error);
+        res.status(500).send('Internal Server Error');
     }
 });
 

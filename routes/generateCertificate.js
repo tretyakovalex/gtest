@@ -37,18 +37,29 @@ async function generateCertificate(data){
 
         // Getting registration info
         let registration = await getRegistrationData(data.Sample_No);
-        // console.log(registration);
+        console.log("Printing registration: ", registration);
 
 
         // === Getting method info ===
         
         // --- Getting Full Scan value and adding to combinedRemoveList if true ---
-        console.log("Printing value of registration[0].Full_scan: ", Buffer.isBuffer(registration[0].Full_scan));
+        console.log("Printing value of registration[0].Full_scan: ", registration[0].Full_scan);
         
         let combinedRemoveList = [];
-        if(Buffer.isBuffer(registration[0].Full_scan) === true){
+        if(registration[0].Full_scan === true){
             combinedRemoveList = [registration[0].Type];
             data.selectedElements.push({name: 'Full_scan'});
+        } else {
+            combinedRemoveList = [registration[0].Type];
+        }
+        // ------------------------------------------------------------------------
+
+        // --- Getting Full Scan value and adding to combinedRemoveList if true ---
+        console.log("Printing value of registration[0].Semi_quantitative: ", registration[0].Semi_quantitative);
+        
+        if(registration[0].Semi_quantitative === true){
+            combinedRemoveList = [registration[0].Type];
+            data.selectedElements.push({name: 'Semi_quantitive'});
         } else {
             combinedRemoveList = [registration[0].Type];
         }
@@ -63,7 +74,7 @@ async function generateCertificate(data){
         
         // ===========================
 
-        // Getting method info
+
         let result = await getResultsBySampleNo(data.Sample_No, data.selectedElements, data.RA_present, data.RA_In_Kg);
         // console.log("Printing result: ", result);
 
@@ -105,6 +116,8 @@ async function generateCertificate(data){
 
         // let pdfPath = await generateCertificatePdf(certificateData);
 
+        console.log("About to send data to generate certificate in external api");
+
         // Define the folder where you want to save the PDF
         const saveFolder = path.join(__dirname, '..', 'handlebars', 'gsa-certificates');
         
@@ -113,39 +126,75 @@ async function generateCertificate(data){
             fs.mkdirSync(saveFolder);
         }
 
-        // let file_name = '';
-
-        const response = await axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData, {
+        return await axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData, {
             httpsAgent: new https.Agent({ ca: MY_CA_BUNDLE }), // Use your custom CA if needed
             responseType: 'stream' // Important: Treat the response as a stream
-        });
+        })
+        .then(response => {
+            console.log('Data sent successfully, downloading and saving PDF...');
 
-        let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
-        console.log("Printing received file_name: ", file_name);
-        const pdfFilePath = path.join(saveFolder, file_name);
-        console.log("Printing pdfFilePath: ", pdfFilePath);
-        // Create a write stream to save the PDF
-        const writer = fs.createWriteStream(pdfFilePath);
-
-        // Create a Promise to handle the file writing
-        return new Promise((resolve, reject) => {
-            const writer = fs.createWriteStream(pdfFilePath);
-
-            // Pipe the response stream to the file
-            response.data.pipe(writer);
-
-            // Handle the 'finish' event to know when the file is written
-            writer.on('finish', () => {
-                console.log('PDF saved successfully to', pdfFilePath);
-                resolve(pdfFilePath); // Resolve with the PDF file path
+            let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
+            console.log("Printing received file_name: ", file_name);
+            const pdfFilePath = path.join(saveFolder, file_name);
+            console.log("Printing pdfFilePath: ", pdfFilePath);
+    
+            // Create a Promise to handle the file writing
+            return new Promise((resolve, reject) => {
+                const writer = fs.createWriteStream(pdfFilePath);
+    
+                // Pipe the response stream to the file
+                response.data.pipe(writer);
+    
+                // Handle the 'finish' event to know when the file is written
+                writer.on('finish', () => {
+                    console.log('PDF saved successfully to', pdfFilePath);
+                    resolve(pdfFilePath); // Resolve with the PDF file path
+                });
+    
+                // Handle errors during the file write process
+                writer.on('error', (error) => {
+                    console.error('Error saving PDF:', error);
+                    reject(error); // Reject the promise if there's an error
+                });
             });
+        })  
 
-            // Handle errors during the file write process
-            writer.on('error', (error) => {
-                console.error('Error saving PDF:', error);
-                reject(error); // Reject the promise if there's an error
-            });
-        });
+        
+
+        // let file_name = '';
+
+
+        // const response = await axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData, {
+        //     httpsAgent: new https.Agent({ ca: MY_CA_BUNDLE }), // Use your custom CA if needed
+        //     responseType: 'stream' // Important: Treat the response as a stream
+        // });
+
+        // let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
+        // console.log("Printing received file_name: ", file_name);
+        // const pdfFilePath = path.join(saveFolder, file_name);
+        // console.log("Printing pdfFilePath: ", pdfFilePath);
+        // // Create a write stream to save the PDF
+        // // const writer = fs.createWriteStream(pdfFilePath);
+
+        // // Create a Promise to handle the file writing
+        // return new Promise((resolve, reject) => {
+        //     const writer = fs.createWriteStream(pdfFilePath);
+
+        //     // Pipe the response stream to the file
+        //     response.data.pipe(writer);
+
+        //     // Handle the 'finish' event to know when the file is written
+        //     writer.on('finish', () => {
+        //         console.log('PDF saved successfully to', pdfFilePath);
+        //         resolve(pdfFilePath); // Resolve with the PDF file path
+        //     });
+
+        //     // Handle errors during the file write process
+        //     writer.on('error', (error) => {
+        //         console.error('Error saving PDF:', error);
+        //         reject(error); // Reject the promise if there's an error
+        //     });
+        // });
 
         // axios.post('http://localhost:4400/generateAssayCertificatePdf', certificateData)
         // axios.post(`${process.env.PDF_GENERATOR_URL}/generateAssayCertificatePdf`, certificateData, { httpsAgent })
@@ -207,11 +256,31 @@ async function getCustomerData(Sample_No){
 
 async function getRegistrationData(Sample_No){
     return new Promise((resolve, reject) => {
-        const query = `SELECT gsa_sample_id, Customer_sample_name, itsci_number, Type, Lot_weight, date, Sampling_date, Sample_No, Full_scan FROM registration WHERE Sample_No=?;`
+        const query = `SELECT gsa_sample_id, Customer_sample_name, itsci_number, Type, Lot_weight, date, Sampling_date, Sample_No, Full_scan, Semi_quantitative FROM registration WHERE Sample_No=?;`
         pool.query(query, [Sample_No], (err, registration) => {
             if(err){
                 console.error(err);
                 reject(err);
+            }
+
+            // Check if Full_scan is a buffer
+            if (Buffer.isBuffer(registration[0].Full_scan)) {
+                // Compare the Buffer content to determine true or false
+                if (registration[0].Full_scan.equals(Buffer.from([0]))) {
+                    registration[0].Full_scan = false;
+                } else if (registration[0].Full_scan.equals(Buffer.from([1]))) {
+                    registration[0].Full_scan = true;
+                }
+            }
+
+            // Check if Semi_quantitative is a buffer
+            if (Buffer.isBuffer(registration[0].Semi_quantitative)) {
+                // Compare the Buffer content to determine true or false
+                if (registration[0].Semi_quantitative.equals(Buffer.from([0]))) {
+                    registration[0].Semi_quantitative = false;
+                } else if (registration[0].Semi_quantitative.equals(Buffer.from([1]))) {
+                    registration[0].Semi_quantitative = true;
+                }
             }
 
             resolve(registration);
