@@ -12,7 +12,7 @@ const { generateCertificate } = require('./generateCertificate.js');
 const { generateSamplingCertificatePdf } = require('../handlebars/compileSamplingCertificateTemplate.js');
 // const transporter = require('../utils/email-transponder');
 
-const { sendMessageForCertificateComponent } = require('../handlebars/websocket');
+// const { sendMessageForCertificateComponent } = require('../handlebars/websocket');
 
 require('dotenv').config();
 
@@ -44,7 +44,7 @@ router.post('/addGSACertificate', async (req, res) => {
         }
 
         const pdfPath = await generateCertificate(data);
-        
+
         if(pdfPath){
             console.log("Printing pdfPath: ", pdfPath);
         }
@@ -225,7 +225,7 @@ async function getFileCreatedDate(file_path){
         const file_path = path.join(__dirname, '..', 'handlebars', 'gsa-certificates', file);
         const stat = await fs.stat(file_path);
         if (stat) {
-            return { file_name: file, created: stat.birthtime };
+            return { file_name: file, created: stat.mtime };
         }
     }));
 

@@ -7,7 +7,7 @@ const moment = require('moment');
 
 const { pool } = require('../../configs/mysql');
 // const { getFileCreatedDate } = require('../testHandlebars.js');
-const { sendMessageForInvoiceComponent } = require('../../handlebars/websocket');
+// const { sendMessageForInvoiceComponent } = require('../../handlebars/websocket');
 
 
 router.get('/getGsaInvoices', async (req, res) => {
