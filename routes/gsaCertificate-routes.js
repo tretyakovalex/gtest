@@ -16,6 +16,13 @@ const { generateSamplingCertificatePdf } = require('../handlebars/compileSamplin
 
 require('dotenv').config();
 
+// Function to check if the filename contains a timestamp
+function isFileWithoutTimestamp(fileName) {
+    // Regex pattern to match filenames with a timestamp like _YYYYMMDD_HHMMSS.pdf
+    const timestampPattern = /_\d{8}_\d{6}\.pdf$/;
+    return !timestampPattern.test(fileName);
+}
+
 router.get('/getGSACertificate', async (req, res) => {
     try {
         const query = `SELECT * FROM gsa_certificate`;
@@ -158,7 +165,13 @@ router.get('/generateCertificate', async (req, res) => {
 router.get('/getAllCertificates', async (req, res) => {
     try {
         let files = fs.readdirSync(path.join(__dirname, '..', 'handlebars', 'gsa-certificates'));
-        const file_path = files.filter(file => file.endsWith('.pdf'));
+
+        // const file_path = files.filter(file => file.endsWith('.pdf'));
+        
+        // Filter to select only PDF files without a timestamp
+        const file_path = files.filter(file => 
+            file.endsWith('.pdf') && isFileWithoutTimestamp(file)
+        );
         console.log("file paths: ", file_path)
 
         let pdf_files = await getFileCreatedDate(file_path);
@@ -175,7 +188,13 @@ router.get('/getCertificateByDate', async (req, res) => {
         const date = req.query.date;
         
         let files = fs.readdirSync(path.join(__dirname, '..', 'handlebars', 'gsa-certificates'));
-        const file_path = files.filter(file => file.endsWith('.pdf'));
+
+        // const file_path = files.filter(file => file.endsWith('.pdf'));
+
+        // Filter to select only PDF files without a timestamp
+        const file_path = files.filter(file => 
+            file.endsWith('.pdf') && isFileWithoutTimestamp(file)
+        );
         console.log("file paths: ", file_path);
 
         let pdf_files = await getFileCreatedDate(file_path);

@@ -9,11 +9,23 @@ const { pool } = require('../../configs/mysql');
 // const { getFileCreatedDate } = require('../testHandlebars.js');
 // const { sendMessageForInvoiceComponent } = require('../../handlebars/websocket');
 
+// Function to check if the filename contains a timestamp
+function isFileWithoutTimestamp(fileName) {
+    // Regex pattern to match filenames with a timestamp like _YYYYMMDD_HHMMSS.pdf
+    const timestampPattern = /_\d{8}_\d{6}\.pdf$/;
+    return !timestampPattern.test(fileName);
+}
 
 router.get('/getGsaInvoices', async (req, res) => {
     try {
         let files = fs.readdirSync(path.join(__dirname, '..', '..', 'handlebars', 'gsa-invoices'));
-        const file_path = files.filter(file => file.endsWith('.pdf'));
+        
+        // const file_path = files.filter(file => file.endsWith('.pdf'));
+        
+        // Filter to select only PDF files without a timestamp
+        const file_path = files.filter(file => 
+            file.endsWith('.pdf') && isFileWithoutTimestamp(file)
+        );
         console.log("file paths: ", file_path)
 
         let pdf_files = await getFileCreatedDate(file_path);
@@ -50,7 +62,12 @@ router.get('/getInvoiceByDate', async (req, res) => {
         const date = req.query.date;
         
         let files = fs.readdirSync(path.join(__dirname, '..', '..', 'handlebars', 'gsa-invoices'));
-        const file_path = files.filter(file => file.endsWith('.pdf'));
+        
+        // const file_path = files.filter(file => file.endsWith('.pdf'));
+
+        const file_path = files.filter(file => 
+            file.endsWith('.pdf') && isFileWithoutTimestamp(file)
+        );
         console.log("file paths: ", file_path);
 
         let pdf_files = await getFileCreatedDate(file_path);
@@ -78,7 +95,7 @@ async function getFileCreatedDate(file_path){
         const file_path = path.join(__dirname, '..', '..', 'handlebars', 'gsa-invoices', file);
         const stat = await fs.stat(file_path);
         if (stat) {
-            return { file_name: file, created: stat.birthtime };
+            return { file_name: file, created: stat.mtime };
         }
     }));
 

@@ -4,7 +4,7 @@ const fs = require('fs');
 const router = express.Router();
 
 const { generateSamplingCertificate } = require('../generateSamplingCertificate.js');
-const { sendMessageForSamplingCertificateComponent } = require('../../handlebars/websocket.js');
+// const { sendMessageForSamplingCertificateComponent } = require('../../handlebars/websocket.js');
 
 const { generateSamplingCertificatePdf } = require('../../handlebars/compileSamplingCertificateTemplate.js');
 

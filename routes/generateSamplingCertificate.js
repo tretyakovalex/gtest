@@ -7,7 +7,7 @@ const path = require('path');
 const moment = require('moment');
 
 const { generateSamplingCertificatePdf } = require('../handlebars/compileSamplingCertificateTemplate.js');
-const { sendMessageForSamplingCertificateComponent } = require('../handlebars/websocket');
+// const { sendMessageForSamplingCertificateComponent } = require('../handlebars/websocket');
 
 async function generateSamplingCertificate(data){
     try {

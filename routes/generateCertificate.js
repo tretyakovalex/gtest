@@ -130,20 +130,30 @@ async function generateCertificate(data){
             httpsAgent: new https.Agent({ ca: MY_CA_BUNDLE }), // Use your custom CA if needed
             responseType: 'stream' // Important: Treat the response as a stream
         })
-        .then(response => {
+        .then(async response => {
             console.log('Data sent successfully, downloading and saving PDF...');
 
             let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
             console.log("Printing received file_name: ", file_name);
-            const pdfFilePath = path.join(saveFolder, file_name);
-            console.log("Printing pdfFilePath: ", pdfFilePath);
+
+            // === function that will rename old pdf by adding a timestamp at the end ===
+            let pdfFilePath = await checkAndRenamePDF(file_name);
+
+            const writer = fs.createWriteStream(pdfFilePath);
+    
+            // Pipe the response stream to the file
+            response.data.pipe(writer);
+            // ==========================================================================
+
+            // const pdfFilePath = path.join(saveFolder, file_name);
+            // console.log("Printing pdfFilePath: ", pdfFilePath);
     
             // Create a Promise to handle the file writing
             return new Promise((resolve, reject) => {
-                const writer = fs.createWriteStream(pdfFilePath);
+                // const writer = fs.createWriteStream(pdfFilePath);
     
-                // Pipe the response stream to the file
-                response.data.pipe(writer);
+                // // Pipe the response stream to the file
+                // response.data.pipe(writer);
     
                 // Handle the 'finish' event to know when the file is written
                 writer.on('finish', () => {
@@ -226,6 +236,40 @@ async function generateCertificate(data){
 
     } catch (error) {
         console.error(error);
+    }
+}
+
+// Helper function to format the current date and time for renaming files
+function getTimestamp() {
+    const now = new Date();
+    return `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
+}
+
+async function checkAndRenamePDF(file_name) {
+    const saveFolder = path.join(__dirname, "..", "handlebars", "gsa-certificates");
+    const pdfFilePath = path.join(saveFolder, file_name);
+
+    try {
+        const files = await fs.readdir(saveFolder);
+        const matchingFiles = files.filter(file => file === file_name);
+
+        // If the file exists, rename it with a timestamp
+        if (matchingFiles.length > 0) {
+            const timestamp = getTimestamp();
+            const existingFilePath = path.join(saveFolder, matchingFiles[0]);
+            const renamedFileName = `${file_name.replace('.pdf', '')}_${timestamp}.pdf`;
+            const renamedFilePath = path.join(saveFolder, renamedFileName);
+
+            // Rename the old file
+            await fs.rename(existingFilePath, renamedFilePath);
+            console.log(`Renamed old PDF file to: ${renamedFileName}`);
+        }
+
+        // Return the path where the new PDF will be saved
+        return pdfFilePath;
+    } catch (error) {
+        console.error('Error handling PDF save:', error);
+        throw error;
     }
 }
 
