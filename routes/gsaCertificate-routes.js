@@ -56,7 +56,7 @@ router.post('/addGSACertificate', async (req, res) => {
             console.log("Printing pdfPath: ", pdfPath);
         }
 
-        await generateInvoice(data.Sample_No, data.release_date);
+        await generateInvoice(data.Sample_No, data.release_date, data.certNumVersion);
 
         // Query to insert or update if sample_no already exists
         const query = `

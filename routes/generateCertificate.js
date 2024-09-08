@@ -107,7 +107,7 @@ async function generateCertificate(data){
             "results": result,
             "sampledGSA": data.sampledGSA,
             "addSignatures": data.addSignatures,
-            "certificate_file_name":`${registration[0].gsa_sample_id}`,
+            "certificate_file_name":`${registration[0].gsa_sample_id}${data.certNumVersion}`,
             "RA_present": RA_present,
             "RA_In_Kg": data.RA_In_Kg
         };

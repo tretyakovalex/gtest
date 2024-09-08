@@ -24,7 +24,7 @@ const httpsAgent = new https.Agent({
     ca: MY_CA_BUNDLE
 });    
 
-async function generateInvoice(Sample_No, date){
+async function generateInvoice(Sample_No, date, certNumVersion){
     try {
         const data = {Sample_No: Sample_No, date, date}; 
         
@@ -233,7 +233,7 @@ async function generateInvoice(Sample_No, date){
                         "company_phone": customerData[0].phone,
                         "company_email": customerData[0].email
                     },
-                    "invoice_file_name":`${customerData[0].gsa_sample_id.slice(0, 3) + "-Invoice" + customerData[0].gsa_sample_id.slice(3)}`,
+                    "invoice_file_name":`${customerData[0].gsa_sample_id.slice(0, 3) + "-Invoice" + customerData[0].gsa_sample_id.slice(3) + certNumVersion}`,
                     "currency": currency,
                     "sampled_request": []
                 };
