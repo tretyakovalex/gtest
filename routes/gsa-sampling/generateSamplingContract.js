@@ -45,7 +45,7 @@ async function generateSamplingContract(data){
         let registration = await getRegistrationData(data.Sample_No);
         console.log(registration);
 
-        let currency = await getCurrency(customer.country_of_origin);
+        let currency = await getCurrency(data.country_of_origin);
 
         let contractData = {
             "documentNumber": documentNumber,
