@@ -5,6 +5,8 @@ const moment = require('moment-timezone');
 
 const { pool } = require('../configs/mysql');
 
+const { generateSamplingContract } = require('./gsa-sampling/generateSamplingContract.js');
+
 router.post('/addRegistration', async (req, res) => {
     try {   
         const data = req.body;
@@ -30,13 +32,17 @@ router.post('/addRegistration', async (req, res) => {
         (${Array(columns.length).fill('?').join(', ')})
         `;
 
-        pool.query(insertQuery, values, (error, results) => {
+        pool.query(insertQuery, values, async (error, results) => {
             if (error) {
                 console.log(error);
                 return res.status(500).send('Internal Server Error');
             }
+            // res.status(200).json('successfully added result to DB');
 
-            res.status(200).json('successfully added result to DB');
+            let samplingContract = await generateSamplingContract(data);
+            console.log("Printing file name for samplingContract: ", samplingContract);
+            res.download(samplingContract);
+
         })
     } catch (error) {
         console.error(error);
@@ -236,7 +242,11 @@ router.put('/updateRegistration', async (req, res) => {
                 return res.status(500).json({"error": "Internal Server Error"});
             }
 
-            res.json("Registration was successfully updated!");
+            // res.json("Registration was successfully updated!");
+
+            let samplingContract = await generateSamplingContract(data);
+            console.log("Printing file name for samplingContract: ", samplingContract);
+            res.download(samplingContract);
         });
     } catch (error) {
         console.error(error);

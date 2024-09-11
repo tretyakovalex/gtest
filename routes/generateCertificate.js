@@ -93,6 +93,8 @@ async function generateCertificate(data){
 
         let paddedNum = await numberPadding(data.Sample_No);
 
+        let disclaimer = await addDisclaimer(data.certNumVersion);
+
         let certificateData = {
             "certType": data.certType,
             "paddedNum": paddedNum,
@@ -109,7 +111,8 @@ async function generateCertificate(data){
             "addSignatures": data.addSignatures,
             "certificate_file_name":`${registration[0].gsa_sample_id}${data.certNumVersion}`,
             "RA_present": RA_present,
-            "RA_In_Kg": data.RA_In_Kg
+            "RA_In_Kg": data.RA_In_Kg,
+            "disclaimer": disclaimer
         };
 
         console.log("Printing certificateData: ", certificateData);
@@ -236,6 +239,23 @@ async function generateCertificate(data){
 
     } catch (error) {
         console.error(error);
+    }
+}
+
+async function addDisclaimer(certNumVersion){
+    switch (certNumVersion) {
+        case 'F':
+            return "These results are indicative and should not be used for commercial purposes.";
+        case 'Q':
+            return "These results are indicative and should not be used for commercial purposes.";
+        case 'R':
+            return "The measurement is based on the intensity of radiation emitted by the analyzed material from the received sample.";
+        case 'U':
+            return "";
+        case 'S':
+            return "";
+        default:
+            return "";
     }
 }
 

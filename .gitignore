@@ -15,3 +15,11 @@ handlebars/events.js
 handlebars/websocket.js
 cert/cert.pem
 cert/chain.pem
+files/*
+
+handlebars/events.js
+handlebars/.DS_Store
+handlebars/public/.DS_Store
+handlebars/public/views/samplingCertificateTemplate/gsaSamplingCertificateTemplate.handlebars
+handlebars/public/views/samplingCertificateTemplate/partials/scale_and_bags_pages.handlebars
+handlebars/websocket.js
