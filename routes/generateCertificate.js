@@ -31,6 +31,8 @@ async function generateCertificate(data){
     try {
         console.log("Printing data: ", data);
 
+        console.log("PRINTING date_of_lab: ", data.date_of_lab);
+
         // Getting customer info
         let customer = await getCustomerData(data.Sample_No);
         // console.log(customer);
@@ -76,7 +78,7 @@ async function generateCertificate(data){
 
 
         let result = await getResultsBySampleNo(data.Sample_No, data.selectedElements, data.RA_present, data.RA_In_Kg);
-        // console.log("Printing result: ", result);
+        console.log("Printing result: ", result);
 
         let RA_present;
         for (let res of result) {
@@ -95,6 +97,11 @@ async function generateCertificate(data){
 
         let disclaimer = await addDisclaimer(data.certNumVersion);
 
+        let Sampling_date = moment(registration[0].Sampling_date);
+
+        let date_of_lab = await getDateOfLabFromResults(data.Sample_No);
+        console.log("Printing date_of_lab from getDateOfLabFromResults():", date_of_lab);
+
         let certificateData = {
             "certType": data.certType,
             "paddedNum": paddedNum,
@@ -104,8 +111,9 @@ async function generateCertificate(data){
             "method": method,
             "releaseDate": moment(data.releaseDate).format('DD.MM.YYYY'),
             "date": moment(registration[0].date).format('DD.MM.YYYY'),
-            "date_of_lab": moment(result[0].date_of_lab).format('DD.MM.YYYY'),
-            "Sampling_date": moment(registration[0].Sampling_date).format('DD.MM.YYYY'),
+            // "date_of_lab": moment(result[0].date_of_lab).format('DD.MM.YYYY'),
+            "date_of_lab": moment(date_of_lab).format('DD.MM.YYYY'),
+            "Sampling_date": Sampling_date.isValid() ? moment(registration[0].Sampling_date).format('DD.MM.YYYY') : undefined,
             "results": result,
             "sampledGSA": data.sampledGSA,
             "addSignatures": data.addSignatures,
@@ -525,6 +533,23 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
 
             resolve(combinedResults);
         })
+    });
+}
+
+async function getDateOfLabFromResults(Sample_No){
+    return new Promise((resolve, reject) => {
+        try {
+            pool.query('SELECT date_of_lab FROM results where Sample_No=?', Sample_No, (err, result) => {
+                if(err){
+                    console.error(err);
+                    reject;
+                }
+
+                resolve(result[0].date_of_lab);
+            })
+        } catch (error) {
+            console.error(error);
+        }
     });
 }
 
