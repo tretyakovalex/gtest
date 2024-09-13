@@ -26,6 +26,33 @@ router.get('/getGsaInvoices', async (req, res) => {
         const file_path = files.filter(file => 
             file.endsWith('.pdf') && isFileWithoutTimestamp(file)
         );
+
+        // Sort based on the numeric part like "000384" in "2024-000384" and handle optional capital letter
+        file_path.sort((a, b) => {
+            // Extract the part after the third hyphen (e.g., "000384F" from "XXX-XX-2024-000384F")
+            let aPart = a.split('-').slice(4).join('-').replace('.pdf', '');
+            let bPart = b.split('-').slice(4).join('-').replace('.pdf', '');
+
+            // Extract the numeric part and the optional letter
+            let aMatch = aPart.match(/^(\d+)([A-Z]?)$/);
+            let bMatch = bPart.match(/^(\d+)([A-Z]?)$/);
+
+            if (aMatch && bMatch) {
+                // Compare the numeric parts first
+                let aNum = parseInt(aMatch[1], 10); // Numeric part of "000384F"
+                let bNum = parseInt(bMatch[1], 10); // Numeric part of "000386F"
+
+                if (aNum !== bNum) {
+                    return bNum - aNum; // Sort numerically in descending order
+                }
+
+                // If numeric parts are equal, compare the letter in ascending order
+                return aMatch[2].localeCompare(bMatch[2]); // Sort letters alphabetically (ascending)
+            }
+
+            return 0;
+        });
+
         console.log("file paths: ", file_path)
 
         let pdf_files = await getFileCreatedDate(file_path);
@@ -68,6 +95,33 @@ router.get('/getInvoiceByDate', async (req, res) => {
         const file_path = files.filter(file => 
             file.endsWith('.pdf') && isFileWithoutTimestamp(file)
         );
+        
+        // Sort based on the numeric part like "000384" in "2024-000384" and handle optional capital letter
+        file_path.sort((a, b) => {
+            // Extract the part after the third hyphen (e.g., "000384F" from "XXX-XX-2024-000384F")
+            let aPart = a.split('-').slice(4).join('-').replace('.pdf', '');
+            let bPart = b.split('-').slice(4).join('-').replace('.pdf', '');
+
+            // Extract the numeric part and the optional letter
+            let aMatch = aPart.match(/^(\d+)([A-Z]?)$/);
+            let bMatch = bPart.match(/^(\d+)([A-Z]?)$/);
+
+            if (aMatch && bMatch) {
+                // Compare the numeric parts first
+                let aNum = parseInt(aMatch[1], 10); // Numeric part of "000384F"
+                let bNum = parseInt(bMatch[1], 10); // Numeric part of "000386F"
+
+                if (aNum !== bNum) {
+                    return bNum - aNum; // Sort numerically in descending order
+                }
+
+                // If numeric parts are equal, compare the letter in ascending order
+                return aMatch[2].localeCompare(bMatch[2]); // Sort letters alphabetically (ascending)
+            }
+
+            return 0;
+        });
+
         console.log("file paths: ", file_path);
 
         let pdf_files = await getFileCreatedDate(file_path);
