@@ -329,11 +329,23 @@ async function getMeasurementServices(Sample_No){
             }
             // ===========================
 
+            // === Add all other elements ===
+            for (const element of selectedElements) {
+                let element_symbol = elementsAndSymbols.filter(item => item.element_name === element.key).map(item => item.element_symbol);
+                console.log("Printing element_symbol: ", element_symbol);
+                if (!measurementServices.includes(element_symbol)) {
+                    measurementServices.push(element.key);
+                }
+            }
+            // ==============================
+
+
+            console.log("Printing filteredMeasurementServices: ", filteredMeasurementServices);
             console.log("Printing measurement services: ", measurementServices);
 
             
             for(const item of elementsAndSymbols){
-                if(measurementServices.includes(item.element_name)){
+                if(measurementServices.includes(item.element_name) && !filteredMeasurementServices.includes(item.element_symbol)){
                     filteredMeasurementServices.push(item.element_symbol);
                 }
             }
