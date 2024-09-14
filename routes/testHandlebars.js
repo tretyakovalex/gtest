@@ -118,8 +118,10 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 resultsArray.forEach(result => {
                     if (!elements.includes(result.name)) {
                         tempResultsArray.push(result);
+                    } else if(result.name !== "Moisture"){
+                        console.log("Printing result !filteredRegistration before adding to tempResultsArray2: ", result);
+                        tempResultsArray2.push(result);
                     }
-                    tempResultsArray2.push(result);
                 });
             }
             
@@ -182,9 +184,9 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 console.log(elementsAndPrices);
 
                 elementsAndPrices.slice(1).forEach((item) => {
-                    if(elementsAndPrices.length === 1 && item.element_symbol !== undefined){
+                    if(elementsAndPrices.length === 1 && item.element_symbol !== undefined && item.element_symbol !== null){
                     elementSymbols = item.element_symbol
-                    } else if (elementsAndPrices.length > 1 && item.element_symbol !== undefined) {
+                    } else if (elementsAndPrices.length > 1 && item.element_symbol !== undefined && item.element_symbol !== null) {
                         elementSymbols += `${item.element_symbol}, `
                     }
                 });
@@ -265,11 +267,11 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 }
 
                 if(elementsAndPrices.length > 1){  
-                    if(elementSymbols){
+                    if(elementSymbols !== ""){
                         clientInvoiceData.sampled_request.push({
                             "date": data.date,
                             "item":"2",
-                            "service_description": `(${elementSymbols})`,
+                            "service_description": `((${elementSymbols})`,
                             // "unit_price": unit_price,
                             "unit_price": "",
                             "quantity": (elementSymbols.split(",").length),
@@ -278,7 +280,10 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                             "total_price": await formatNumber(unit_price)
                         }); 
                         item_num_for_nonElements = 3;
-                    }  
+
+                    } else if (elementSymbols === ""){
+                        item_num_for_nonElements = 2;
+                    }
 
                     nonElements.forEach(item => {
                         clientInvoiceData.sampled_request.push({
@@ -329,6 +334,8 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 //         console.error('Error sending data:', error);
                 //     });
 
+                console.log("Printing final invoice date: ", clientInvoiceData);
+
                 return await axios.post(`${process.env.PDF_GENERATOR_URL}/generateInvoicePdf`, clientInvoiceData, {
                     httpsAgent: new https.Agent({ ca: MY_CA_BUNDLE }), // Use your custom CA if needed
                     responseType: 'stream' // Important: Treat the response as a stream
@@ -336,7 +343,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 .then(async response => {
                     console.log('Data sent successfully, downloading and saving PDF...');
         
-                    let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
+                    let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
                     console.log("Printing received file_name: ", file_name);
         
                     // === function that will rename old pdf by adding a timestamp at the end ===
