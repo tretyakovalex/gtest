@@ -271,7 +271,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                         clientInvoiceData.sampled_request.push({
                             "date": data.date,
                             "item":"2",
-                            "service_description": `((${elementSymbols})`,
+                            "service_description": `(${elementSymbols})`,
                             // "unit_price": unit_price,
                             "unit_price": "",
                             "quantity": (elementSymbols.split(",").length),
@@ -343,7 +343,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 .then(async response => {
                     console.log('Data sent successfully, downloading and saving PDF...');
         
-                    let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
+                    let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
                     console.log("Printing received file_name: ", file_name);
         
                     // === function that will rename old pdf by adding a timestamp at the end ===
