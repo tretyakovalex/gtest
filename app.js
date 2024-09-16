@@ -54,6 +54,9 @@ app.use(require('./routes/accounting/receive-invoice-routes.js'));
 app.use(require('./routes/assay-certificates/receive-assay-certificate-routes.js'));
 app.use(require('./routes/gsa-sampling/receive-sampling-certificate-route.js'));
 
+// WSP Contract
+app.use(require('./routes/wsp-contract/wsp-contract-routes.js'));
+
 // === Frontend: ===
 // =================
 

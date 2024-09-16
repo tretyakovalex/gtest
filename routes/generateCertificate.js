@@ -144,7 +144,7 @@ async function generateCertificate(data){
         .then(async response => {
             console.log('Data sent successfully, downloading and saving PDF...');
 
-            let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
+            let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
             console.log("Printing received file_name: ", file_name);
 
             // === function that will rename old pdf by adding a timestamp at the end ===
@@ -190,7 +190,7 @@ async function generateCertificate(data){
         //     responseType: 'stream' // Important: Treat the response as a stream
         // });
 
-        // let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
+        // let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
         // console.log("Printing received file_name: ", file_name);
         // const pdfFilePath = path.join(saveFolder, file_name);
         // console.log("Printing pdfFilePath: ", pdfFilePath);
