@@ -41,9 +41,16 @@ router.get('/getGSACertificate', async (req, res) => {
 
 router.post('/addGSACertificate', async (req, res) => {
     try {
-        const data = req.body;
+        const rawData = req.body;
+
+        const { reasonObject, ...data } = rawData;
 
         console.log(data);
+
+        // reasonObject.editedFile = data;
+
+        await writeReasonToLogFile(reasonObject);
+
 
         const certificate = {
             sample_no: data.Sample_No,
@@ -149,6 +156,8 @@ router.post('/addGSACertificate', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 router.get('/generateCertificate', async (req, res) => {
     try {
@@ -303,6 +312,21 @@ async function getFileCreatedDate(file_path){
     }));
 
     return pdf_files;
+}
+
+
+async function writeReasonToLogFile(reasonObject){
+    let logFileLocation = path.join(__dirname, "..", "logs", "assay-certificate-logs", "assay-certificate-edits-logs");
+    const jsonString = JSON.stringify(reasonObject, null, 2);
+
+    fs.appendFile(logFileLocation, jsonString + '\n', (err) => {
+        if (err) {
+          console.error('Error appending to file', err);
+        } else {
+          console.log('Successfully appended to file');
+        }
+    });
+    // fs.writeFileSync(logFileLocation, jsonString);
 }
 // ========================
 

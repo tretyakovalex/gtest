@@ -166,7 +166,20 @@ router.get('/getWSPContractInfoBySampleNo', async (req, res) => {
 
 router.put('/updateWSPContract', async (req, res) => {
     try {
-        const data = req.body;
+        const data = req.body.reqObject;
+        console.log("Printing req object: ", data);
+
+        const reasonObject = req.body.reasonObject;
+        console.log("Printing reason object: ", reasonObject);
+
+        const unparsedOriginalFile = await fetch(`http://localhost:4000/getWSPContractInfoBySampleNo?sample_no=${data.sample_no}`);
+        const originalFile = await unparsedOriginalFile.json();
+        console.log("Priting originalFile: ", originalFile.wsp_contract_info[0]);
+
+        // Object.assign(reasonObject, originalFile.wsp_contract_info[0]);
+        reasonObject.originalFile = originalFile.wsp_contract_info[0];
+        
+        await writeReasonToLogFile(reasonObject);
 
         let wspContract = await generateWSPContract(data);
         if(wspContract){
@@ -190,6 +203,7 @@ router.put('/updateWSPContract', async (req, res) => {
 
         pool.query(query, [WSPContract, WSPContract.sample_no], (err, result) => {
             if(err){
+                console.error(err);
                 res.json({error: err});
             }
 
@@ -203,7 +217,21 @@ router.put('/updateWSPContract', async (req, res) => {
     } catch (error) {
         console.error(error);
     }
-})
+});
+
+async function writeReasonToLogFile(reasonObject){
+    let logFileLocation = path.join(__dirname, "..", "..", "logs", "wsp-contract-logs", "wsp-contract-edits-logs");
+    const jsonString = JSON.stringify(reasonObject, null, 2);
+
+    fs.appendFile(logFileLocation, jsonString + '\n', (err) => {
+        if (err) {
+          console.error('Error appending to file', err);
+        } else {
+          console.log('Successfully appended to file');
+        }
+    });
+    // fs.writeFileSync(logFileLocation, jsonString);
+}
 
 async function getFileCreatedDate(file_path){
     let pdf_files = await Promise.all(file_path.map(async (file) => {
