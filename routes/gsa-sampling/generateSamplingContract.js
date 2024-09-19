@@ -275,10 +275,16 @@ async function getMeasurementServices(Sample_No){
             const hasFullScan = selectedElements.some(el => el.key === "Full_scan");
             const hasSamplePreparation = selectedElements.some(el => el.key === "Sample_preparation");
             const hasGeologicalSample = selectedElements.some(el => el.key === "Geological_sample");
+
+            // === Adding non elements ===
+            const hasRA = selectedElements.some(el => el.key === "RA");
+            const hasMoisture = selectedElements.some(el => el.key === "Moisture");
             
-            console.log("Printing selected items from registration: ", selectedElements);
-            
-            if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample) {
+            // console.log("Printing selected items from registration: ", selectedElements);
+            console.log("Printing selected items from registration: ", JSON.stringify(selectedElements, null, 2));
+
+            // if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample) {
+            if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample || hasRA || hasMoisture) {
                 // If any of these elements exist, remove all other elements and push the specific service
                 selectedElements = [];  // Clear the selected elements
                 
@@ -298,8 +304,31 @@ async function getMeasurementServices(Sample_No){
                     measurementServices.push("Geological_sample");
                     filteredMeasurementServices.push("Geological_sample");
                 }
+                if(hasRA){
+                    measurementServices.push("RA");
+                    filteredMeasurementServices.push("RA");
+                }
+                if(hasMoisture){
+                    console.log("Includes Moisture");
+                    measurementServices.push("Moisture");
+                    filteredMeasurementServices.push("Moisture");
+                }
             }
             // =============================================================================================================================
+
+            // === Adding non elements ===
+            // let hasRA = selectedElements.some(el => el.key === "RA");
+            // let hasMoisture = selectedElements.some(el => el.key === "Moisture");
+            // if(hasRA){
+            //     measurementServices.push("RA");
+            //     filteredMeasurementServices.push("RA");
+            // }
+            // if(hasMoisture){
+            //     console.log("Includes Moisture");
+            //     measurementServices.push("Moisture");
+            //     filteredMeasurementServices.push("Moisture");
+            // }
+            // ===========================
 
             // === Check if selectedElements contains "REO" ===
             let REO_Elements = [57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 89, 91, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103];
@@ -318,16 +347,7 @@ async function getMeasurementServices(Sample_No){
             }
             // ========================
 
-            // === Adding non elements ===
-            let hasRA = selectedElements.some(el => el.key === "RA");
-            let hasMoisture = selectedElements.some(el => el.key === "Moisture");
-            if(hasRA){
-                filteredMeasurementServices.push("RA");
-            }
-            if(hasMoisture){
-                filteredMeasurementServices.push("Moisture");
-            }
-            // ===========================
+            
 
             // === Add all other elements ===
             for (const element of selectedElements) {
