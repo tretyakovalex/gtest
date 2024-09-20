@@ -275,6 +275,7 @@ async function getMeasurementServices(Sample_No){
             const hasFullScan = selectedElements.some(el => el.key === "Full_scan");
             const hasSamplePreparation = selectedElements.some(el => el.key === "Sample_preparation");
             const hasGeologicalSample = selectedElements.some(el => el.key === "Geological_sample");
+            const hasSumRareEarthElements = selectedElements.some(el => el.key === "Sum_rare_earth_elements");
 
             // === Adding non elements ===
             const hasRA = selectedElements.some(el => el.key === "RA");
@@ -284,7 +285,7 @@ async function getMeasurementServices(Sample_No){
             console.log("Printing selected items from registration: ", JSON.stringify(selectedElements, null, 2));
 
             // if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample) {
-            if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample || hasRA || hasMoisture) {
+            if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample || hasRA || hasMoisture || hasSumRareEarthElements) {
                 // If any of these elements exist, remove all other elements and push the specific service
                 selectedElements = [];  // Clear the selected elements
                 
@@ -312,6 +313,10 @@ async function getMeasurementServices(Sample_No){
                     console.log("Includes Moisture");
                     measurementServices.push("Moisture");
                     filteredMeasurementServices.push("Moisture");
+                }
+                if (hasSumRareEarthElements) {
+                    measurementServices.push("Sum_rare_earth_elements");
+                    filteredMeasurementServices.push("Sum_rare_earth_elements");
                 }
             }
             // =============================================================================================================================
