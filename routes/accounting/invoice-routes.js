@@ -144,6 +144,20 @@ router.get('/getInvoiceByDate', async (req, res) => {
     }
 });
 
+
+router.post("/add-invoice-data", async (req, res) => {
+    const data = req.query.data;
+    const query = 'INSERT INTO invoice-data SET ?';
+
+    pool.query(query, data, (err, invoice) => {
+        if(err){
+            console.error(err);
+        }
+
+        res.json("Added data into invoice-data");
+    })
+})
+
 async function getFileCreatedDate(file_path){
     let pdf_files = await Promise.all(file_path.map(async (file) => {
         const file_path = path.join(__dirname, '..', '..', 'handlebars', 'gsa-invoices', file);

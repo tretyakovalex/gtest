@@ -26,13 +26,13 @@ const { pool } = require('../../configs/mysql');
 
 async function generateSamplingContract(data){
     try {
-        console.log("Printing data: ", data);
+        // console.log("Printing data: ", data);
 
         let paddedSampleNumber = await paddedNumber(data.Sample_No);
         let documentNumber = `GSA-FR-CFRM-${paddedSampleNumber}`;
         // Getting customer info
         let customer = await getCustomerData(data.Sample_No);
-        console.log(customer);
+        console.log("printing customer (line 35): ", customer);
 
         let measurementServices = await getMeasurementServices(data.Sample_No);
         console.log(measurementServices);
@@ -196,7 +196,7 @@ async function checkAndRenamePDF(file_name) {
 
 async function getCustomerData(Sample_No){
     return new Promise((resolve, reject) => {
-        const query = `SELECT cust.company, cust.name, cust.tin, cust.address, cust.phone, cust.country, reg.Sample_No FROM customers cust INNER JOIN registration reg ON reg.customer_id=cust.customer_id WHERE Sample_No=?;`
+        const query = `SELECT cust.company, cust.name, cust.surname, cust.tin, cust.address, cust.phone, cust.country, reg.Sample_No FROM customers cust INNER JOIN registration reg ON reg.customer_id=cust.customer_id WHERE Sample_No=?;`
         pool.query(query, [Sample_No], (err, customer) => {
             if(err){
                 console.error(err);
@@ -204,15 +204,38 @@ async function getCustomerData(Sample_No){
                 return;
             }
 
-            let filteredCustomer = {};
-            if (customer && customer.length > 0) {
-                if (customer[0].company) {
-                    const { name, ...rest } = customer[0];
-                    filteredCustomer = rest;
-                } else {
-                    filteredCustomer = { company: customer[0].company };
-                }
-            }
+            // let filteredCustomer = {};
+            // if (customer && customer.length > 0) {
+            //     const { name, surname, company, ...rest } = customer[0]; // Move destructuring outside
+
+            //     if (company) {
+            //         filteredCustomer = { company, ...rest }; // If company exists, return it with other fields
+            //     } else {
+            //         // If company doesn't exist, combine name and surname and assign to company
+            //         filteredCustomer = {
+            //             company: `${name} ${surname}`, // Combine name and surname
+            //             ...rest // Include the rest of the properties
+            //         };
+            //     }
+            // }
+
+            let filteredCustomer = customer[0];
+
+            // let filteredCustomer = {};
+            // if (customer && customer.length > 0) {
+            //     if (customer[0].company) {
+            //         const { name, ...rest } = customer[0];
+            //         filteredCustomer = rest;
+            //     } else {
+            //         // filteredCustomer = { company: customer[0].company };
+                    
+            //         // If company doesn't exist, combine name and surname and assign to company
+            //         filteredCustomer = {
+            //             company: `${customer[0].name} ${customer[0].surname}`, // Combine name and surname
+            //             ...rest // Include the rest of the properties
+            //         };
+            //     }       
+            // }
 
             resolve(filteredCustomer);
         })

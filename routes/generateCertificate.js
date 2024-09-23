@@ -303,7 +303,7 @@ async function checkAndRenamePDF(file_name) {
 
 async function getCustomerData(Sample_No){
     return new Promise((resolve, reject) => {
-        const query = `SELECT cust.company, cust.name, cust.email, cust.address, reg.Sample_No FROM customers cust INNER JOIN registration reg ON reg.customer_id=cust.customer_id WHERE Sample_No=?;`
+        const query = `SELECT cust.company, cust.name, cust.surname, cust.email, cust.address, reg.Sample_No FROM customers cust INNER JOIN registration reg ON reg.customer_id=cust.customer_id WHERE Sample_No=?;`
         pool.query(query, [Sample_No], (err, customer) => {
             if(err){
                 console.error(err);
@@ -311,15 +311,17 @@ async function getCustomerData(Sample_No){
                 return;
             }
 
-            let filteredCustomer = {};
-            if (customer && customer.length > 0) {
-                if (customer[0].company) {
-                    const { name, ...rest } = customer[0];
-                    filteredCustomer = rest;
-                } else {
-                    filteredCustomer = { company: customer[0].company };
-                }
-            }
+            // let filteredCustomer = {};
+            // if (customer && customer.length > 0) {
+            //     if (customer[0].company) {
+            //         const { name, ...rest } = customer[0];
+            //         filteredCustomer = rest;
+            //     } else {
+            //         filteredCustomer = { company: customer[0].company };
+            //     }
+            // }
+
+            let filteredCustomer = customer[0];
 
             resolve(filteredCustomer);
         })

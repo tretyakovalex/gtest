@@ -43,14 +43,22 @@ router.post('/addGSACertificate', async (req, res) => {
     try {
         const rawData = req.body;
 
-        const { reasonObject, ...data } = rawData;
+        console.log("Printing rawData: ", rawData);
 
-        console.log(data);
+        const { reasonObject, ...unfilteredData } = rawData;
 
-        // reasonObject.editedFile = data;
+        console.log("Printing unfilteredData: ", unfilteredData);
+        let data = unfilteredData.reqObject;
+        
+        console.log("Printing data: ", data);
+        
+        if (rawData.reasonObject){
+            console.log("Printing reasonObject: ", reasonObject);
 
-        await writeReasonToLogFile(reasonObject);
-
+            // reasonObject.editedFile = data;
+    
+            await writeReasonToLogFile(reasonObject);
+        } 
 
         const certificate = {
             sample_no: data.Sample_No,

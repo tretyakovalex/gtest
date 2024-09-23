@@ -3,8 +3,9 @@ const router = express.Router();
 const fs = require('fs-extra');
 const path = require('path');
 
+const fetch = require('node-fetch');
+
 const { generatePdf } = require('../handlebars/compiledHandlebars');
-// const { sendMessageToClients } = require('../handlebars/websocket');
 
 const { pool } = require('../configs/mysql');
 
@@ -335,6 +336,22 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 //     });
 
                 console.log("Printing final invoice date: ", clientInvoiceData);
+
+                // Sending data to be added to invoice-data table
+                // const filteredDataForInvoiceTable = {
+                //     sample_no: clientInvoiceData.sample_no,
+                //     customer_id: customerData[0].customer_id,
+                //     currency: currency,
+                //     main_element: clientInvoiceData.
+                //     other_elements: clientInvoiceData.
+                //     other_services: clientInvoiceData.
+                //     sample_management_fee: clientInvoiceData.
+                //     environmental_fee: clientInvoiceData.
+                //     grand_total: clientInvoiceData.
+                // }
+                // const AddToInvoiceData = await fetch(`http://localhost:4000/add-invoice-data?data=${clientInvoiceData}`);
+                // console.log(AddToInvoiceData);
+                // ===============================================
 
                 return await axios.post(`${process.env.PDF_GENERATOR_URL}/generateInvoicePdf`, clientInvoiceData, {
                     httpsAgent: new https.Agent({ ca: MY_CA_BUNDLE }), // Use your custom CA if needed
