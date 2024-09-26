@@ -53,7 +53,11 @@ router.post('/addGSACertificate', async (req, res) => {
         console.log("Printing data: ", data);
         
         if (rawData.reasonObject){
-            console.log("Printing reasonObject: ", reasonObject);
+
+            // const unparsedOriginalFile = await fetch(`http://localhost:4000/getAssayCertificateBySampleNo?sample_no=${data.sample_no}`);
+            // console.log("Printing reasonObject: ", reasonObject);
+            // const originalFile = await unparsedOriginalFile.json();
+            // console.log("Priting originalFile: ", originalFile);
 
             // reasonObject.editedFile = data;
     
@@ -177,6 +181,24 @@ router.get('/generateCertificate', async (req, res) => {
         console.error(error);
     }
 })
+
+// router.get('/getAssayCertificateBySampleNo', async (req, res) => {
+//     try {
+//         const sample_no = req.query.sample_no;
+//         console.log(sample_no);
+//         const query = 'SELECT * FROM wsp_contract WHERE sample_no=?';
+//         pool.query(query, [sample_no], (err, result) => {
+//             if(err){
+//                 console.error(err);
+//                 res.status(500).send("Internal Server Error");
+//             }
+
+//             res.json({wsp_contract_info: result});
+//         })
+//     } catch (error) {
+//         console.error(error);
+//     }
+// })
 
 // === Getting Generated Certificates ===
 router.get('/getAllCertificates', async (req, res) => {

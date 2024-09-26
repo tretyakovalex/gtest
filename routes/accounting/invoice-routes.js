@@ -146,8 +146,11 @@ router.get('/getInvoiceByDate', async (req, res) => {
 
 
 router.post("/add-invoice-data", async (req, res) => {
-    const data = req.query.data;
-    const query = 'INSERT INTO invoice-data SET ?';
+    const data = req.body;
+    const query = `INSERT INTO invoice_data SET ?`;
+
+    console.log("Printing data inside add-invoice-data route: ", data);
+    console.log("Printing query: ", query);
 
     pool.query(query, data, (err, invoice) => {
         if(err){

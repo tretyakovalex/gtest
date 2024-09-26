@@ -337,20 +337,30 @@ async function generateInvoice(Sample_No, date, certNumVersion){
 
                 console.log("Printing final invoice date: ", clientInvoiceData);
 
+
+
                 // Sending data to be added to invoice-data table
-                // const filteredDataForInvoiceTable = {
-                //     sample_no: clientInvoiceData.sample_no,
-                //     customer_id: customerData[0].customer_id,
-                //     currency: currency,
-                //     main_element: clientInvoiceData.
-                //     other_elements: clientInvoiceData.
-                //     other_services: clientInvoiceData.
-                //     sample_management_fee: clientInvoiceData.
-                //     environmental_fee: clientInvoiceData.
-                //     grand_total: clientInvoiceData.
-                // }
-                // const AddToInvoiceData = await fetch(`http://localhost:4000/add-invoice-data?data=${clientInvoiceData}`);
-                // console.log(AddToInvoiceData);
+                const filteredDataForInvoiceTable = {
+                    sample_no: Sample_No,
+                    customer_id: customerData[0].customer_id,
+                    currency: currency,
+                    main_element: elementsAndPrices[0].element_name,
+                    other_elements: elementSymbols,
+                    other_services: nonElements.map(item => item.non_element_name).join(', '),
+                    sample_management_fee: sampleManagementFee,
+                    grand_total: undoNumberFormatting(clientInvoiceData.grand_total),
+                    Date: data.date
+                }
+                console.log("Printing filteredDataForInvoiceTable: ", filteredDataForInvoiceTable);
+
+                const AddToInvoiceData = await fetch(`http://localhost:4000/add-invoice-data`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(filteredDataForInvoiceTable) // Convert the data to JSON
+                  });
+                console.log(AddToInvoiceData);
                 // ===============================================
 
                 return await axios.post(`${process.env.PDF_GENERATOR_URL}/generateInvoicePdf`, clientInvoiceData, {
@@ -458,6 +468,11 @@ async function formatNumber(num){
         let formatted_number = Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
         resolve(formatted_number);
     })
+}
+
+function undoNumberFormatting(formattedNumber) {
+    // Remove spaces and parse the number back to an integer
+    return parseInt(formattedNumber.replace(/\s+/g, ''), 10);
 }
 
 async function selectSampleManagementFee(total_price) {

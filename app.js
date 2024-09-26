@@ -57,6 +57,9 @@ app.use(require('./routes/gsa-sampling/receive-sampling-certificate-route.js'));
 // WSP Contract
 app.use(require('./routes/wsp-contract/wsp-contract-routes.js'));
 
+// Statistics
+app.use(require('./routes/statistics/analysis-statistics-routes.js'));
+
 // === Frontend: ===
 // =================
 
