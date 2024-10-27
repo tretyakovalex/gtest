@@ -32,18 +32,18 @@ async function generateSamplingContract(data){
         let documentNumber = `GSA-FR-CFRM-${paddedSampleNumber}`;
         // Getting customer info
         let customer = await getCustomerData(data.Sample_No);
-        console.log("printing customer (line 35): ", customer);
+        // console.log("printing customer (line 35): ", customer);
 
         let measurementServices = await getMeasurementServices(data.Sample_No);
-        console.log(measurementServices);
+        // console.log(measurementServices);
 
         let measurementServicesString = measurementServices.join(", ");
 
         let method_types = await getMethodData(measurementServices);
-        console.log("Printing getMethods: ", method_types);
+        // console.log("Printing getMethods: ", method_types);
 
         let registration = await getRegistrationData(data.Sample_No);
-        console.log(registration);
+        // console.log(registration);
 
         let currency = await getCurrency(data.country_of_origin);
 
@@ -76,7 +76,7 @@ async function generateSamplingContract(data){
         .then(async response => {
             console.log('Data sent successfully, downloading and saving PDF...');
 
-            let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
+            let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
             console.log("Printing received file_name: ", file_name);
 
             // === function that will rename old pdf by adding a timestamp at the end ===
@@ -293,22 +293,25 @@ async function getMeasurementServices(Sample_No){
                 }
             }
 
+            // console.log("Printing selected elements (296): ", selectedElements);
+
             // ===  Check if selectedElements contains "Semi_quantitative" or "Full_scan" or "Sample_preparation" or "Geological_sample" ===
             const hasSemiQuantitative = selectedElements.some(el => el.key === "Semi_quantitative");
             const hasFullScan = selectedElements.some(el => el.key === "Full_scan");
             const hasSamplePreparation = selectedElements.some(el => el.key === "Sample_preparation");
             const hasGeologicalSample = selectedElements.some(el => el.key === "Geological_sample");
-            const hasSumRareEarthElements = selectedElements.some(el => el.key === "Sum_rare_earth_elements");
 
             // === Adding non elements ===
             const hasRA = selectedElements.some(el => el.key === "RA");
             const hasMoisture = selectedElements.some(el => el.key === "Moisture");
+            const hasREO = selectedElements.some(el => el.key === "Sum_rare_earth_elements");
             
             // console.log("Printing selected items from registration: ", selectedElements);
-            console.log("Printing selected items from registration: ", JSON.stringify(selectedElements, null, 2));
+            // console.log("Printing selected items from registration: ", JSON.stringify(selectedElements, null, 2));
 
             // if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample) {
-            if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample || hasRA || hasMoisture || hasSumRareEarthElements) {
+            // if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample || hasRA || hasMoisture || hasSumRareEarthElements) {
+            if (hasSemiQuantitative || hasFullScan || hasSamplePreparation || hasGeologicalSample) {
                 // If any of these elements exist, remove all other elements and push the specific service
                 selectedElements = [];  // Clear the selected elements
                 
@@ -328,6 +331,19 @@ async function getMeasurementServices(Sample_No){
                     measurementServices.push("Geological_sample");
                     filteredMeasurementServices.push("Geological_sample");
                 }
+                // if(hasRA){
+                //     measurementServices.push("RA");
+                //     filteredMeasurementServices.push("RA");
+                // }
+                // if(hasMoisture){
+                //     console.log("Includes Moisture");
+                //     measurementServices.push("Moisture");
+                //     filteredMeasurementServices.push("Moisture");
+                // }
+            }
+
+            // For ra and moisture we don't remove all other elements
+            if(hasRA || hasMoisture){
                 if(hasRA){
                     measurementServices.push("RA");
                     filteredMeasurementServices.push("RA");
@@ -336,10 +352,6 @@ async function getMeasurementServices(Sample_No){
                     console.log("Includes Moisture");
                     measurementServices.push("Moisture");
                     filteredMeasurementServices.push("Moisture");
-                }
-                if (hasSumRareEarthElements) {
-                    measurementServices.push("Sum_rare_earth_elements");
-                    filteredMeasurementServices.push("Sum_rare_earth_elements");
                 }
             }
             // =============================================================================================================================
@@ -359,10 +371,13 @@ async function getMeasurementServices(Sample_No){
             // ===========================
 
             // === Check if selectedElements contains "REO" ===
-            let REO_Elements = [57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 89, 91, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103];
-            let hasREO = selectedElements.some(el => el.key === "Sum_rare_earth_elements");
+            let REO_Elements = ['Lanthanum', 'Cerium', 'Praseodymium', 'Neodymium', 'Promethium', 'Samarium', 'Europium', 'Gadolinium', 'Terbium', 'Dysprosium', 'Holmium', 'Erbium', 'Thulium', 'Ytterbium', 'Lutetium', 'Tantalum', 'Actinium', 'Protactinium', 'Neptunium', 'Plutonium', 'Americium', 'Curium', 'Berkelium', 'Californium', 'Einsteinium', 'Fermium', 'Mendelevium', 'Nobelium', 'Lawrencium'];
+            let excluded_reo_elements = elementsAndSymbols.filter(item => REO_Elements.includes(item.element_name)).map(item => item.element_symbol);
             if(hasREO){
-                measurementServices.push(!selectedElements.includes(REO_Elements));
+                measurementServices.push("Sum_rare_earth_elements");
+                filteredMeasurementServices.push("Sum_rare_earth_elements");
+                // measurementServices.push(!selectedElements.includes(excluded_reo_elements));
+                // filteredMeasurementServices.push(!selectedElements.includes(excluded_reo_elements));
             }
             // ================================================
 
@@ -380,16 +395,24 @@ async function getMeasurementServices(Sample_No){
             // === Add all other elements ===
             for (const element of selectedElements) {
                 let element_symbol = elementsAndSymbols.filter(item => item.element_name === element.key).map(item => item.element_symbol);
-                console.log("Printing element_symbol: ", element_symbol);
                 if (!measurementServices.includes(element_symbol)) {
                     measurementServices.push(element.key);
                 }
             }
             // ==============================
 
+            // === remove REO ===
+            REO_Elements.forEach(element => {
+                let indexToRemove = measurementServices.indexOf(element);
+                if (indexToRemove !== -1) {
+                    measurementServices.splice(indexToRemove, 1);
+                }
+            })
+            // ==================
 
-            console.log("Printing filteredMeasurementServices: ", filteredMeasurementServices);
-            console.log("Printing measurement services: ", measurementServices);
+
+            // console.log("Printing filteredMeasurementServices: ", filteredMeasurementServices);
+            console.log("Printing measurement services (408): ", measurementServices);
 
             
             for(const item of elementsAndSymbols){
