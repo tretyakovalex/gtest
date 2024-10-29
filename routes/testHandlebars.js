@@ -63,7 +63,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 }
             }
 
-            console.log("Printing filteredRegistraton: ", filteredRegistration);
+            // console.log("Printing filteredRegistraton: ", filteredRegistration);
 
             for (const [key, value] of Object.entries(result[0])) {
                 if (value !== null && key !== 'Sample_No' && key !== 'date_of_lab') {
@@ -76,14 +76,14 @@ async function generateInvoice(Sample_No, date, certNumVersion){
             let tempResultsArray = [];
             let tempResultsArray2 = [];
 
-            console.log("Printing results array (62): ", resultsArray);
+            // console.log("Printing results array (62): ", resultsArray);
             
 
             if(filteredRegistration){ 
                 if(filteredRegistration === "Sum_rare_earth_elements"){
                     resultsArray.forEach(item => {
                         if(!reo_elements.includes(item.name) && (item.name !== "Moisture" && item.name !== "RA" && item.name !== "REO")){
-                            console.log("Printing elements excluded from REO: ", {name: item.name, value: item.value});
+                            // console.log("Printing elements excluded from REO: ", {name: item.name, value: item.value});
                             tempResultsArray2.push({name: item.name, value: item.value});
                         } else {
                             if (item.name === "Moisture" || item.name === "RA"){
@@ -104,7 +104,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                         }
                         return (current.value > acc.value) ? current : acc;
                     }, resultsArray[0]);
-                    console.log("maxItem: ", maxItem);
+                    // console.log("maxItem: ", maxItem);
                     tempResultsArray2.push(maxItem);
 
                     tempResultsArray.push({name: filteredRegistration, value: 0});
@@ -120,7 +120,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                     if (!elements.includes(result.name)) {
                         tempResultsArray.push(result);
                     } else if(result.name !== "Moisture"){
-                        console.log("Printing result !filteredRegistration before adding to tempResultsArray2: ", result);
+                        // console.log("Printing result !filteredRegistration before adding to tempResultsArray2: ", result);
                         tempResultsArray2.push(result);
                     }
                 });
@@ -130,8 +130,8 @@ async function generateInvoice(Sample_No, date, certNumVersion){
             tempResultsArray2.sort((a, b) => b.value - a.value);
             // tempResultsArray2.push(...tempResultsArray);
 
-            console.log("tempResultsArray:", tempResultsArray);
-            console.log("tempResultsArray2:", tempResultsArray2);
+            // console.log("tempResultsArray:", tempResultsArray);
+            // console.log("tempResultsArray2:", tempResultsArray2);
             
             resultsArray = tempResultsArray2;
             // ====================================================================================================
@@ -142,7 +142,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
 
             // creating select query with added element values that contain results using columns.join(', ')
             const selectQuery = `
-                SELECT cust.customer_id, cust.company, cust.country, cust.address, cust.email, cust.phone, reg.Sample_No, reg.gsa_sample_id,
+                SELECT cust.customer_id, cust.company, cust.country, cust.address, cust.email, cust.phone, reg.Sample_No, reg.gsa_sample_id, reg.internal_calibration,
                 ${columns.join(', ')}
                 FROM customers AS cust 
                 INNER JOIN registration reg on reg.customer_id=cust.customer_id 
@@ -153,18 +153,32 @@ async function generateInvoice(Sample_No, date, certNumVersion){
             pool.query(selectQuery, [data.Sample_No], async (err, customerData) => {
                 if (err) {
                     console.error(err);
-                    return res.status(500).send('Internal Server Error');
+                    // return res.status(500).send('Internal Server Error');
                 }
                 
                 // const tempElements = resultsArray;
                 const tempElements = tempResultsArray2;
                 const tempNonElements = tempResultsArray;
 
-                console.log("printing temp non elements: ", tempNonElements);
+                // console.log("printing temp non elements: ", tempNonElements);
+
+                console.log("Printing customerData:", customerData[0]);
                 
                 let elementsAndPrices = await getElementSymbolAndPrices(tempElements, tempNonElements, customerData[0].country);
 
-                // console.log("Printing elements and their prices (59): ", elementsAndPrices);
+                let internal_calibration = false;
+                if(customerData[0].internal_calibration !== null && Buffer.isBuffer(customerData[0].internal_calibration) && customerData[0].internal_calibration.equals(new Buffer.from([0x01]))){
+                    internal_calibration = true;
+                }
+
+                // Setting all prices to 0 if internal calibration is selected
+                // elementsAndPrices.forEach(item => {
+                //     if(customerData[0].internal_calibration !== null && Buffer.isBuffer(customerData[0].internal_calibration) && customerData[0].internal_calibration.equals(new Buffer.from([0x01]))){
+                //         item.price = 0
+                //     }
+                // })
+
+                console.log("Printing elements and their prices (167): ", elementsAndPrices);
 
                 let total_price = 0;
                 elementsAndPrices.forEach(element => {
@@ -178,7 +192,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                     }
                 });
                 // nonElements = nonElements.replace(/, $/, '');
-                console.log("Printing non elements (128): ", nonElements);
+                // console.log("Printing non elements (128): ", nonElements);
 
 
                 let elementSymbols = "";
@@ -191,7 +205,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                         elementSymbols += `${item.element_symbol}, `
                     }
                 });
-                console.log("Printing element symbols: ", elementSymbols);
+                // console.log("Printing element symbols: ", elementSymbols);
                 elementSymbols = elementSymbols.replace(/, $/, '');
 
                 
@@ -249,9 +263,9 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                         "item":"1",
                         "certificate_number": customerData[0].gsa_sample_id,
                         "service_description": `${elementsAndPrices[0].element_name} Analysis (${elementsAndPrices[0].element_symbol})`,
-                        "unit_price": await formatNumber(elementsAndPrices[0].price),
+                        "unit_price": internal_calibration ? 0 : await formatNumber(elementsAndPrices[0].price),
                         "quantity": "1",
-                        "total_price": await formatNumber(elementsAndPrices[0].price)
+                        "total_price": internal_calibration ? 0 : await formatNumber(elementsAndPrices[0].price)
                     });
                 }
 
@@ -261,9 +275,9 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                         "item":"1",
                         "certificate_number": customerData[0].gsa_sample_id,
                         "service_description": `${elementsAndPrices[0].element_name} Analysis (${elementsAndPrices[0].element_symbol})`,
-                        "unit_price": await formatNumber(elementsAndPrices[0].price),
+                        "unit_price": internal_calibration ? 0 : await formatNumber(elementsAndPrices[0].price),
                         "quantity": "1",
-                        "total_price": await formatNumber(elementsAndPrices[0].price)
+                        "total_price": internal_calibration ? 0 : await formatNumber(elementsAndPrices[0].price)
                     });
                 }
 
@@ -278,7 +292,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                             "quantity": (elementSymbols.split(",").length),
                             // "total_price": 20 * elementsAndPrices.slice(1).length
                             // "total_price": await formatNumber(elementsAndPrices.slice(1).reduce((acc, item) => acc + item.price, 0)),
-                            "total_price": await formatNumber(unit_price)
+                            "total_price": internal_calibration ? 0 : await formatNumber(unit_price)
                         }); 
                         item_num_for_nonElements = 3;
 
@@ -291,9 +305,9 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                             "date": data.date,
                             "item": item_num_for_nonElements,
                             "service_description": item.non_element_name,
-                            "unit_price": item.price,
+                            "unit_price": internal_calibration ? 0 : item.price,
                             "quantity": 1,
-                            "total_price": item.price
+                            "total_price": internal_calibration ? 0 : item.price
                         });
                         item_num_for_nonElements += 1;
                     })
@@ -305,11 +319,11 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                         "date": data.date,
                         "item": clientInvoiceData.sampled_request.length + 1,
                         "service_description": "Sample management",
-                        "unit_price": sampleManagementFee,
+                        "unit_price": internal_calibration ? 0 : sampleManagementFee,
                         "quantity": "1",
-                        "total_price": sampleManagementFee
+                        "total_price": internal_calibration ? 0 : sampleManagementFee
                     });
-                    clientInvoiceData.grand_total = total_price + sampleManagementFee;
+                    clientInvoiceData.grand_total = internal_calibration ? 0 : (total_price + sampleManagementFee);
                 }
 
                 if(customerData[0].country === "Rwanda"){
@@ -338,6 +352,12 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 console.log("Printing final invoice date: ", clientInvoiceData);
 
 
+                let grandTotal = 0;
+                if(currency === "RWF"){
+                    grandTotal = undoNumberFormatting(clientInvoiceData.grand_total);
+                } else if (currency === "USD"){
+                    grandTotal = clientInvoiceData.grand_total;
+                }
 
                 // Sending data to be added to invoice-data table
                 const filteredDataForInvoiceTable = {
@@ -347,8 +367,8 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                     main_element: elementsAndPrices[0].element_name,
                     other_elements: elementSymbols,
                     other_services: nonElements.map(item => item.non_element_name).join(', '),
-                    sample_management_fee: sampleManagementFee,
-                    grand_total: undoNumberFormatting(clientInvoiceData.grand_total),
+                    sample_management_fee: internal_calibration ? 0 : sampleManagementFee,
+                    grand_total: internal_calibration ? 0 : grandTotal,
                     Date: data.date
                 }
                 console.log("Printing filteredDataForInvoiceTable: ", filteredDataForInvoiceTable);
@@ -370,7 +390,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 .then(async response => {
                     console.log('Data sent successfully, downloading and saving PDF...');
         
-                    let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
+                    let file_name = response.data.rawHeaders[process.env.RAW_HEADER_INDEX].match(/filename="(.+\.pdf)"/)[1];
                     console.log("Printing received file_name: ", file_name);
         
                     // === function that will rename old pdf by adding a timestamp at the end ===
