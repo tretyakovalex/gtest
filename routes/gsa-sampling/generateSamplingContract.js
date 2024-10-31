@@ -49,7 +49,7 @@ async function generateSamplingContract(data){
 
         let contractData = {
             "documentNumber": documentNumber,
-            "date": registration[0].Date,
+            "date": registration[0].Sampling_date,
             "customer": customer,
             "measurementService": measurementServicesString,
             "selectedMethodTypes": method_types,
@@ -76,7 +76,7 @@ async function generateSamplingContract(data){
         .then(async response => {
             console.log('Data sent successfully, downloading and saving PDF...');
 
-            let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
+            let file_name = response.data.rawHeaders[process.env.RAW_HEADER_INDEX].match(/filename="(.+\.pdf)"/)[1];
             console.log("Printing received file_name: ", file_name);
 
             // === function that will rename old pdf by adding a timestamp at the end ===
@@ -244,7 +244,7 @@ async function getCustomerData(Sample_No){
 
 async function getRegistrationData(Sample_No){
     return new Promise((resolve, reject) => {
-        const query = `SELECT reg.Date, reg.Sample_weight, reg.Customer_sample_name, reg.gsa_sample_id, reg.Approved_Quotation_Value, reg.Approx_days FROM registration reg WHERE Sample_No=?;`
+        const query = `SELECT reg.Date, reg.Sampling_date, reg.Sample_weight, reg.Customer_sample_name, reg.gsa_sample_id, reg.Approved_Quotation_Value, reg.Approx_days FROM registration reg WHERE Sample_No=?;`
         pool.query(query, [Sample_No], async (err, registration) => {
             if(err){
                 console.error(err);
@@ -253,6 +253,7 @@ async function getRegistrationData(Sample_No){
             }
 
             registration[0].Date = await formatDate(registration[0].Date);
+            registration[0].Sampling_date = await formatDate(registration[0].Sampling_date);
 
             resolve(registration);
         })
