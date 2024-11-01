@@ -49,7 +49,7 @@ async function generateSamplingContract(data){
 
         let contractData = {
             "documentNumber": documentNumber,
-            "date": registration[0].Sampling_date,
+            "date": registration[0].Date,
             "customer": customer,
             "measurementService": measurementServicesString,
             "selectedMethodTypes": method_types,
