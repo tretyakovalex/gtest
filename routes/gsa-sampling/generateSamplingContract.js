@@ -384,7 +384,7 @@ async function getMeasurementServices(Sample_No){
 
             // === Add main element ===
             for(const item of compoundSymbols){
-                if(registration[0].Type === item.compound_name){
+                if(registration[0].Type === item.compound_name && registration[0].Type !== "Unidentified"){
                     console.log(item);
                     filteredMeasurementServices.push(item.compound_abbreviation);
                 }
