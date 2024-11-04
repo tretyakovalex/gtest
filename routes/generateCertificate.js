@@ -144,7 +144,7 @@ async function generateCertificate(data){
         .then(async response => {
             console.log('Data sent successfully, downloading and saving PDF...');
 
-            let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
+            let file_name = response.data.rawHeaders[process.env.RAW_HEADER_INDEX].match(/filename="(.+\.pdf)"/)[1];
             console.log("Printing received file_name: ", file_name);
 
             // === function that will rename old pdf by adding a timestamp at the end ===
@@ -190,7 +190,7 @@ async function generateCertificate(data){
         //     responseType: 'stream' // Important: Treat the response as a stream
         // });
 
-        // let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
+        // let file_name = response.data.rawHeaders[5].match(/filename="(.+\.pdf)"/)[1];
         // console.log("Printing received file_name: ", file_name);
         // const pdfFilePath = path.join(saveFolder, file_name);
         // console.log("Printing pdfFilePath: ", pdfFilePath);
@@ -371,10 +371,14 @@ async function getMethodData(Type, filteredArray){
                 reject(err);
             }
 
+
             let compound = await getCompoundByCompoundName(Type);
             console.log("Printing compound: ", compound);
 
-            let element_name = compound[0].element_name;
+            let element_name = "";
+            if(Type !== 'Unidentified'){
+                element_name = compound[0].element_name;
+            }
 
             let filteredMethods = [];
             let method_data = {};
@@ -390,7 +394,7 @@ async function getMethodData(Type, filteredArray){
             methods.filter((method) => {
                 for (const [key, value] of Object.entries(method)) {
                     if (value !== null && Buffer.isBuffer(value) && value.equals(Buffer.from([0x01]))) {
-                        if (key === element_name) {
+                        if (key === element_name && Type !== 'Unidentified') {
                             if (!uniqueMethods.has(method.Methods) || !uniqueSamplePreparations.has(method.Sample_Preparation)) {
                                 filteredMethods.push(method);
 
