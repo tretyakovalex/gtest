@@ -76,7 +76,7 @@ async function generateSamplingContract(data){
         .then(async response => {
             console.log('Data sent successfully, downloading and saving PDF...');
 
-            let file_name = response.data.rawHeaders[process.env.RAW_HEADER_INDEX].match(/filename="(.+\.pdf)"/)[1];
+            let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
             console.log("Printing received file_name: ", file_name);
 
             // === function that will rename old pdf by adding a timestamp at the end ===
@@ -464,7 +464,7 @@ async function getMethodData(data){
         let elementsAndSymbols = await getElementSymbols();
 
         let filteredArray = [];
-        let nonElements = ["Full_scan", "Semi_quantitative", "Sample_preparation", "Geological_sample", "RA", "Moisture"];
+        let nonElements = ["Full_scan", "Semi_quantitative", "Sample_preparation", "Geological_sample", "RA", "Moisture", "Sum_rare_earth_elements"];
 
         for(const item of elementsAndSymbols){
             if(data.includes(item.element_symbol)){
@@ -480,7 +480,7 @@ async function getMethodData(data){
             }
         }
 
-        // console.log("Printing filteredArray: ", filteredArray);
+        console.log("Printing filteredArray: ", filteredArray);
 
         const query = `SELECT * FROM methods;`
         pool.query(query, (err, methods) => {
@@ -504,7 +504,7 @@ async function getMethodData(data){
                 for (const [key, value] of Object.entries(method)) {
                     if (value !== null && Buffer.isBuffer(value) && value.equals(Buffer.from([0x01]))) {
                         // if (method.Methods !== excludedMethod){
-                            // console.log("key: ", key, ", value: ", value);
+                            console.log("key: ", key, ", value: ", value);
                             if (filteredArray.includes(key)) {
                                 let method_exists = false;
                                 // console.log("key: ", key, ", value: ", value);
