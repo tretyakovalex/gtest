@@ -3,12 +3,8 @@ const router = express.Router();
 
 const { pool } = require('../configs/mysql');
 
-
-// SELECT r.Sample_No FROM results r 
-// LEFT JOIN gsa_certificate gc 
-// ON r.Sample_No = gc.sample_no 
-// WHERE gc.sample_no IS NULL;
-
+const fs = require('fs-extra');
+const path = require('path');
 
 router.get('/getResults', async (req, res) => {
     try {
@@ -111,10 +107,19 @@ router.post('/addResult', async (req, res) => {
 
 router.put('/updateResult', async (req, res) => {
     try {
-        const data = req.body;
+        // const data = req.body;
+        
+        const rawData = req.body;
+        // Splitting raw data to select reqObject, the other part of rawData is reasonObject
+        // Save reasonObject to file to keep track of changes
+        const data = rawData.reqObject;
 
         console.log("Printing data:");
         console.log(data);
+
+        // Logging data and reason
+        console.log("Printing rawData.reasonObject: ", rawData.reasonObject);
+        writeReasonToLogFile(rawData.reasonObject);
 
         // Extract the column names and values from the data object
         const columns = Object.keys(data);
@@ -185,6 +190,22 @@ router.delete('/deleteResult/:Sample_No', async (req, res) => {
         console.error(error);
     }
 });
+
+
+// Saving updated results to log file
+async function writeReasonToLogFile(reasonObject){
+    let logFileLocation = path.join(__dirname, "..", "logs", "modified-results-logs", "modified-result-logs");
+    const jsonString = JSON.stringify(reasonObject, null, 2);
+
+    fs.appendFile(logFileLocation, jsonString + '\n', (err) => {
+        if (err) {
+          console.error('Error appending to file', err);
+        } else {
+          console.log('Successfully appended to file');
+        }
+    });
+    // fs.writeFileSync(logFileLocation, jsonString);
+}
 
 
 module.exports = router;
