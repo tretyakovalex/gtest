@@ -5,6 +5,9 @@ const moment = require('moment-timezone');
 
 const { pool } = require('../configs/mysql');
 
+const fs = require('fs-extra');
+const path = require('path');
+
 const { generateSamplingContract } = require('./gsa-sampling/generateSamplingContract.js');
 
 router.post('/addRegistration', async (req, res) => {
@@ -243,7 +246,13 @@ router.get('/getRegistrationSampleNumbers', async (req, res) => {
 
 router.put('/updateRegistration', async (req, res) => {
     try {
-        const data = req.body;
+        const rawData = req.body;
+
+        let data = rawData.reqObject;
+
+        // Logging data and reason
+        console.log("Printing rawData.reasonObject: ", rawData.reasonObject);
+        writeReasonToLogFile(rawData.reasonObject);
 
         const query = `UPDATE registration SET ? WHERE Sample_No=?`;
 
@@ -266,6 +275,21 @@ router.put('/updateRegistration', async (req, res) => {
         res.status(500).json({"error": "Internal Server Error"});
     }
 });
+
+// Saving updated results to log file
+async function writeReasonToLogFile(reasonObject){
+    let logFileLocation = path.join(__dirname, "..", "logs", "modified-registration-logs", "modified-registration-logs");
+    const jsonString = JSON.stringify(reasonObject, null, 2);
+
+    fs.appendFile(logFileLocation, jsonString + '\n', (err) => {
+        if (err) {
+          console.error('Error appending to file', err);
+        } else {
+          console.log('Successfully appended to file');
+        }
+    });
+    // fs.writeFileSync(logFileLocation, jsonString);
+}
 
 
 module.exports = router;
