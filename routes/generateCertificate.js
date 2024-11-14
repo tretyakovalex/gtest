@@ -117,6 +117,7 @@ async function generateCertificate(data){
             "results": result,
             "sampledGSA": data.sampledGSA,
             "addSignatures": data.addSignatures,
+            "addDisclaimer": data.addDisclaimer,
             "certificate_file_name":`${registration[0].gsa_sample_id}${data.certNumVersion}`,
             "RA_present": RA_present,
             "RA_In_Kg": data.RA_In_Kg,
@@ -144,7 +145,7 @@ async function generateCertificate(data){
         .then(async response => {
             console.log('Data sent successfully, downloading and saving PDF...');
 
-            let file_name = response.data.rawHeaders[process.env.RAW_HEADER_INDEX].match(/filename="(.+\.pdf)"/)[1];
+            let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
             console.log("Printing received file_name: ", file_name);
 
             // === function that will rename old pdf by adding a timestamp at the end ===
@@ -486,7 +487,12 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
 
                                     if (item.asMetal === true) {
                                         // Find element by name and obtain Element symbol
-                                        filteredResults.push({name: element_info[0].element_symbol, value: value.toFixed(2)});
+                                        if(item.showAsPPM === true){
+                                            let convertedValue = (value / 100) * 10000; 
+                                            filteredResults.push({name: element_info[0].element_symbol, value: convertedValue.toFixed(2), showAsPPM: true});
+                                        } else if(item.showAsPPM === false){
+                                            filteredResults.push({name: element_info[0].element_symbol, value: value.toFixed(2)});
+                                        }
                                     } else {
                                         if(element_info[0].oxides !== undefined){
                                             // Find element by name and obtain Element in Oxide form
@@ -495,7 +501,12 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
                                             //     filteredResults.push({name: element_info[0].oxides, value: "< 0.01"});
                                             // } else if (oxide_value >= 0.01){
                                             // }
-                                            filteredResults.push({name: element_info[0].oxides, value: oxide_value.toFixed(2)});
+                                            if(item.showAsPPM === true){
+                                                let convertedValue = (oxide_value / 100) * 10000; 
+                                                filteredResults.push({name: element_info[0].element_symbol, value: convertedValue.toFixed(2), showAsPPM: true});
+                                            } else if(item.showAsPPM === false){
+                                                filteredResults.push({name: element_info[0].oxides, value: oxide_value.toFixed(2)});
+                                            }
                                         }
                                     }                                        
                                 } else if (key === 'Moisture'){
@@ -507,7 +518,7 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
                                     } else {
                                         raAndMoistureResults.push({name: key, value: `${value.toFixed(2)} bq/g`});
                                     }
-                                } 
+                                }
                             }
                         }
                     }
@@ -533,7 +544,11 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
 
             combinedResults.forEach((result) => {
                 if(result.name !== "RA" && result.name !== "Moisture"){
-                    result.value = `${result.value} %`;
+                    if(result.showAsPPM === true){
+                        result.value = `${result.value} ppm`;
+                    } else if(result.showAsPPM === false){
+                        result.value = `${result.value} %`;
+                    }
                 }
             });
 
