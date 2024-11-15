@@ -546,7 +546,7 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
                 if(result.name !== "RA" && result.name !== "Moisture"){
                     if(result.showAsPPM === true){
                         result.value = `${result.value} ppm`;
-                    } else if(result.showAsPPM === false){
+                    } else {
                         result.value = `${result.value} %`;
                     }
                 }
