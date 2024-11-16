@@ -71,8 +71,16 @@ async function generateCertificate(data){
         // Remove matching elements
         let filteredArray = data.selectedElements.filter(item => !combinedRemoveList.includes(item.name)).map(item => item.name);
         console.log("Printing filteredArray: ", filteredArray);
-        let method = await getMethodData(registration[0].Type, filteredArray);
-        console.log(method);
+
+        // manually selected method(s) overwrite:
+        let method;
+        if(data.selectedMethods){
+            console.log("Printing manually selected methods: ", data.selectedMethods);
+            method = await getMethodData(registration[0].Type, filteredArray, data.selectedMethods);
+        } else if(!data.selectedMethods){
+            method = await getMethodData(registration[0].Type, filteredArray);
+        }
+        console.log("Method :) ", method);
         
         // ===========================
 
@@ -363,7 +371,7 @@ async function getRegistrationData(Sample_No){
     });
 }
 
-async function getMethodData(Type, filteredArray){
+async function getMethodData(Type, filteredArray, manualMethods){
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM methods;`
         pool.query(query, async (err, methods) => {
@@ -392,56 +400,71 @@ async function getMethodData(Type, filteredArray){
             const uniqueMethods = new Set();
             const uniqueSamplePreparations = new Set();
 
-            methods.filter((method) => {
-                for (const [key, value] of Object.entries(method)) {
-                    if (value !== null && Buffer.isBuffer(value) && value.equals(Buffer.from([0x01]))) {
-                        if (key === element_name && Type !== 'Unidentified') {
-                            if (!uniqueMethods.has(method.Methods) || !uniqueSamplePreparations.has(method.Sample_Preparation)) {
-                                filteredMethods.push(method);
+            if(manualMethods.length !== 0){
+            
+                let filteredData = methods.filter(item => manualMethods.includes(item.Methods));
+                console.log("filteredData inside manual Methods: ", filteredData);
 
-                                if (method.Sample_Preparation !== null && !uniqueSamplePreparations.has(method.Sample_Preparation)) {
-                                    methods_sample_preparations += method.Sample_Preparation + ' ';
-                                    uniqueSamplePreparations.add(method.Sample_Preparation); // Mark Sample_Preparation as seen
-                                }
+                method_data = {
+                    Sample_Preparation: Array.from(new Set(filteredData.map(item => item.Sample_Preparation))).join(', '),
+                    Methods: filteredData.map(item => item.Methods).join(', ')
+                };
+                console.log("method data inside manual Methods: ", method_data);
 
-                                if (!uniqueMethods.has(method.Methods)) {
-                                    methods_string += method.Methods + ' ';
-                                    uniqueMethods.add(method.Methods); // Mark Methods as seen
-                                }
+            } else if(manualMethods.length === 0){
 
-                                method_data = {
-                                    Sample_Preparation: methods_sample_preparations.trim(),
-                                    Methods: methods_string.trim()  // Trimming any extra spaces
-                                };
-                            }
-                        } else if (method.Methods !== excludedMethod){
-                            if (filteredArray.includes(key)) {
-                                let method_exists = false;
-                                while (!method_exists) {
-                                    if (!uniqueMethods.has(method.Methods) || !uniqueSamplePreparations.has(method.Sample_Preparation)) {
-                                        methods_string += method.Methods + ' ';
+                methods.filter((method) => {
+                    for (const [key, value] of Object.entries(method)) {
+                        if (value !== null && Buffer.isBuffer(value) && value.equals(Buffer.from([0x01]))) {
+                            if (key === element_name && Type !== 'Unidentified') {
+                                if (!uniqueMethods.has(method.Methods) || !uniqueSamplePreparations.has(method.Sample_Preparation)) {
+                                    filteredMethods.push(method);
     
-                                        if (method.Sample_Preparation !== null && !uniqueSamplePreparations.has(method.Sample_Preparation)) {
-                                            methods_sample_preparations += method.Sample_Preparation + ' ';
-                                            uniqueSamplePreparations.add(method.Sample_Preparation);
-                                        }
-    
-                                        uniqueMethods.add(method.Methods);
-    
-                                        method_data = {
-                                            Sample_Preparation: methods_sample_preparations.trim(),
-                                            Methods: methods_string.trim()
-                                        };
-    
-                                        filteredMethods.push(method);
+                                    if (method.Sample_Preparation !== null && !uniqueSamplePreparations.has(method.Sample_Preparation)) {
+                                        methods_sample_preparations += method.Sample_Preparation + ' ';
+                                        uniqueSamplePreparations.add(method.Sample_Preparation); // Mark Sample_Preparation as seen
                                     }
-                                    method_exists = true;
+    
+                                    if (!uniqueMethods.has(method.Methods)) {
+                                        methods_string += method.Methods + ' ';
+                                        uniqueMethods.add(method.Methods); // Mark Methods as seen
+                                    }
+    
+                                    method_data = {
+                                        Sample_Preparation: methods_sample_preparations.trim(),
+                                        Methods: methods_string.trim()  // Trimming any extra spaces
+                                    };
+                                }
+                            } else if (method.Methods !== excludedMethod){
+                                if (filteredArray.includes(key)) {
+                                    let method_exists = false;
+                                    while (!method_exists) {
+                                        if (!uniqueMethods.has(method.Methods) || !uniqueSamplePreparations.has(method.Sample_Preparation)) {
+                                            methods_string += method.Methods + ' ';
+        
+                                            if (method.Sample_Preparation !== null && !uniqueSamplePreparations.has(method.Sample_Preparation)) {
+                                                methods_sample_preparations += method.Sample_Preparation + ' ';
+                                                uniqueSamplePreparations.add(method.Sample_Preparation);
+                                            }
+        
+                                            uniqueMethods.add(method.Methods);
+        
+                                            method_data = {
+                                                Sample_Preparation: methods_sample_preparations.trim(),
+                                                Methods: methods_string.trim()
+                                            };
+        
+                                            filteredMethods.push(method);
+                                        }
+                                        method_exists = true;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
+                });
+
+            }
 
             console.log("Method Data: ", method_data);
 
@@ -488,7 +511,8 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
                                     if (item.asMetal === true) {
                                         // Find element by name and obtain Element symbol
                                         if(item.showAsPPM === true){
-                                            let convertedValue = (value / 100) * 10000; 
+                                            // let convertedValue = (value / 100) * 10000; 
+                                            let convertedValue = value * 10000; 
                                             filteredResults.push({name: element_info[0].element_symbol, value: convertedValue.toFixed(2), showAsPPM: true});
                                         } else if(item.showAsPPM === false){
                                             filteredResults.push({name: element_info[0].element_symbol, value: value.toFixed(2)});
@@ -502,7 +526,8 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
                                             // } else if (oxide_value >= 0.01){
                                             // }
                                             if(item.showAsPPM === true){
-                                                let convertedValue = (oxide_value / 100) * 10000; 
+                                                // let convertedValue = (oxide_value / 100) * 10000; 
+                                                let convertedValue = oxide_value * 10000; 
                                                 filteredResults.push({name: element_info[0].element_symbol, value: convertedValue.toFixed(2), showAsPPM: true});
                                             } else if(item.showAsPPM === false){
                                                 filteredResults.push({name: element_info[0].oxides, value: oxide_value.toFixed(2)});
