@@ -570,7 +570,8 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
             combinedResults.forEach((result) => {
                 if(result.name !== "RA" && result.name !== "Moisture"){
                     if(result.showAsPPM === true){
-                        result.value = `${result.value} ppm`;
+                        let rounded = Math.round(result.value);
+                        result.value = `${rounded} ppm`;
                     } else {
                         result.value = `${result.value} %`;
                     }

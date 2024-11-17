@@ -61,8 +61,10 @@ router.post('/addGSACertificate', async (req, res) => {
 
             // reasonObject.editedFile = data;
     
-            await writeReasonToLogFile(reasonObject);
-        } 
+            await writeReasonToLogFile(reasonObject, "assay-certificate-edits-logs");
+        } else if(!rawData.reasonObject && unfilteredData){
+            await writeReasonToLogFile(unfilteredData, "initial-assay-certificate");
+        }
 
         const certificate = {
             sample_no: data.Sample_No,
@@ -345,8 +347,8 @@ async function getFileCreatedDate(file_path){
 }
 
 
-async function writeReasonToLogFile(reasonObject){
-    let logFileLocation = path.join(__dirname, "..", "logs", "assay-certificate-logs", "assay-certificate-edits-logs");
+async function writeReasonToLogFile(reasonObject, file_name){
+    let logFileLocation = path.join(__dirname, "..", "logs", "assay-certificate-logs", file_name);
     const jsonString = JSON.stringify(reasonObject, null, 2);
 
     fs.appendFile(logFileLocation, jsonString + '\n', (err) => {
