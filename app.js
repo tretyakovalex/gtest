@@ -59,6 +59,10 @@ app.use(require('./routes/wsp-contract/wsp-contract-routes.js'));
 
 // Statistics
 app.use(require('./routes/statistics/analysis-statistics-routes.js'));
+app.use(require('./routes/statistics/sample-statistics-routes.js'));
+
+// Regenerate Service Contract
+app.use(require('./routes/regenerateServiceContract-routes.js'));
 
 // === Frontend: ===
 // =================
