@@ -565,9 +565,7 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
                 return a.name.localeCompare(b.name); // Sort remaining items in ascending order
             });
 
-            combinedResults = [...filteredResults, ...raAndMoistureResults];
-
-            combinedResults.forEach((result) => {
+            filteredResults.forEach((result) => {
                 if(result.name !== "RA" && result.name !== "Moisture"){
                     if(result.showAsPPM === true){
                         let rounded = Math.round(result.value);
@@ -577,6 +575,39 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
                     }
                 }
             });
+
+            filteredResults.sort((a, b) => {
+                const isPercentageA = !a.showAsPPM; // true if a is a percentage
+                const isPercentageB = !b.showAsPPM; // true if b is a percentage
+            
+                if (isPercentageA && !isPercentageB) {
+                    return -1; // a comes before b
+                }
+                if (!isPercentageA && isPercentageB) {
+                    return 1; // b comes before a
+                }
+                if (!isPercentageA && !isPercentageB) {
+                    // Both are ppm values, sort descending based on numerical value
+                    const valueA = parseInt(a.value);
+                    const valueB = parseInt(b.value);
+                    return valueB - valueA;
+                }
+                // For percentages, keep the original order (or define your logic here)
+                return 0;
+            });
+
+            combinedResults = [...filteredResults, ...raAndMoistureResults];
+
+            // combinedResults.forEach((result) => {
+            //     if(result.name !== "RA" && result.name !== "Moisture"){
+            //         if(result.showAsPPM === true){
+            //             let rounded = Math.round(result.value);
+            //             result.value = `${rounded} ppm`;
+            //         } else {
+            //             result.value = `${result.value} %`;
+            //         }
+            //     }
+            // });
 
             resolve(combinedResults);
         })
