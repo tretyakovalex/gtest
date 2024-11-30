@@ -5,10 +5,19 @@ const { pool } = require('../../configs/mysql');
 
 router.get('/getAllCompaniesAnalysisStatistics', async (req, res) => {
     try {
-        const query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type
+        // const query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type
+        //             FROM customers cust 
+        //             INNER JOIN registration reg on cust.customer_id=reg.customer_id 
+        //             WHERE YEAR(Date) = 2024;`;
+        const query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type, inv_data.grand_total
                     FROM customers cust 
                     INNER JOIN registration reg on cust.customer_id=reg.customer_id 
-                    WHERE YEAR(Date) = 2024;`;
+                    JOIN invoice_data inv_data on reg.Sample_No=inv_data.sample_no
+                    WHERE YEAR(inv_data.Date) = 2024`;
+        // const query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type
+        //             FROM customers cust 
+        //             INNER JOIN registration reg on cust.customer_id=reg.customer_id 
+        //             WHERE YEAR(Date) = 2024 AND cust.customer_id=3;`;
 
         pool.query(query, async (err, data) => {
             if(err){
@@ -75,7 +84,27 @@ router.get('/getAllCompaniesAnalysisStatistics', async (req, res) => {
 
             console.log("Printing combined analysisStatistics: ", analysisStatistics);
 
-            res.json({analysisStatistics: analysisStatistics});
+            // Define a mapping of properties to rename
+            const propertyMapping = {
+                Tantalum: 'Tantalum',
+                Tungsten: 'Tungsten',
+                Cassiterite: 'Tin',
+                Shielitte: 'Tungsten',
+                Monozite: 'Monozite',
+                Spodumene: 'Lithium',
+                Beryl: 'Beryllium',
+                Columbite: 'Niobium',
+                Unidentified: 'Unidentified',
+                "Tantalite_Concentrate": 'Tantalum',
+                "Wolframite_Concentrate": 'Tungsten',
+                "Cassiterite_Concentrate": 'Tin'
+            };
+
+            let new_analysisStatistics = renameAndCombineProperties(analysisStatistics, propertyMapping);
+
+            console.log("Printing new formatted analysisStatistics: ", new_analysisStatistics);
+
+            res.json({analysisStatistics: new_analysisStatistics});
         })
     } catch (error) {
         console.error(error);
@@ -85,11 +114,17 @@ router.get('/getAllCompaniesAnalysisStatistics', async (req, res) => {
 router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
     try {
         const month = req.query.month;
-        const query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type
+        // const query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type
+        //             FROM customers cust 
+        //             INNER JOIN registration reg on cust.customer_id=reg.customer_id 
+        //             WHERE YEAR(Date) = 2024
+        //             AND MONTH(Date) = ${month};`;
+        const query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type, inv_data.grand_total
                     FROM customers cust 
                     INNER JOIN registration reg on cust.customer_id=reg.customer_id 
-                    WHERE YEAR(Date) = 2024
-                    AND MONTH(Date) = ${month};`;
+                    JOIN invoice_data inv_data on reg.Sample_No=inv_data.sample_no
+                    WHERE YEAR(inv_data.Date) = 2024
+                    AND MONTH(inv_data.Date) = ${month};`;
         
         pool.query(query, async (err, data) => {
             if(err){
@@ -156,8 +191,28 @@ router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
 
             console.log("Printing combined analysisStatistics: ", analysisStatistics);
 
+            // Define a mapping of properties to rename
+            const propertyMapping = {
+                Tantalum: 'Tantalum',
+                Tungsten: 'Tungsten',
+                Cassiterite: 'Tin',
+                Shielitte: 'Tungsten',
+                Monozite: 'Monozite',
+                Spodumene: 'Lithium',
+                Beryl: 'Beryllium',
+                Columbite: 'Niobium',
+                Unidentified: 'Unidentified',
+                "Tantalite_Concentrate": 'Tantalum',
+                "Wolframite_Concentrate": 'Tungsten',
+                "Cassiterite_Concentrate": 'Tin'
+            };
+            
+            let new_analysisStatistics = renameAndCombineProperties(analysisStatistics, propertyMapping);
+            
+            console.log("Printing new formatted analysisStatistics: ", new_analysisStatistics);
+            
             // Send the combined result
-            res.json({analysisStatistics: analysisStatistics});
+            res.json({analysisStatistics: new_analysisStatistics});
         })
     } catch (error) {
         console.error(error);
@@ -195,6 +250,29 @@ router.get('/getAllCompanyTotalsByMainElement', async (req, res) => {
         console.error(error);
     }
 });
+
+// Function to rename properties in an analysisStatistics
+function renameAndCombineProperties(input, mapping) {
+    return input.map(statistics => {
+      const updatedStatistics = {};
+  
+      Object.entries(statistics).forEach(([key, value]) => {
+        // Skip the 'company' property to avoid adding 0 to the company's value
+        if (key === 'company') {
+            updatedStatistics[key] = value;
+            return;
+        }
+
+        // Find the new key based on the mapping
+        const newKey = mapping[key] || key;
+  
+        // Add the value to the new key, combining if it already exists
+        updatedStatistics[newKey] = (updatedStatistics[newKey] || 0) + value;
+      });
+  
+      return updatedStatistics;
+    });
+}
 
 
 module.exports = router;
