@@ -147,19 +147,28 @@ router.get('/getInvoiceByDate', async (req, res) => {
 
 router.post("/add-invoice-data", async (req, res) => {
     const data = req.body;
-    const query = `INSERT INTO invoice_data SET ?`;
+
+    // SQL query to insert or update data based on 'sample_no'
+    const query = `
+        INSERT INTO invoice_data SET ?
+        ON DUPLICATE KEY UPDATE 
+        ${Object.keys(data)
+            .map((key) => `${key} = VALUES(${key})`)
+            .join(", ")}
+    `;
 
     console.log("Printing data inside add-invoice-data route: ", data);
     console.log("Printing query: ", query);
 
-    pool.query(query, data, (err, invoice) => {
-        if(err){
-            console.error(err);
+    pool.query(query, data, (err, result) => {
+        if (err) {
+            console.error("Error adding or updating data in invoice_data:", err);
+            return res.status(500).json({ message: "Failed to add or update data", error: err });
         }
 
-        res.json("Added data into invoice-data");
-    })
-})
+        res.json({ message: "Data successfully added or updated", result });
+    });
+});
 
 async function getFileCreatedDate(file_path){
     let pdf_files = await Promise.all(file_path.map(async (file) => {
