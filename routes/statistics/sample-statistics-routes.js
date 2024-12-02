@@ -8,7 +8,7 @@ const { pool } = require('../../configs/mysql');
 
 router.get('/getAllCompaniesSampleStatistics', async (req, res) => {
     try {
-        const query = `SELECT company_name, compound, quotation_value, currency FROM wsp_contract;`;
+        const query = `SELECT company_name, compound, quotation_value, currency FROM wsp_contract WHERE YEAR(future_sampling_date) = 2024;`;
 
         pool.query(query, async (err, data) => {
             if(err){
@@ -84,7 +84,7 @@ router.get('/getAllCompaniesSampleStatisticsByMonth', async (req, res) => {
     try {
         const month = req.query.month;
 
-        const query = `SELECT company_name, compound, quotation_value, currency FROM wsp_contract where Month(future_sampling_date) = ${month};`;
+        const query = `SELECT company_name, compound, quotation_value, currency FROM wsp_contract where YEAR(future_sampling_date) = 2024 AND MONTH(future_sampling_date) = ${month};`;
 
         pool.query(query, async (err, data) => {
             if(err){
