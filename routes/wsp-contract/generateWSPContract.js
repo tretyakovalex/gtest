@@ -41,6 +41,7 @@ async function generateWSPContract(data){
             "sample_no": paddedSampleNumber,
             "service": data.service,
             "surveyor": data.surveyor,
+            "currency": data.currency,
             "quotation_value": data.quotation_value,
             "future_sampling_date": data.future_sampling_date,
             "future_sampling_time": data.future_sampling_time,

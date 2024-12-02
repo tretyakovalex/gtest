@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+const path = require('path');
+const ExcelJS = require('exceljs');
+
 const { pool } = require('../../configs/mysql');
 
 router.get('/getAllCompaniesAnalysisStatistics', async (req, res) => {
@@ -210,6 +213,8 @@ router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
             let new_analysisStatistics = renameAndCombineProperties(analysisStatistics, propertyMapping);
             
             console.log("Printing new formatted analysisStatistics: ", new_analysisStatistics);
+
+            // sumAllAnalysis(new_analysisStatistics);
             
             // Send the combined result
             res.json({analysisStatistics: new_analysisStatistics});
@@ -251,6 +256,26 @@ router.get('/getAllCompanyTotalsByMainElement', async (req, res) => {
     }
 });
 
+router.get('/exportInvoiceData', async (req, res) => {
+    pool.query('select * from invoice_data', async (err, data) => {
+        if(err){
+            console.error(err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        let excelPath = await createExcelFile(data);
+
+        console.log("Printing excelPath: ", excelPath);
+        // res.download(excelPath);
+        res.download(excelPath, 'exportedInvoiceData.xlsx', (err) => {
+            if (err) {
+                console.error('Error downloading the file:', err);
+                res.status(500).send('Failed to download file.');
+            }
+        });
+    })
+})
+
 // Function to rename properties in an analysisStatistics
 function renameAndCombineProperties(input, mapping) {
     return input.map(statistics => {
@@ -272,6 +297,60 @@ function renameAndCombineProperties(input, mapping) {
   
       return updatedStatistics;
     });
+}
+
+// function sumAllAnalysis(new_analysisStatistics){
+//     new_analysisStatistics.forEach(statistic => {
+//         console.log("Printing statistic: ", statistic);
+//         console.log(statistic.Tantalum);
+//         console.log("Printing Tantalum: ", statistic.Tantalum);
+//         statistic.total_analysis = statistic.Tantalum + statistic.Tungsten + statistic.Tin + statistic.Niobium + statistic.Monozite + statistic.Lithium + statistic.Beryllium + statistic.Unidentified;
+//         console.log(statistic.total_analysis);
+//     })
+
+//     return new_analysisStatistics;
+// }
+
+async function createExcelFile(result) {
+    // Create a new workbook and add a worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Exported Prices');
+
+    // Add columns to the worksheet
+    worksheet.columns = [
+        { header: 'id', key: 'id', width: 10 },
+        { header: 'sample_no', key: 'sample_no', width: 10 },
+        { header: 'customer_id', key: 'customer_id', width: 10 },
+        { header: 'currency', key: 'currency', width: 10 },
+        { header: 'main_element', key: 'main_element', width: 15 },
+        { header: 'other_elements', key: 'other_elements', width: 50 },
+        { header: 'other_services', key: 'other_services', width: 30 },
+        { header: 'sample_management_fee', key: 'sample_management_fee', width: 10 },
+        { header: 'grand_total', key: 'grand_total', width: 10 },
+        { header: 'Date', key: 'Date', width: 10 },
+    ];
+
+    result.forEach(item => {
+        worksheet.addRow({ 
+            id: item.id,
+            sample_no: item.sample_no,
+            customer_id: item.customer_id,
+            currency: item.currency,
+            main_element: item.main_element,
+            other_elements: item.other_elements,
+            other_services: item.other_services,
+            sample_management_fee: item.sample_management_fee,
+            grand_total: item.grand_total,
+            Date: item.Date
+        })
+    });
+
+    // Save the workbook to a file
+    const filePath = path.join(__dirname, '..', '..', 'files', 'exportedAnalysisStatistics.xlsx');
+    await workbook.xlsx.writeFile(filePath);
+    console.log(`Excel file created at ${filePath}`);
+
+    return filePath;
 }
 
 

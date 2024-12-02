@@ -52,6 +52,7 @@ router.post('/generateWSPContract', async (req, res) => {
             compound: data.compound,
             service: data.service,
             surveyor: data.surveyor,
+            currency: data.currency,
             quotation_value: data.quotation_value,
             location_service: data.location_service
         }
@@ -197,6 +198,7 @@ router.put('/updateWSPContract', async (req, res) => {
             compound: data.compound,
             service: data.service,
             surveyor: data.surveyor,
+            currency: data.currency,
             quotation_value: data.quotation_value,
             location_service: data.location_service
         }
