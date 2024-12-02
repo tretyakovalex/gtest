@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+const path = require('path');
+const ExcelJS = require('exceljs');
+
 const { pool } = require('../../configs/mysql');
 
 router.get('/getAllCompaniesSampleStatistics', async (req, res) => {
@@ -53,72 +56,198 @@ router.get('/getAllCompaniesSampleStatistics', async (req, res) => {
 
             console.log("sampleStatistics: ", sampleStatistics);
 
-            // const unparsedCompanyTotals = await fetch(`http://localhost:4000/getAllCompanyTotalsByMainElement`);
-            // const companyTotals = await unparsedCompanyTotals.json();
+            const propertyMapping = {
+                Tantalum: 'Tantalum',
+                Tungsten: 'Tungsten',
+                Cassiterite: 'Tin',
+                Shielitte: 'Tungsten',
+                Monozite: 'Monozite',
+                Spodumene: 'Lithium',
+                Beryl: 'Beryllium',
+                Columbite: 'Niobium',
+                Unidentified: 'Unidentified',
+                "Tantalite_Concentrate": 'Tantalum',
+                "Wolframite_Concentrate": 'Tungsten',
+                "Cassiterite_Concentrate": 'Tin'
+            };
 
-            // Calculate total
-            // sampleStatistics.forEach((item) => {
-                
-            //     // let matchingCompanyTotals = companyTotals.filter(total => total.company === item.company);
-            //     let matchingCompanyTotals = companyTotals.filter(total => total.customer_id === item.customer_id);
+            let new_samplingStatistics = renameAndCombineProperties(sampleStatistics, propertyMapping);
 
-            //     console.log("Printing matchingCompanyTotal: ", matchingCompanyTotals);
-                
-            //     matchingCompanyTotals.forEach(matchingTotal => {
-            //         if(matchingTotal.currency === "USD"){
-            //             item.total_amount_usd += matchingTotal.grand_total;
-            //         } else if (matchingTotal.currency === "RWF"){
-            //             item.total_amount_rwf += matchingTotal.grand_total;
-            //         }
-            //     });
-
-            // });
-
-            // console.log("Printing combined result: ", result);
-
-            //   sampleStatistics.forEach((item) => {
-            //     const matchingCompany = result.filter(resl => resl.company === item.company);
-                
-            //   })
-
-            res.json({sampleStatistics: sampleStatistics});
+            res.json({sampleStatistics: new_samplingStatistics});
         })
     } catch (error) {
         console.error(error);
     }
 });
 
-// router.get('/getAllCompanyTotalsByMainElement', async (req, res) => {
-//     try {
-//         const month = req.query.month;
-//         let query = "";
+router.get('/getAllCompaniesSampleStatisticsByMonth', async (req, res) => {
+    try {
+        const month = req.query.month;
 
-//         console.log("Printing month: ", month);
+        const query = `SELECT company_name, compound, quotation_value, currency FROM wsp_contract where Month(future_sampling_date) = ${month};`;
 
-//         if(month){
-//             query = `SELECT inv_data.sample_no, cust.customer_id, cust.company, cust.name, cust.surname, inv_data.main_element, inv_data.grand_total, inv_data.currency, inv_data.Date
-//                 FROM customers cust 
-//                 INNER JOIN invoice_data inv_data on cust.customer_id=inv_data.customer_id 
-//                 WHERE YEAR(Date) = 2024
-//                 AND MONTH(Date) = ${month};`
-//         } else if (!month){
-//             query = `SELECT inv_data.sample_no, cust.customer_id, cust.company, cust.name, cust.surname, inv_data.main_element, inv_data.grand_total, inv_data.currency, inv_data.Date
-//                 FROM customers cust 
-//                 INNER JOIN invoice_data inv_data on cust.customer_id=inv_data.customer_id 
-//                 WHERE YEAR(Date) = 2024;`
-//         }
+        pool.query(query, async (err, data) => {
+            if(err){
+                console.error(err);
+                res.json({error: err});
+            }
 
-//         pool.query(query, (err, companyTotals) => {
-//             if(err){
-//                 console.error(err);
-//             }
+            console.log("Printing raw data: ", data);
 
-//             res.json(companyTotals);
-//         })
-//     } catch (error) {
-//         console.error(error);
-//     }
-// });
+            let sampleStatistics = [];
+
+            // Helper function to find the company object in the result array
+            const findCompanyObject = (companyName) => {
+                return sampleStatistics.find(obj => obj.company === companyName);
+            };
+
+            data.forEach(item => {
+
+                const materialType = item.compound.replace(/\s+/g, '_'); //replacing spaces with underscores
+
+                // Try to find the existing object for the company
+                let companyObj = findCompanyObject(item.company_name);
+
+                // If no object exists, create a new one
+                if (!companyObj) {
+                    companyObj = { company: item.company_name, total_amount_rwf: 0, total_amount_usd: 0 };
+                    sampleStatistics.push(companyObj);
+                }
+
+                // Initialize the material type count if it doesn't exist
+                if (!companyObj[materialType]) {
+                    companyObj[materialType] = 0;
+                }
+
+                // Increment the material count
+                companyObj[materialType]++;
+
+                const quotationValue = Number(item.quotation_value); // Ensure it's a number
+                if (item.currency === "USD") {
+                    companyObj.total_amount_usd += quotationValue;
+                } else if (item.currency === "RWF") {
+                    companyObj.total_amount_rwf += quotationValue;
+                }
+            });
+
+            console.log("sampleStatistics: ", sampleStatistics);
+
+            const propertyMapping = {
+                Tantalum: 'Tantalum',
+                Tungsten: 'Tungsten',
+                Cassiterite: 'Tin',
+                Shielitte: 'Tungsten',
+                Monozite: 'Monozite',
+                Spodumene: 'Lithium',
+                Beryl: 'Beryllium',
+                Columbite: 'Niobium',
+                Unidentified: 'Unidentified',
+                "Tantalite_Concentrate": 'Tantalum',
+                "Wolframite_Concentrate": 'Tungsten',
+                "Cassiterite_Concentrate": 'Tin'
+            };
+
+            let new_samplingStatistics = renameAndCombineProperties(sampleStatistics, propertyMapping);
+
+            res.json({sampleStatistics: new_samplingStatistics});
+        })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.get('/exportWSPContractData', async (req, res) => {
+    pool.query('select * from wsp_contract', async (err, data) => {
+        if(err){
+            console.error(err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        let excelPath = await createExcelFile(data);
+
+        console.log("Printing excelPath: ", excelPath);
+        // res.download(excelPath);
+        res.download(excelPath, 'exportedInvoiceData.xlsx', (err) => {
+            if (err) {
+                console.error('Error downloading the file:', err);
+                res.status(500).send('Failed to download file.');
+            }
+        });
+    })
+});
+
+// Function to rename properties in an samplingStatistics
+function renameAndCombineProperties(input, mapping) {
+    return input.map(statistics => {
+      const updatedStatistics = {};
+  
+      Object.entries(statistics).forEach(([key, value]) => {
+        // Skip the 'company' property to avoid adding 0 to the company's value
+        if (key === 'company') {
+            updatedStatistics[key] = value;
+            return;
+        }
+
+        // If the key is not usd or rwf total then rename the properties and carry the counters
+        if (key !== 'total_amount_usd' || key !== 'total_amount_rwf'){
+            // Find the new key based on the mapping
+            const newKey = mapping[key] || key;
+            
+            // Add the value to the new key, combining if it already exists
+            updatedStatistics[newKey] = (updatedStatistics[newKey] || 0) + value;
+        }
+        
+      });
+  
+      return updatedStatistics;
+    });
+}
+
+async function createExcelFile(result) {
+    // Create a new workbook and add a worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Exported Prices');
+
+    // Add columns to the worksheet
+    worksheet.columns = [
+        { header: 'id', key: 'id', width: 10 },
+        { header: 'sample_no', key: 'sample_no', width: 10 },
+        { header: 'company_name', key: 'company_name', width: 30 },
+        { header: 'future_sampling_time', key: 'future_sampling_time', width: 15 },
+        { header: 'future_sampling_date', key: 'future_sampling_date', width: 15 },
+        { header: 'compound', key: 'compound', width: 15 },
+        { header: 'service', key: 'service', width: 30 },
+        { header: 'surveyor', key: 'surveyor', width: 15 },
+        { header: 'quotation_value', key: 'quotation_value', width: 20 },
+        { header: 'location_service', key: 'location_service', width: 30 },
+        { header: 'release_date', key: 'release_date', width: 15 },
+        { header: 'currency', key: 'currency', width: 10 },
+    ];
+
+    result.forEach(item => {
+        worksheet.addRow({ 
+            id: item.id,
+            sample_no: item.sample_no,
+            company_name: item.company_name,
+            future_sampling_time: item.future_sampling_time,
+            future_sampling_date: item.future_sampling_date,
+            compound: item.compound,
+            service: item.service,
+            surveyor: item.surveyor,
+            quotation_value: item.quotation_value,
+            location_service: item.location_service,
+            release_date: item.release_date,
+            currency: item.currency
+        })
+    });
+
+    // Save the workbook to a file
+    const filePath = path.join(__dirname, '..', '..', 'files', 'exportedSamplingStatistics.xlsx');
+    await workbook.xlsx.writeFile(filePath);
+    console.log(`Excel file created at ${filePath}`);
+
+    return filePath;
+}
 
 
 module.exports = router;
