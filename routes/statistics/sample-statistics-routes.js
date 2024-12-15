@@ -83,8 +83,17 @@ router.get('/getAllCompaniesSampleStatistics', async (req, res) => {
 router.get('/getAllCompaniesSampleStatisticsByMonth', async (req, res) => {
     try {
         const month = req.query.month;
+        const year = req.query.year;
 
-        const query = `SELECT company_name, compound, quotation_value, currency FROM wsp_contract where YEAR(future_sampling_date) = 2024 AND MONTH(future_sampling_date) = ${month};`;
+        let query = ``;
+        console.log("year: ", year);
+        console.log("month: ", month);
+        if(month){
+            query = `SELECT company_name, compound, quotation_value, currency FROM wsp_contract where YEAR(future_sampling_date) = ${year} AND MONTH(future_sampling_date) = ${month};`;
+        } else if (!month){
+            query = `SELECT company_name, compound, quotation_value, currency FROM wsp_contract where YEAR(future_sampling_date) = ${year};`;
+        }
+
 
         pool.query(query, async (err, data) => {
             if(err){
@@ -202,6 +211,21 @@ function renameAndCombineProperties(input, mapping) {
       return updatedStatistics;
     });
 }
+
+router.get('/getMinAndMaxYearFromWSPContract', async (req, res) => {
+    try {
+        pool.query('SELECT MIN(YEAR(future_sampling_date)) AS min_year, MAX(YEAR(future_sampling_date)) AS max_year FROM wsp_contract;', (err, data) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.json({minMaxYears: data});
+        })
+    } catch (error) {
+        console.error(error);
+    }
+})
 
 async function createExcelFile(result) {
     // Create a new workbook and add a worksheet

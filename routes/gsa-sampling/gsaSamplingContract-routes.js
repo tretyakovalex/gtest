@@ -98,7 +98,7 @@ router.get('/getSamplingContractByDate', async (req, res) => {
         let pdf_files = await getFileCreatedDate(file_path);
 
         // console.log(pdf_files);
-        console.log(date);
+        // console.log(date);
 
         let filtered_pdfs = [];
         pdf_files.forEach((item) => {
@@ -107,7 +107,7 @@ router.get('/getSamplingContractByDate', async (req, res) => {
             }
         });
 
-        console.log("filtered pdf files: ", filtered_pdfs);
+        // console.log("filtered pdf files: ", filtered_pdfs);
 
         res.json(filtered_pdfs);
     } catch (error) {
@@ -118,10 +118,11 @@ router.get('/getSamplingContractByDate', async (req, res) => {
 async function getFileCreatedDate(file_path){
     let pdf_files = await Promise.all(file_path.map(async (file) => {
         const file_path = path.join(__dirname, '..', '..', 'handlebars', 'gsa-sampling-contracts', file);
-        console.log("Printing file path inside getFileCreatedDate: ", file_path);
         const stat = await fs.stat(file_path);
+
+        let file_year = file.match(/^(?:[^-]*-){3}(\d{4})/); // Getting year from file_name
         if (stat) {
-            return { file_name: file, created: stat.mtime };
+            return { file_name: file, created: stat.mtime, year: file_year[1] };
         }
     }));
 

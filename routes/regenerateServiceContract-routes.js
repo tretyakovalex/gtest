@@ -59,6 +59,38 @@ router.post('/regenerateSamplingContractBySampleNo', async (req, res) => {
     }
 });
 
+router.get('/renameServiceContractsToIncludeYear', async (req, res) => {
+    let directory = path.join(__dirname, "..", "handlebars", "gsa-sampling-contracts");
+    let year = 2024;
+
+    const files = fs.readdirSync(directory); // Read all files in the directory
+    
+    console.log("Printing files: ", files);
+
+    files.forEach((file) => {
+        const match = file.match(/^GSA-FR-CFRM-(\d{5})(?:_(\d{8}_\d{6}))?.pdf$/); // Match files with the pattern `GSA-FR-CFRM-*.pdf`
+        console.log(match);
+        if (match) {
+            const baseName = match[1]; // Extract the 5-digit code
+            const timeStamp = match[2] ? `_${match[2]}` : ''; // Extract timestamp if present
+            console.log("timestamp: ", match[2]);
+            const newFileName = `GSA-FR-CFRM-${year}-${baseName}${timeStamp}.pdf`;
+
+            const oldPath = path.join(directory, file);
+            const newPath = path.join(directory, newFileName);
+
+            // Rename the file
+            fs.renameSync(oldPath, newPath);
+
+            // Remove the old file (optional, as renaming replaces the old one)
+            console.log(`Renamed: ${file} -> ${newFileName}`);
+        } else {
+            console.log(`Skipped: ${file} (does not match pattern)`);
+        }
+    });
+
+})
+
 async function writeReasonToLogFile(reasonObject, file_name){
     let logFileLocation = path.join(__dirname, "..", "logs", "service-contract-logs", file_name);
     const jsonString = JSON.stringify(reasonObject, null, 2);

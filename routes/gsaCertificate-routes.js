@@ -68,7 +68,8 @@ router.post('/addGSACertificate', async (req, res) => {
 
         const certificate = {
             sample_no: data.Sample_No,
-            release_date: data.release_date
+            release_date: data.release_date,
+            year: parseInt(data.year)
         }
 
         const pdfPath = await generateCertificate(data);
@@ -77,16 +78,19 @@ router.post('/addGSACertificate', async (req, res) => {
             console.log("Printing pdfPath: ", pdfPath);
         }
 
-        await generateInvoice(data.Sample_No, data.release_date, data.certNumVersion);
+        await generateInvoice(data.Sample_No, data.release_date, data.certNumVersion, data.year);
 
         // Query to insert or update if sample_no already exists
+
         const query = `
-            INSERT INTO gsa_certificate (sample_no, release_date) 
-            VALUES (?, ?) 
+            INSERT INTO gsa_certificate (sample_no, release_date, year) 
+            VALUES (?, ?, ?) 
             ON DUPLICATE KEY UPDATE release_date = VALUES(release_date)`;
 
+        console.log("Printing query to insert into gsa_certificate table: ", query)
+
         // Insert into DB or update if exists
-        pool.query(query, [certificate.sample_no, certificate.release_date], async (err, result) => {
+        pool.query(query, [certificate.sample_no, certificate.release_date, certificate.year], async (err, result) => {
             if(err){
                 console.error(err);
                 res.json({error: err});
@@ -295,7 +299,7 @@ router.get('/getCertificateByDate', async (req, res) => {
         let pdf_files = await getFileCreatedDate(file_path);
 
         // console.log(pdf_files);
-        console.log(date);
+        // console.log(date);
 
         let filtered_pdfs = [];
         pdf_files.forEach((item) => {
@@ -304,7 +308,7 @@ router.get('/getCertificateByDate', async (req, res) => {
             }
         });
 
-        console.log("filtered pdf files: ", filtered_pdfs);
+        // console.log("filtered pdf files: ", filtered_pdfs);
 
         res.json(filtered_pdfs);
     } catch (error) {
@@ -338,8 +342,10 @@ async function getFileCreatedDate(file_path){
     let pdf_files = await Promise.all(file_path.map(async (file) => {
         const file_path = path.join(__dirname, '..', 'handlebars', 'gsa-certificates', file);
         const stat = await fs.stat(file_path);
+
+        let file_year = file.match(/^(?:[^-]*-){2}(\d{4})/); // Getting year from file_name
         if (stat) {
-            return { file_name: file, created: stat.mtime };
+            return { file_name: file, created: stat.mtime, year: file_year[1] };
         }
     }));
 

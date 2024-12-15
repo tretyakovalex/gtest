@@ -25,11 +25,11 @@ const httpsAgent = new https.Agent({
     ca: MY_CA_BUNDLE
 });    
 
-async function generateInvoice(Sample_No, date, certNumVersion){
+async function generateInvoice(Sample_No, date, certNumVersion, year){
     try {
-        const data = {Sample_No: Sample_No, date, date}; 
+        const data = {Sample_No, date, year}; 
         
-        pool.query(`SELECT * FROM results WHERE Sample_No=?`, [data.Sample_No], async (err, result) => {
+        pool.query(`SELECT * FROM results WHERE Sample_No=? AND year=?`, [data.Sample_No, data.year], async (err, result) => {
             if (err) {
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
@@ -50,7 +50,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
             // =====================================================
 
             
-            let registration = await retrieveNonElementFromRegistration(data.Sample_No);
+            let registration = await retrieveNonElementFromRegistration(data.Sample_No, data.year);
             let filteredRegistration = "";
 
             // console.log("registration: ", registration[0]);
@@ -63,10 +63,10 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 }
             }
 
-            // console.log("Printing filteredRegistraton: ", filteredRegistration);
+            // console.log("Printing result[0] (66): ", result[0]);
 
             for (const [key, value] of Object.entries(result[0])) {
-                if (value !== null && key !== 'Sample_No' && key !== 'date_of_lab') {
+                if (value !== null && key !== 'Sample_No' && key !== 'date_of_lab' && key !== 'year' && key !== 'result_id') {
                     newObj[`res.${key}`] = value;
                     resultsArray.push({name: key, value: value});      
                 }
@@ -76,13 +76,15 @@ async function generateInvoice(Sample_No, date, certNumVersion){
             let tempResultsArray = [];
             let tempResultsArray2 = [];
 
-            // console.log("Printing results array (62): ", resultsArray);
+            console.log("Printing results array (79): ", resultsArray);
+            resultsArray.dele
             
+            console.log("Printing filteredRegistration (81): ", filteredRegistration);
 
             if(filteredRegistration){ 
                 if(filteredRegistration === "Sum_rare_earth_elements"){
                     resultsArray.forEach(item => {
-                        if(!reo_elements.includes(item.name) && (item.name !== "Moisture" && item.name !== "RA" && item.name !== "REO")){
+                        if(!reo_elements.includes(item.name) && (item.name !== "Moisture" && item.name !== "RA" && item.name !== "REO" && item.name !== "year" && item.year !== "result_id")){
                             // console.log("Printing elements excluded from REO: ", {name: item.name, value: item.value});
                             tempResultsArray2.push({name: item.name, value: item.value});
                         } else {
@@ -146,11 +148,11 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 ${columns.join(', ')}
                 FROM customers AS cust 
                 INNER JOIN registration reg on reg.customer_id=cust.customer_id 
-                INNER JOIN results res on reg.Sample_No=res.Sample_No
-                WHERE res.Sample_No=?;
+                INNER JOIN results res on reg.Sample_No=res.Sample_No AND reg.year = res.year
+                WHERE res.Sample_No=? AND res.year=?;
             `;
 
-            pool.query(selectQuery, [data.Sample_No], async (err, customerData) => {
+            pool.query(selectQuery, [data.Sample_No, data.year], async (err, customerData) => {
                 if (err) {
                     console.error(err);
                     // return res.status(500).send('Internal Server Error');
@@ -159,6 +161,9 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 // const tempElements = resultsArray;
                 const tempElements = tempResultsArray2;
                 const tempNonElements = tempResultsArray;
+
+                console.log("Printing tempResultsArray2 (163): ", tempResultsArray2);
+                console.log("Printing tempResultsArray (164): ", tempResultsArray);
 
                 // console.log("printing temp non elements: ", tempNonElements);
 
@@ -369,7 +374,8 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                     other_services: nonElements.map(item => item.non_element_name).join(', '),
                     sample_management_fee: internal_calibration ? 0 : sampleManagementFee,
                     grand_total: internal_calibration ? 0 : grandTotal,
-                    Date: data.date
+                    Date: data.date,
+                    year: data.year
                 }
                 console.log("Printing filteredDataForInvoiceTable: ", filteredDataForInvoiceTable);
 
@@ -380,7 +386,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                     },
                     body: JSON.stringify(filteredDataForInvoiceTable) // Convert the data to JSON
                   });
-                console.log(AddToInvoiceData);
+                // console.log(JSON.parse(AddToInvoiceData));
                 // ===============================================
 
                 return await axios.post(`${process.env.PDF_GENERATOR_URL}/generateInvoicePdf`, clientInvoiceData, {
@@ -390,7 +396,7 @@ async function generateInvoice(Sample_No, date, certNumVersion){
                 .then(async response => {
                     console.log('Data sent successfully, downloading and saving PDF...');
         
-                    let file_name = response.data.rawHeaders[process.env.RAW_HEADER_INDEX].match(/filename="(.+\.pdf)"/)[1];
+                    let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
                     console.log("Printing received file_name: ", file_name);
         
                     // === function that will rename old pdf by adding a timestamp at the end ===
@@ -467,9 +473,9 @@ async function checkAndRenamePDF(file_name) {
     }
 }
 
-async function retrieveNonElementFromRegistration(sample_no){
+async function retrieveNonElementFromRegistration(sample_no, year){
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT * FROM registration WHERE Sample_No=?`, [sample_no], (err, registration) => {
+        pool.query(`SELECT * FROM registration WHERE Sample_No=? AND year=?`, [sample_no, year], (err, registration) => {
             resolve(registration);
         })
     })

@@ -26,15 +26,18 @@ const { pool } = require('../../configs/mysql');
 
 async function generateSamplingContract(data){
     try {
-        // console.log("Printing data: ", data);
+        console.log("Printing data in generateSamplingContract: ", data);
 
         let paddedSampleNumber = await paddedNumber(data.Sample_No);
         let documentNumber = `GSA-FR-CFRM-${paddedSampleNumber}`;
+
+        // File name:
+        let file_name = `GSA-FR-CFRM-${data.year}-${paddedSampleNumber}`;
         // Getting customer info
-        let customer = await getCustomerData(data.Sample_No);
+        let customer = await getCustomerData(data.Sample_No, data.year);
         // console.log("printing customer (line 35): ", customer);
 
-        let measurementServices = await getMeasurementServices(data.Sample_No);
+        let measurementServices = await getMeasurementServices(data.Sample_No, data.year);
         // console.log(measurementServices);
 
         let measurementServicesString = measurementServices.join(", ");
@@ -42,7 +45,7 @@ async function generateSamplingContract(data){
         let method_types = await getMethodData(measurementServices);
         // console.log("Printing getMethods: ", method_types);
 
-        let registration = await getRegistrationData(data.Sample_No);
+        let registration = await getRegistrationData(data.Sample_No, data.year);
         // console.log(registration);
 
         let currency = await getCurrency(data.country_of_origin);
@@ -54,10 +57,11 @@ async function generateSamplingContract(data){
             "measurementService": measurementServicesString,
             "selectedMethodTypes": method_types,
             "registration": registration[0],
-            "currency": currency
+            "currency": currency,
+            "file_name": file_name
         };
 
-        console.log("Printing certificateData: ", contractData);
+        // console.log("Printing certificateData: ", contractData);
 
         console.log("About to send data to generate contract in external api");
 
@@ -194,9 +198,9 @@ async function checkAndRenamePDF(file_name) {
     }
 }
 
-async function getCustomerData(Sample_No){
+async function getCustomerData(Sample_No, year){
     return new Promise((resolve, reject) => {
-        const query = `SELECT cust.company, cust.name, cust.surname, cust.tin, cust.address, cust.phone, cust.country, reg.Sample_No FROM customers cust INNER JOIN registration reg ON reg.customer_id=cust.customer_id WHERE Sample_No=?;`
+        const query = `SELECT cust.company, cust.name, cust.surname, cust.tin, cust.address, cust.phone, cust.country, reg.Sample_No FROM customers cust INNER JOIN registration reg ON reg.customer_id=cust.customer_id WHERE Sample_No=? AND year=${year};`
         pool.query(query, [Sample_No], (err, customer) => {
             if(err){
                 console.error(err);
@@ -242,9 +246,9 @@ async function getCustomerData(Sample_No){
     });
 }
 
-async function getRegistrationData(Sample_No){
+async function getRegistrationData(Sample_No, year){
     return new Promise((resolve, reject) => {
-        const query = `SELECT reg.Date, reg.Sampling_date, reg.Sample_weight, reg.Customer_sample_name, reg.gsa_sample_id, reg.Approved_Quotation_Value, reg.Approx_days FROM registration reg WHERE Sample_No=?;`
+        const query = `SELECT reg.Date, reg.Sampling_date, reg.Sample_weight, reg.Customer_sample_name, reg.gsa_sample_id, reg.Approved_Quotation_Value, reg.Approx_days FROM registration reg WHERE Sample_No=? AND year=${year};`
         pool.query(query, [Sample_No], async (err, registration) => {
             if(err){
                 console.error(err);
@@ -270,11 +274,12 @@ async function formatDate(mysqlDate) {
     return `${day}.${month}.${year}`;
 }
 
-async function getMeasurementServices(Sample_No){
+async function getMeasurementServices(Sample_No, year){
     return new Promise(async (resolve, reject) => {
         let elementsAndSymbols = await getElementSymbols();
         let compoundSymbols = await getMainElementSymbol();
-        const query = `SELECT * FROM registration WHERE Sample_No=?;`
+        const query = `SELECT * FROM registration WHERE Sample_No=? AND year=${year};`
+        console.log("Printing sample-no getMeasurementService:", Sample_No);
         pool.query(query, [Sample_No], (err, registration) => {
             if(err){
                 console.error(err);
@@ -282,7 +287,7 @@ async function getMeasurementServices(Sample_No){
                 return;
             }
 
-            // console.log("Printing registration: ", registration);
+            console.log("Printing registration: ", registration);
 
             let measurementServices = [];
             let selectedElements = [];
@@ -372,7 +377,8 @@ async function getMeasurementServices(Sample_No){
             // ===========================
 
             // === Check if selectedElements contains "REO" ===
-            let REO_Elements = ['Lanthanum', 'Cerium', 'Praseodymium', 'Neodymium', 'Promethium', 'Samarium', 'Europium', 'Gadolinium', 'Terbium', 'Dysprosium', 'Holmium', 'Erbium', 'Thulium', 'Ytterbium', 'Lutetium', 'Tantalum', 'Actinium', 'Protactinium', 'Neptunium', 'Plutonium', 'Americium', 'Curium', 'Berkelium', 'Californium', 'Einsteinium', 'Fermium', 'Mendelevium', 'Nobelium', 'Lawrencium'];
+            // let REO_Elements = ['Lanthanum', 'Cerium', 'Praseodymium', 'Neodymium', 'Promethium', 'Samarium', 'Europium', 'Gadolinium', 'Terbium', 'Dysprosium', 'Holmium', 'Erbium', 'Thulium', 'Ytterbium', 'Lutetium', 'Tantalum', 'Actinium', 'Protactinium', 'Neptunium', 'Plutonium', 'Americium', 'Curium', 'Berkelium', 'Californium', 'Einsteinium', 'Fermium', 'Mendelevium', 'Nobelium', 'Lawrencium'];
+            let REO_Elements = ['Lanthanum', 'Cerium', 'Praseodymium', 'Neodymium', 'Promethium', 'Samarium', 'Europium', 'Gadolinium', 'Terbium', 'Dysprosium', 'Holmium', 'Erbium', 'Thulium', 'Ytterbium', 'Lutetium', 'Actinium', 'Protactinium', 'Neptunium', 'Plutonium', 'Americium', 'Curium', 'Berkelium', 'Californium', 'Einsteinium', 'Fermium', 'Mendelevium', 'Nobelium', 'Lawrencium']; //Removed Tantalum from REO
             let excluded_reo_elements = elementsAndSymbols.filter(item => REO_Elements.includes(item.element_name)).map(item => item.element_symbol);
             if(hasREO){
                 measurementServices.push("Sum_rare_earth_elements");
@@ -403,12 +409,14 @@ async function getMeasurementServices(Sample_No){
             // ==============================
 
             // === remove REO ===
-            REO_Elements.forEach(element => {
-                let indexToRemove = measurementServices.indexOf(element);
-                if (indexToRemove !== -1) {
-                    measurementServices.splice(indexToRemove, 1);
-                }
-            })
+            if(hasREO){
+                REO_Elements.forEach(element => {
+                    let indexToRemove = measurementServices.indexOf(element);
+                    if (indexToRemove !== -1) {
+                        measurementServices.splice(indexToRemove, 1);
+                    }
+                })
+            }
             // ==================
 
 

@@ -117,17 +117,25 @@ router.get('/getAllCompaniesAnalysisStatistics', async (req, res) => {
 router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
     try {
         const month = req.query.month;
-        // const query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type
-        //             FROM customers cust 
-        //             INNER JOIN registration reg on cust.customer_id=reg.customer_id 
-        //             WHERE YEAR(Date) = 2024
-        //             AND MONTH(Date) = ${month};`;
-        const query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type, inv_data.grand_total
-                    FROM customers cust 
-                    INNER JOIN registration reg on cust.customer_id=reg.customer_id 
-                    JOIN invoice_data inv_data on reg.Sample_No=inv_data.sample_no
-                    WHERE YEAR(inv_data.Date) = 2024
-                    AND MONTH(inv_data.Date) = ${month};`;
+        const year = req.query.year;
+        
+        let query = ``;
+        console.log("year: ", year);
+        console.log("month: ", month);
+        if(month){
+            query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type, inv_data.grand_total
+                        FROM customers cust 
+                        INNER JOIN registration reg on cust.customer_id=reg.customer_id 
+                        JOIN invoice_data inv_data on reg.Sample_No=inv_data.sample_no
+                        WHERE YEAR(inv_data.Date) = ${year}
+                        AND MONTH(inv_data.Date) = ${month};`;
+        } else if (!month || month === undefined){
+            query = `SELECT reg.Date, cust.customer_id, cust.company, cust.name, cust.surname, reg.Sample_No, reg.Type, inv_data.grand_total
+                        FROM customers cust 
+                        INNER JOIN registration reg on cust.customer_id=reg.customer_id 
+                        JOIN invoice_data inv_data on reg.Sample_No=inv_data.sample_no
+                        WHERE YEAR(inv_data.Date) = ${year};`;
+        }
         
         pool.query(query, async (err, data) => {
             if(err){
@@ -165,22 +173,30 @@ router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
                 companyObj[materialType]++;
             });
 
-            const query = new URLSearchParams({
-                month: month
-            }).toString();
+            let query;
+            if(month !== undefined){
+                query = new URLSearchParams({
+                    month: month,
+                    year: year
+                }).toString();
+            } else if(month === undefined) {
+                query = new URLSearchParams({
+                    year: year
+                }).toString();
+            }
 
             const unparsedCompanyTotals = await fetch(`http://localhost:4000/getAllCompanyTotalsByMainElement?${query}`);
             const companyTotals = await unparsedCompanyTotals.json();
 
-            console.log("Printing company totals: ", companyTotals);
-            console.log("Printing analysisStatistics: ", analysisStatistics);
+            // console.log("Printing company totals: ", companyTotals);
+            // console.log("Printing analysisStatistics: ", analysisStatistics);
 
             analysisStatistics.forEach((item) => {
                 
                 // let matchingCompanyTotals = companyTotals.filter(total => total.company === item.company);
                 let matchingCompanyTotals = companyTotals.filter(total => total.customer_id === item.customer_id);
 
-                console.log("Printing matchingCompanyTotal: ", matchingCompanyTotals);
+                // console.log("Printing matchingCompanyTotal: ", matchingCompanyTotals);
                 
                 matchingCompanyTotals.forEach(matchingTotal => {
                     if(matchingTotal.currency === "USD"){
@@ -192,7 +208,7 @@ router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
 
             });
 
-            console.log("Printing combined analysisStatistics: ", analysisStatistics);
+            // console.log("Printing combined analysisStatistics: ", analysisStatistics);
 
             // Define a mapping of properties to rename
             const propertyMapping = {
@@ -227,22 +243,27 @@ router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
 router.get('/getAllCompanyTotalsByMainElement', async (req, res) => {
     try {
         const month = req.query.month;
+        const year = req.query.year || new Date().getFullYear();
+
+        // let currentYear = new Date().getFullYear();
         let query = "";
 
         console.log("Printing month: ", month);
+        console.log("Printing year: ", year);
+        // console.log("Printing current year: ", currentYear);
 
-        if(month){
+        if(month && year){
             query = `SELECT inv_data.sample_no, cust.customer_id, cust.company, cust.name, cust.surname, inv_data.main_element, inv_data.grand_total, inv_data.currency, inv_data.Date
                 FROM customers cust 
                 INNER JOIN invoice_data inv_data on cust.customer_id=inv_data.customer_id 
-                WHERE YEAR(Date) = 2024
+                WHERE YEAR(Date) = ${year}
                 AND MONTH(Date) = ${month};`
-        } else if (!month){
+        } else if (!month || month === undefined && year !== undefined){
             query = `SELECT inv_data.sample_no, cust.customer_id, cust.company, cust.name, cust.surname, inv_data.main_element, inv_data.grand_total, inv_data.currency, inv_data.Date
                 FROM customers cust 
                 INNER JOIN invoice_data inv_data on cust.customer_id=inv_data.customer_id 
-                WHERE YEAR(Date) = 2024;`
-        }
+                WHERE YEAR(Date) = ${year};`
+        } 
 
         pool.query(query, (err, companyTotals) => {
             if(err){
@@ -274,6 +295,21 @@ router.get('/exportInvoiceData', async (req, res) => {
             }
         });
     })
+})
+
+router.get('/getMinAndMaxYearFromInvoiceData', async (req, res) => {
+    try {
+        pool.query('SELECT MIN(YEAR(Date)) AS min_year, MAX(YEAR(Date)) AS max_year FROM invoice_data;', (err, data) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.json({minMaxYears: data});
+        })
+    } catch (error) {
+        console.error(error);
+    }
 })
 
 // Function to rename properties in an analysisStatistics

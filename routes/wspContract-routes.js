@@ -5,7 +5,15 @@ const { pool } = require('../configs/mysql');
 
 router.get('/getLastWSPContract', async (req, res) => {
     try {
-        const query = `SELECT sample_no from wsp_contract ORDER BY id DESC LIMIT 1;`;
+        // const year = req.query.year;
+        // console.log("year: ", year);
+        // let query = ``;
+        // if(year){
+        //     query = `SELECT sample_no from wsp_contract WHERE year = ${year} ORDER BY id DESC LIMIT 1;`;
+        // } else if(!year){
+        //     query = `SELECT sample_no from wsp_contract ORDER BY id DESC LIMIT 1;`;
+        // }
+            query = `SELECT sample_no from wsp_contract ORDER BY id DESC LIMIT 1;`;
 
         pool.query(query, (err, wspLastContract) => {
             if(err){

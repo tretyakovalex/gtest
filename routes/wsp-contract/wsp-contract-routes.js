@@ -54,7 +54,8 @@ router.post('/generateWSPContract', async (req, res) => {
             surveyor: data.surveyor,
             currency: data.currency,
             quotation_value: data.quotation_value,
-            location_service: data.location_service
+            location_service: data.location_service,
+            // year: data.year
         }
         
         const query = `INSERT INTO wsp_contract SET ?`;
@@ -130,7 +131,7 @@ router.get('/getWSPContractByDate', async (req, res) => {
         let pdf_files = await getFileCreatedDate(file_path);
 
         // console.log(pdf_files);
-        console.log(date);
+        // console.log(date);
 
         let filtered_pdfs = [];
         pdf_files.forEach((item) => {
@@ -139,7 +140,7 @@ router.get('/getWSPContractByDate', async (req, res) => {
             }
         });
 
-        console.log("filtered pdf files: ", filtered_pdfs);
+        // console.log("filtered pdf files: ", filtered_pdfs);
 
         res.json(filtered_pdfs);
     } catch (error) {

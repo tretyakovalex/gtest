@@ -18,9 +18,40 @@ router.get('/getResults', async (req, res) => {
     }
 });
 
+router.get('/getResultsByYear', async (req, res) => {
+    try {
+        const year = req.query.year;
+        pool.query(`SELECT * FROM results where year = ${year}`, (err, result) => {
+            res.json({results: result});
+        })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.get('/getResultToEditByYear', async (req, res) => {
+    try {
+        const sample_no = req.query.sample_no;
+        const year = req.query.year;
+
+        pool.query(`SELECT * FROM results WHERE sample_no = ${sample_no} AND year = ${year}`, (err, result) => {
+            res.json({results: result});
+        })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
 router.get('/getResultsNotInGsaCertificate', async (req, res) => {
-    
-    const query = `SELECT r.Sample_No FROM results r LEFT JOIN gsa_certificate gc ON r.Sample_No = gc.sample_no WHERE gc.sample_no IS NULL`;
+    const year = req.query.year;
+    let query = ``;
+    if(year){
+        query = `SELECT r.Sample_No FROM results r LEFT JOIN gsa_certificate gc ON r.Sample_No = gc.sample_no AND r.year = gc.year WHERE gc.sample_no IS NULL AND r.year=${year}`;
+    } else if (!year){
+        query = `SELECT r.Sample_No FROM results r LEFT JOIN gsa_certificate gc ON r.Sample_No = gc.sample_no WHERE gc.sample_no IS NULL`;
+    }
+
+    console.log("Printing query for getResultsNotInGsaCertificate: ", query);
 
     try {
         pool.query(query, (err, sample_no) => {
@@ -36,13 +67,49 @@ router.get('/getResultsNotInGsaCertificate', async (req, res) => {
     }
 })
 
+router.get('/getSampleNumbersForResultsByYear', async (req, res) => {
+    const year = req.query.year;    
+    const query = `SELECT Sample_No from results where year = ${year}`;
+
+    try {
+        pool.query(query, (err, sample_no) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+        
+            res.json({ sample_nums: sample_no });
+        })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+// Getting min max years:
+router.get('/getMinMaxYearForResults', async (req, res) => {
+    try {
+        pool.query('SELECT MIN(YEAR(date_of_lab)) AS min_year, MAX(YEAR(date_of_lab)) AS max_year FROM results;', (err, data) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.json({minMaxYears: data});
+        })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
 router.get('/searchResults', async (req, res) => {
     try {
-      const sampleNo = req.query.Sample_No;
-      console.log(sampleNo);
+      const sample_no = req.query.sample_no;
+      const year = req.query.year;
+      console.log(sample_no);
+      console.log(year);
 
-      const resultsQuery = `SELECT * FROM results WHERE Sample_No = ?`;
-      pool.query(resultsQuery, [sampleNo], async (err, result) => {
+      const resultsQuery = `SELECT * FROM results WHERE Sample_No = ${sample_no} AND year = ${year}`;
+      pool.query(resultsQuery, async (err, result) => {
           if (err) {
             console.error(err);
             return res.status(500).send('Internal Server Error');
@@ -120,6 +187,9 @@ router.put('/updateResult', async (req, res) => {
         // Logging data and reason
         console.log("Printing rawData.reasonObject: ", rawData.reasonObject);
         writeReasonToLogFile(rawData.reasonObject);
+        
+        console.log("Printing rawData.reasonObject.elements: ", rawData.reasonObject.originalResult.elements);
+        writeReasonToLogFile(rawData.reasonObject.originalResult.elements);
 
         // Extract the column names and values from the data object
         const columns = Object.keys(data);
@@ -134,10 +204,10 @@ router.put('/updateResult', async (req, res) => {
         const updateQuery = `
             UPDATE results
             SET ${columns.map(column => `${column === 'Lead' ? '`Lead`' : column} = ?`).join(', ')}
-            WHERE Sample_No = ?
+            WHERE Sample_No = ? AND year = ?
         `;
 
-        pool.query(updateQuery, [...values, data.Sample_No], (error, results) => {
+        pool.query(updateQuery, [...values, data.Sample_No, data.year], (error, results) => {
             if (error) {
                 console.log(error);
                 return res.status(500).send('Internal Server Error');

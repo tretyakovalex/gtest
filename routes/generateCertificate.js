@@ -34,11 +34,11 @@ async function generateCertificate(data){
         console.log("PRINTING date_of_lab: ", data.date_of_lab);
 
         // Getting customer info
-        let customer = await getCustomerData(data.Sample_No);
+        let customer = await getCustomerData(data.Sample_No, data.year);
         // console.log(customer);
 
         // Getting registration info
-        let registration = await getRegistrationData(data.Sample_No);
+        let registration = await getRegistrationData(data.Sample_No, data.year);
         console.log("Printing registration: ", registration);
 
 
@@ -85,7 +85,7 @@ async function generateCertificate(data){
         // ===========================
 
 
-        let result = await getResultsBySampleNo(data.Sample_No, data.selectedElements, data.RA_present, data.RA_In_Kg);
+        let result = await getResultsBySampleNo(data.Sample_No, data.selectedElements, data.RA_present, data.RA_In_Kg, data.year);
         console.log("Printing result: ", result);
 
         let RA_present;
@@ -107,7 +107,7 @@ async function generateCertificate(data){
 
         let Sampling_date = moment(registration[0].Sampling_date);
 
-        let date_of_lab = await getDateOfLabFromResults(data.Sample_No);
+        let date_of_lab = await getDateOfLabFromResults(data.Sample_No, data.year);
         console.log("Printing date_of_lab from getDateOfLabFromResults():", date_of_lab);
 
         let certificateData = {
@@ -310,10 +310,10 @@ async function checkAndRenamePDF(file_name) {
     }
 }
 
-async function getCustomerData(Sample_No){
+async function getCustomerData(Sample_No, year){
     return new Promise((resolve, reject) => {
-        const query = `SELECT cust.company, cust.name, cust.surname, cust.email, cust.address, reg.Sample_No FROM customers cust INNER JOIN registration reg ON reg.customer_id=cust.customer_id WHERE Sample_No=?;`
-        pool.query(query, [Sample_No], (err, customer) => {
+        const query = `SELECT cust.company, cust.name, cust.surname, cust.email, cust.address, reg.Sample_No FROM customers cust INNER JOIN registration reg ON reg.customer_id=cust.customer_id WHERE Sample_No=? AND year=?;`
+        pool.query(query, [Sample_No, year], (err, customer) => {
             if(err){
                 console.error(err);
                 reject(err);
@@ -337,10 +337,10 @@ async function getCustomerData(Sample_No){
     });
 }
 
-async function getRegistrationData(Sample_No){
+async function getRegistrationData(Sample_No, year){
     return new Promise((resolve, reject) => {
-        const query = `SELECT gsa_sample_id, Customer_sample_name, itsci_number, Type, Lot_weight, date, Sampling_date, Sample_No, Full_scan, Semi_quantitative FROM registration WHERE Sample_No=?;`
-        pool.query(query, [Sample_No], (err, registration) => {
+        const query = `SELECT gsa_sample_id, Customer_sample_name, itsci_number, Type, Lot_weight, date, Sampling_date, Sample_No, Full_scan, Semi_quantitative FROM registration WHERE Sample_No=? AND year=?;`
+        pool.query(query, [Sample_No, year], (err, registration) => {
             if(err){
                 console.error(err);
                 reject(err);
@@ -487,10 +487,10 @@ async function getCompoundByCompoundName(compound_name){
     });
 }
 
-async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_In_Kg){
+async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_In_Kg, year){
     return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM results where Sample_No=?;`
-        pool.query(query, [Sample_No], async (err, result) => {
+        const query = `SELECT * FROM results where Sample_No=? AND year=?;`
+        pool.query(query, [Sample_No, year], async (err, result) => {
             if(err){
                 console.error(err);
                 reject(err);
@@ -614,10 +614,11 @@ async function getResultsBySampleNo(Sample_No, selectedElements, RA_present, RA_
     });
 }
 
-async function getDateOfLabFromResults(Sample_No){
+async function getDateOfLabFromResults(Sample_No, year){
     return new Promise((resolve, reject) => {
         try {
-            pool.query('SELECT date_of_lab FROM results where Sample_No=?', Sample_No, (err, result) => {
+            let query = `SELECT date_of_lab FROM results where Sample_No=${Sample_No} AND year=${year}`;
+            pool.query(query, (err, result) => {
                 if(err){
                     console.error(err);
                     reject;

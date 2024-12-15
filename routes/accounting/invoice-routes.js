@@ -53,7 +53,7 @@ router.get('/getGsaInvoices', async (req, res) => {
             return 0;
         });
 
-        console.log("file paths: ", file_path)
+        console.log("file paths: ", file_path);
 
         let pdf_files = await getFileCreatedDate(file_path);
         console.log(pdf_files);
@@ -67,7 +67,9 @@ router.get('/getGsaInvoices', async (req, res) => {
 router.get('/getInvoiceByName', async (req, res) => {
     try {
         const file_name = req.query.file_name;
-        const clientId = req.query.clientId;
+        // const clientId = req.query.clientId;
+
+        console.log("Printing file name: ", file_name);
         
         // const pdfData = await fs.promises.readFile(path.join(__dirname, "..", "..", "handlebars", 'gsa-invoices', file_name));
         // sendMessageForInvoiceComponent(pdfData, clientId);
@@ -122,12 +124,12 @@ router.get('/getInvoiceByDate', async (req, res) => {
             return 0;
         });
 
-        console.log("file paths: ", file_path);
+        // console.log("file paths: ", file_path);
 
         let pdf_files = await getFileCreatedDate(file_path);
 
         // console.log(pdf_files);
-        console.log(date);
+        // console.log(date);
 
         let filtered_pdfs = [];
         pdf_files.forEach((item) => {
@@ -136,7 +138,7 @@ router.get('/getInvoiceByDate', async (req, res) => {
             }
         });
 
-        console.log("filtered pdf files: ", filtered_pdfs);
+        // console.log("filtered pdf files: ", filtered_pdfs);
 
         res.json(filtered_pdfs);
     } catch (error) {
@@ -170,16 +172,22 @@ router.post("/add-invoice-data", async (req, res) => {
     });
 });
 
-async function getFileCreatedDate(file_path){
+async function getFileCreatedDate(file_path, year){
     let pdf_files = await Promise.all(file_path.map(async (file) => {
         const file_path = path.join(__dirname, '..', '..', 'handlebars', 'gsa-invoices', file);
         const stat = await fs.stat(file_path);
+
+        let file_year = file.match(/^(?:[^-]*-){3}(\d{4})/); // Getting year from file_name
         if (stat) {
-            return { file_name: file, created: stat.mtime };
+            return { file_name: file, created: stat.mtime, year: file_year[1] };
         }
     }));
 
     return pdf_files;
+}
+
+async function getYearFromFileName(file_name){
+
 }
 
 module.exports = router;

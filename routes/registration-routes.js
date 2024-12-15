@@ -53,7 +53,7 @@ router.post('/addRegistration', async (req, res) => {
 });
 
 router.get('/getSampleNoAndCustomerSampleName', async (req, res) => {
-    const query = `SELECT Sample_No, Customer_sample_name FROM registration ORDER BY Sample_No DESC;`;
+    const query = `SELECT Sample_No, Customer_sample_name, year FROM registration ORDER BY Sample_No DESC;`;
 
     pool.query(query, (err, registration) => {
         if(err){
@@ -65,9 +65,27 @@ router.get('/getSampleNoAndCustomerSampleName', async (req, res) => {
     })
 })
 
-router.get('/getRegistrationsNotInResults', async (req, res) => {
+// router.get('/getRegistrationsNotInResults', async (req, res) => {
     
-    const query = `SELECT r2.Sample_No FROM registration r2 LEFT JOIN results r ON r2.Sample_No = r.Sample_No WHERE r.Sample_No IS NULL`;
+//     const query = `SELECT r2.Sample_No FROM registration r2 LEFT JOIN results r ON r2.Sample_No = r.Sample_No WHERE r.Sample_No IS NULL`;
+
+//     try {
+//         pool.query(query, (err, sample_no) => {
+//             if(err){
+//                 console.error(err);
+//                 return res.status(500).send('Internal Server Error');
+//             }
+        
+//             res.json({ sample_nums: sample_no });
+//         })
+//     } catch (error) {
+//         console.error(error);
+//     }
+// });
+router.get('/getRegistrationsNotInResultsByYear', async (req, res) => {
+    const year = req.query.year;
+    // const query = `SELECT r2.Sample_No FROM registration r2 LEFT JOIN results r ON r2.Sample_No = r.Sample_No WHERE r.Sample_No IS NULL AND r2.year = ${year}`; // Old query without considering duplicate sample numbers but with different years
+    const query = `SELECT reg.Sample_No FROM registration reg LEFT JOIN results res ON reg.Sample_No = res.Sample_No AND reg.year = res.year WHERE res.Sample_No IS NULL AND reg.year = ${year};`;
 
     try {
         pool.query(query, (err, sample_no) => {
@@ -129,7 +147,13 @@ router.get('/getSampleNoRegistration', async (req, res) => {
 
 router.get('/getLastRegistration', async (req, res) => {
     try {
-        const query = `SELECT * FROM registration WHERE Sample_No = (SELECT MAX(Sample_No) FROM registration);`;
+        const year = req.query.year;
+        let query = ``;
+        if(year){
+            query = `SELECT * FROM registration WHERE Sample_No = (SELECT MAX(Sample_No) FROM registration WHERE year = ${year}) AND year = ${year};`;
+        } else if(!year){
+            query = `SELECT * FROM registration WHERE Sample_No = (SELECT MAX(Sample_No) FROM registration);`;
+        }
         pool.query(query, async (err, registration) => {
             if(err){
                 console.error(err);
@@ -152,11 +176,28 @@ router.get('/getLastRegistration', async (req, res) => {
     }
 });
 
+// Getting min max years:
+router.get('/getMinMaxYearForRegistration', async (req, res) => {
+    try {
+        pool.query('SELECT MIN(YEAR(Date)) AS min_year, MAX(YEAR(Date)) AS max_year FROM registration;', (err, data) => {
+            if(err){
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            res.json({minMaxYears: data});
+        })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
 
 router.post('/searchRegistration', async (req, res) => {
     try {
         const registration = req.body;
-        console.log(registration.Sample_No);
+        console.log("registration sample_no: ", registration.Sample_No);
+        console.log("registration year: ", registration.year);
 
         // Check if sample_no exists in ** registration ** table
         const checkRegistrationQuery = `SELECT sample_no FROM registration WHERE sample_no = ?`;
@@ -172,8 +213,8 @@ router.post('/searchRegistration', async (req, res) => {
             }
 
             // Check if sample_no exists in ** Results ** table
-            const checkResultsQuery = `SELECT sample_no FROM results WHERE sample_no = ?`;
-            pool.query(checkResultsQuery, [registration.Sample_No], (selectError, selectResults) => {
+            const checkResultsQuery = `SELECT sample_no FROM results WHERE sample_no = ${registration.Sample_No} AND year = ${registration.year}`;
+            pool.query(checkResultsQuery, (selectError, selectResults) => {
                 if (selectError) {
                     console.log(selectError);
                     return res.status(500).send('Internal Server Error');
@@ -184,7 +225,9 @@ router.post('/searchRegistration', async (req, res) => {
                     return res.status(400).json('Data for this sample number already filled in');
                 }
 
-                pool.query('SELECT * FROM registration WHERE Sample_No = ? AND Sample_No NOT IN (SELECT Sample_No FROM results)', [registration.Sample_No], async (err, result) => {
+                let query = `SELECT * FROM registration WHERE Sample_No = ${registration.Sample_No} AND year = ${registration.year} AND Sample_No NOT IN (SELECT Sample_No FROM results where year = ${registration.year});`;
+                // pool.query('SELECT * FROM registration WHERE Sample_No = ? AND Sample_No NOT IN (SELECT Sample_No FROM results)', [registration.Sample_No], async (err, result) => {
+                pool.query(query, async (err, result) => {
                     if(err){
                         console.error(err);
                         return res.status(500).send('Internal Server Error');
@@ -203,9 +246,11 @@ router.post('/searchRegistration', async (req, res) => {
 
 router.get('/selectRegistrationBySampleNo', async (req, res) => {
     const sample_no = req.query.Sample_No;
+    const year = req.query.year;
 
+    let query = `SELECT * FROM registration WHERE Sample_No = ${sample_no} AND year = ${year}`
     try {
-        pool.query(`SELECT * FROM registration WHERE Sample_No = ?`, sample_no, async (err, results) => {
+        pool.query(query, async (err, results) => {
             if(err){
                 console.error(err);
                 return res.status(500).send('Internal Server Error');
@@ -230,7 +275,9 @@ router.get('/selectRegistrationBySampleNo', async (req, res) => {
 
 router.get('/getRegistrationSampleNumbers', async (req, res) => {
     try {
-        const query = `SELECT Sample_No FROM registration ORDER BY Sample_No DESC;`;
+        const year = req.query.year;
+        const query = `SELECT Sample_No, year FROM registration WHERE year = ${year} ORDER BY Sample_No DESC;`;
+        
         pool.query(query, async (err, results) => {
             if(err){
                 console.error(err);
@@ -254,7 +301,8 @@ router.put('/updateRegistration', async (req, res) => {
         console.log("Printing rawData.reasonObject: ", rawData.reasonObject);
         writeReasonToLogFile(rawData.reasonObject);
 
-        const query = `UPDATE registration SET ? WHERE Sample_No=?`;
+        // const query = `UPDATE registration SET ? WHERE Sample_No=?`;
+        const query = `UPDATE registration SET ? WHERE Sample_No = ${data.Sample_No} AND year = ${data.year}`;
 
         console.log(data);
 
