@@ -541,10 +541,11 @@ async function getMethodData(data){
             });
 
             // Trimming last comma:
+            console.log("Method Data before removing last comma and space: ", method_data);
             if (method_data.endsWith(',')) {
                 method_data = method_data.slice(0, -1); // Removes the last comma and space
             }
-            // console.log("Method Data: ", method_data);
+            console.log("Method Data after removing last comma and space: ", method_data);
 
             resolve(method_data);
         })

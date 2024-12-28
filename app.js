@@ -59,10 +59,14 @@ app.use(require('./routes/wsp-contract/wsp-contract-routes.js'));
 
 // Statistics
 app.use(require('./routes/statistics/analysis-statistics-routes.js'));
+app.use(require('./routes/statistics/material-statistics-routes.js'));
 app.use(require('./routes/statistics/sample-statistics-routes.js'));
 
 // Regenerate Service Contract
 app.use(require('./routes/regenerateServiceContract-routes.js'));
+
+// Test generating invoice
+app.use(require('./routes/testGenerateInvoice-routes.js'));
 
 // === Frontend: ===
 // =================

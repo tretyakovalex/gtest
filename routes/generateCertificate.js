@@ -110,6 +110,11 @@ async function generateCertificate(data){
         let date_of_lab = await getDateOfLabFromResults(data.Sample_No, data.year);
         console.log("Printing date_of_lab from getDateOfLabFromResults():", date_of_lab);
 
+        // Filter out Underscore and Parenthesis from Type. Done here to avoid causing issue with other functions/table such as: methods, compounds, ...
+        registration[0].Type = registration[0].Type
+        .replace(/_/g, ' ') // Replace underscores with spaces
+        .replace(/\s*\(.*\)$/, '');
+
         let certificateData = {
             "certType": data.certType,
             "paddedNum": paddedNum,

@@ -53,10 +53,10 @@ router.get('/getGsaInvoices', async (req, res) => {
             return 0;
         });
 
-        console.log("file paths: ", file_path);
+        // console.log("file paths: ", file_path);
 
         let pdf_files = await getFileCreatedDate(file_path);
-        console.log(pdf_files);
+        // console.log(pdf_files);
 
         res.json(pdf_files);
     } catch (error) {

@@ -5,7 +5,7 @@ const { pool } = require('../configs/mysql');
 
 router.get('/getCompounds', async (req, res) => {
     try {
-        pool.query('SELECT * FROM compounds', (err, compound) => {
+        pool.query("SELECT * FROM compounds WHERE compound_name != 'Monazite'", (err, compound) => {
             if(err){
                 console.error(err);
                 return res.status(500).send('Internal Server Error');

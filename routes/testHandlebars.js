@@ -76,10 +76,10 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
             let tempResultsArray = [];
             let tempResultsArray2 = [];
 
-            console.log("Printing results array (79): ", resultsArray);
+            // console.log("Printing results array (79): ", resultsArray);
             resultsArray.dele
             
-            console.log("Printing filteredRegistration (81): ", filteredRegistration);
+            // console.log("Printing filteredRegistration (81): ", filteredRegistration);
 
             if(filteredRegistration){ 
                 if(filteredRegistration === "Sum_rare_earth_elements"){
@@ -93,7 +93,7 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
                             } else if (item.name === "REO"){
                                 tempResultsArray.push({name: "Sum_rare_earth_elements", value: item.value});
                             } else {
-                                console.log("Printing elements from REO: ", {name: item.name, value: item.value});
+                                // console.log("Printing elements from REO: ", {name: item.name, value: item.value});
                             }
                         }
                     })
@@ -162,14 +162,14 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
                 const tempElements = tempResultsArray2;
                 const tempNonElements = tempResultsArray;
 
-                console.log("Printing tempResultsArray2 (163): ", tempResultsArray2);
-                console.log("Printing tempResultsArray (164): ", tempResultsArray);
+                // console.log("Printing tempResultsArray2 (163): ", tempResultsArray2);
+                // console.log("Printing tempResultsArray (164): ", tempResultsArray);
 
                 // console.log("printing temp non elements: ", tempNonElements);
 
-                console.log("Printing customerData:", customerData[0]);
+                // console.log("Printing customerData:", customerData[0]);
                 
-                let elementsAndPrices = await getElementSymbolAndPrices(tempElements, tempNonElements, customerData[0].country);
+                let elementsAndPrices = await getElementSymbolAndPrices(tempElements, tempNonElements, customerData[0].country, registration[0].Type);
 
                 let internal_calibration = false;
                 if(customerData[0].internal_calibration !== null && Buffer.isBuffer(customerData[0].internal_calibration) && customerData[0].internal_calibration.equals(new Buffer.from([0x01]))){
@@ -183,7 +183,7 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
                 //     }
                 // })
 
-                console.log("Printing elements and their prices (167): ", elementsAndPrices);
+                // console.log("Printing elements and their prices (167): ", elementsAndPrices);
 
                 let total_price = 0;
                 elementsAndPrices.forEach(element => {
@@ -201,7 +201,7 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
 
 
                 let elementSymbols = "";
-                console.log(elementsAndPrices);
+                // console.log(elementsAndPrices);
 
                 elementsAndPrices.slice(1).forEach((item) => {
                     if(elementsAndPrices.length === 1 && item.element_symbol !== undefined && item.element_symbol !== null){
@@ -354,7 +354,7 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
                 //         console.error('Error sending data:', error);
                 //     });
 
-                console.log("Printing final invoice date: ", clientInvoiceData);
+                // console.log("Printing final invoice date: ", clientInvoiceData);
 
 
                 let grandTotal = 0;
@@ -377,7 +377,7 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
                     Date: data.date,
                     year: data.year
                 }
-                console.log("Printing filteredDataForInvoiceTable: ", filteredDataForInvoiceTable);
+                // console.log("Printing filteredDataForInvoiceTable: ", filteredDataForInvoiceTable);
 
                 const AddToInvoiceData = await fetch(`http://localhost:4000/add-invoice-data`, {
                     method: 'POST',
@@ -394,10 +394,10 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
                     responseType: 'stream' // Important: Treat the response as a stream
                 })
                 .then(async response => {
-                    console.log('Data sent successfully, downloading and saving PDF...');
+                    // console.log('Data sent successfully, downloading and saving PDF...');
         
                     let file_name = response.data.rawHeaders[13].match(/filename="(.+\.pdf)"/)[1];
-                    console.log("Printing received file_name: ", file_name);
+                    // console.log("Printing received file_name: ", file_name);
         
                     // === function that will rename old pdf by adding a timestamp at the end ===
                     let pdfFilePath = await checkAndRenamePDF(file_name);
@@ -420,7 +420,7 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
             
                         // Handle the 'finish' event to know when the file is written
                         writer.on('finish', () => {
-                            console.log('PDF saved successfully to', pdfFilePath);
+                            // console.log('PDF saved successfully to', pdfFilePath);
                             resolve(pdfFilePath); // Resolve with the PDF file path
                         });
             
@@ -462,7 +462,7 @@ async function checkAndRenamePDF(file_name) {
 
             // Rename the old file
             await fs.rename(existingFilePath, renamedFilePath);
-            console.log(`Renamed old PDF file to: ${renamedFileName}`);
+            // console.log(`Renamed old PDF file to: ${renamedFileName}`);
         }
 
         // Return the path where the new PDF will be saved
@@ -536,229 +536,152 @@ async function selectSampleManagementFee(total_price) {
 
 
 // --- Removing sort for each country if statement because tempElements sorted before getElementSymbolAndPrices() is called ---
-async function getElementSymbolAndPrices(tempElements, tempNonElements, country) {
-    return new Promise((resolve, reject) => {
-        let query = "";
-        if(country === "Rwanda"){
-            query = `SELECT prices.element, elem.element_name, prices.main_price_rwf, prices.secondary_price_rwf, elem.element_symbol FROM service_prices prices LEFT JOIN elements elem ON prices.element=elem.element_name;`
-            pool.query(query, (err, result) => {
-                if (err) {
-                reject(err);
-                } else {
-                    const tempElementSymbols = [];
-
-                    let tempObj = result.filter(element => tempElements[0].name.includes(element.element))
-                    .map((element) => ({
-                        "element_name": element.element,
-                        "element_symbol": element.element_symbol, 
-                        "price": element.main_price_rwf, 
-                        "element_value": tempElements[0].value
-                    }));
-                    tempElementSymbols.push(tempObj);
-
-                    tempElements.slice(1).forEach(item => {
-                        let tempObj = result.filter(element => item.name.includes(element.element))
-                        .map((element) => ({
-                            "element_name": element.element,
-                            "element_symbol": element.element_symbol, 
-                            "price": element.secondary_price_rwf, 
-                            "element_value": item.value
-                        }));
-                        tempElementSymbols.push(tempObj);
-                    })
-
-                    tempNonElements.forEach(item => {
-                        let tempObj = result.filter(element => item.name.includes(element.element))
-                        .map((element) => ({
-                            "non_element_name": element.element,
-                            "price": element.secondary_price_rwf, 
-                            "element_value": item.value
-                        }));
-                        tempElementSymbols.push(tempObj);
-                    })
-    
-                    const elementSymbols = [].concat(...tempElementSymbols);
-    
-                    // elementSymbols.sort((a, b) => b.element_value - a.element_value);
-
-                    console.log("printing elementSymbols: ", elementSymbols);
-    
-                    resolve(elementSymbols);
-                }
-            });
-        } else if (country !== "Rwanda" && country !== "DRC"){
-            query = `SELECT prices.element, prices.main_price_usd, prices.secondary_price_usd, elem.element_symbol FROM service_prices prices LEFT JOIN elements elem ON prices.element=elem.element_name;`
-            pool.query(query, (err, result) => {
-                if (err) {
-                reject(err);
-                } else {
-                    const tempElementSymbols = [];
-    
-                    let tempObj = result.filter(element => tempElements[0].name.includes(element.element))
-                        .map((element) => ({
-                            "element_name": element.element,
-                            "element_symbol": element.element_symbol, 
-                            "price": element.main_price_usd, 
-                            "element_value": tempElements[0].value
-                        }));
-                    tempElementSymbols.push(tempObj);
-
-                    tempElements.slice(1).forEach(item => {
-                        let tempObj = result.filter(element => item.name.includes(element.element))
-                            .map((element) => ({
-                                "element_name": element.element,
-                                "element_symbol": element.element_symbol, 
-                                "price": element.secondary_price_usd, 
-                                "element_value": item.value
-                            }));
-                        tempElementSymbols.push(tempObj);
-                    })
-
-                    tempNonElements.forEach(item => {
-                        let tempObj = result.filter(element => item.name.includes(element.element))
-                        .map((element) => ({
-                            "non_element_name": element.element,
-                            "price": element.secondary_price_usd, 
-                            "element_value": item.value
-                        }));
-                        tempElementSymbols.push(tempObj);
-                    })
-    
-                    const elementSymbols = [].concat(...tempElementSymbols);
-    
-                    // elementSymbols.sort((a, b) => b.element_value - a.element_value);
-    
-                    resolve(elementSymbols);
-                }
-            });
-        } else if (country === "DRC"){
-            query = `SELECT prices.element, prices.main_price_usd_drc, prices.secondary_price_usd_drc, elem.element_symbol FROM service_prices prices LEFT JOIN elements elem ON prices.element=elem.element_name;`
-            pool.query(query, (err, result) => {
-                if (err) {
-                reject(err);
-                } else {
-                    const tempElementSymbols = [];
-
-                    // console.log("printing result: ", result);
-    
-                    let tempObj = result.filter(element => tempElements[0].name.includes(element.element))
-                        .map((element) => ({
-                            "element_name": element.element,
-                            "element_symbol": element.element_symbol, 
-                            "price": element.main_price_usd_drc, 
-                            "element_value": tempElements[0].value
-                        }));
-                    tempElementSymbols.push(tempObj);
-
-                    tempElements.slice(1).forEach(item => {
-                        let tempObj = result.filter(element => item.name.includes(element.element))
-                            .map((element) => ({
-                                "element_name": element.element,
-                                "element_symbol": element.element_symbol, 
-                                "price": element.secondary_price_usd_drc, 
-                                "element_value": item.value
-                            }));
-                        tempElementSymbols.push(tempObj);
-                    });
-
-                    tempNonElements.forEach(item => {
-                        let tempObj = result.filter(element => item.name.includes(element.element))
-                        .map((element) => ({
-                            "non_element_name": element.element,
-                            "price": element.secondary_price_usd_drc, 
-                            "element_value": item.value
-                        }));
-                        tempElementSymbols.push(tempObj);
-                    })
-    
-                    const elementSymbols = [].concat(...tempElementSymbols);
-    
-                    // elementSymbols.sort((a, b) => b.element_value - a.element_value);
-    
-                    resolve(elementSymbols);
-                }
-            });
-        }
-    });
-}
-
-// async function getElementSymbolAndPrices(tempElements, country) {
+// async function getElementSymbolAndPrices(tempElements, tempNonElements, country, Type) {
 //     return new Promise((resolve, reject) => {
 //         let query = "";
 //         if(country === "Rwanda"){
-//             query = `SELECT prices.element, prices.main_price_rwf, prices.secondary_price_rwf, elem.element_symbol FROM service_prices prices INNER JOIN elements elem ON prices.element=elem.element_name;`
+//             query = `SELECT prices.element, elem.element_name, prices.main_price_rwf, prices.secondary_price_rwf, elem.element_symbol FROM service_prices prices LEFT JOIN elements elem ON prices.element=elem.element_name;`
+//             let combintationCompounds = ["", ""];
 //             pool.query(query, (err, result) => {
 //                 if (err) {
 //                 reject(err);
 //                 } else {
 //                     const tempElementSymbols = [];
-    
-//                     tempElements.forEach(item => {
+
+//                     // Add the main element
+//                     let tempObj = result.filter(element => tempElements[0].name.includes(element.element))
+//                     .map((element) => ({
+//                         "element_name": element.element,
+//                         "element_symbol": element.element_symbol, 
+//                         "price": element.main_price_rwf, 
+//                         "element_value": tempElements[0].value
+//                     }));
+//                     tempElementSymbols.push(tempObj);
+
+//                     console.log("printing tempElementSymbols(1): ", tempElementSymbols);
+
+//                     tempElements.slice(1).forEach(item => {
 //                         let tempObj = result.filter(element => item.name.includes(element.element))
-//                             .map((element) => ({
-//                                 "element_name": element.element,
-//                                 "element_symbol": element.element_symbol, 
-//                                 "price": element.price_rwf, 
-//                                 "element_value": item.value
-//                             }));
+//                         .map((element) => ({
+//                             "element_name": element.element,
+//                             "element_symbol": element.element_symbol, 
+//                             "price": element.secondary_price_rwf, 
+//                             "element_value": item.value
+//                         }));
 //                         tempElementSymbols.push(tempObj);
 //                     })
+
+//                     console.log("printing tempElementSymbols(2): ", tempElementSymbols);
+
+//                     tempNonElements.forEach(item => {
+//                         let tempObj = result.filter(element => item.name.includes(element.element))
+//                         .map((element) => ({
+//                             "non_element_name": element.element,
+//                             "price": element.secondary_price_rwf, 
+//                             "element_value": item.value
+//                         }));
+//                         tempElementSymbols.push(tempObj);
+//                     })
+
+//                     console.log("printing tempElementSymbols(3): ", tempElementSymbols);
     
 //                     const elementSymbols = [].concat(...tempElementSymbols);
     
-//                     elementSymbols.sort((a, b) => b.element_value - a.element_value);
+//                     // elementSymbols.sort((a, b) => b.element_value - a.element_value);
+
+//                     console.log("printing elementSymbols: ", elementSymbols);
     
 //                     resolve(elementSymbols);
 //                 }
 //             });
 //         } else if (country !== "Rwanda" && country !== "DRC"){
-//             query = `SELECT prices.element, prices.main_price_usd, prices.secondary_price_usd, elem.element_symbol FROM service_prices prices INNER JOIN elements elem ON prices.element=elem.element_name;`
+//             query = `SELECT prices.element, prices.main_price_usd, prices.secondary_price_usd, elem.element_symbol FROM service_prices prices LEFT JOIN elements elem ON prices.element=elem.element_name;`
 //             pool.query(query, (err, result) => {
 //                 if (err) {
 //                 reject(err);
 //                 } else {
 //                     const tempElementSymbols = [];
     
-//                     tempElements.forEach(item => {
+//                     let tempObj = result.filter(element => tempElements[0].name.includes(element.element))
+//                         .map((element) => ({
+//                             "element_name": element.element,
+//                             "element_symbol": element.element_symbol, 
+//                             "price": element.main_price_usd, 
+//                             "element_value": tempElements[0].value
+//                         }));
+//                     tempElementSymbols.push(tempObj);
+
+//                     tempElements.slice(1).forEach(item => {
 //                         let tempObj = result.filter(element => item.name.includes(element.element))
 //                             .map((element) => ({
 //                                 "element_name": element.element,
 //                                 "element_symbol": element.element_symbol, 
-//                                 "price": element.main_price_usd, 
+//                                 "price": element.secondary_price_usd, 
 //                                 "element_value": item.value
 //                             }));
+//                         tempElementSymbols.push(tempObj);
+//                     })
+
+//                     tempNonElements.forEach(item => {
+//                         let tempObj = result.filter(element => item.name.includes(element.element))
+//                         .map((element) => ({
+//                             "non_element_name": element.element,
+//                             "price": element.secondary_price_usd, 
+//                             "element_value": item.value
+//                         }));
 //                         tempElementSymbols.push(tempObj);
 //                     })
     
 //                     const elementSymbols = [].concat(...tempElementSymbols);
     
-//                     elementSymbols.sort((a, b) => b.element_value - a.element_value);
+//                     // elementSymbols.sort((a, b) => b.element_value - a.element_value);
     
 //                     resolve(elementSymbols);
 //                 }
 //             });
 //         } else if (country === "DRC"){
-//             query = `SELECT prices.element, prices.main_price_usd_drc, prices.secondary_price_usd_drc, elem.element_symbol FROM service_prices prices INNER JOIN elements elem ON prices.element=elem.element_name;`
+//             query = `SELECT prices.element, prices.main_price_usd_drc, prices.secondary_price_usd_drc, elem.element_symbol FROM service_prices prices LEFT JOIN elements elem ON prices.element=elem.element_name;`
 //             pool.query(query, (err, result) => {
 //                 if (err) {
 //                 reject(err);
 //                 } else {
 //                     const tempElementSymbols = [];
+
+//                     // console.log("printing result: ", result);
     
-//                     tempElements.forEach(item => {
+//                     let tempObj = result.filter(element => tempElements[0].name.includes(element.element))
+//                         .map((element) => ({
+//                             "element_name": element.element,
+//                             "element_symbol": element.element_symbol, 
+//                             "price": element.main_price_usd_drc, 
+//                             "element_value": tempElements[0].value
+//                         }));
+//                     tempElementSymbols.push(tempObj);
+
+//                     tempElements.slice(1).forEach(item => {
 //                         let tempObj = result.filter(element => item.name.includes(element.element))
 //                             .map((element) => ({
 //                                 "element_name": element.element,
 //                                 "element_symbol": element.element_symbol, 
-//                                 "price": element.main_price_usd_drc, 
+//                                 "price": element.secondary_price_usd_drc, 
 //                                 "element_value": item.value
 //                             }));
+//                         tempElementSymbols.push(tempObj);
+//                     });
+
+//                     tempNonElements.forEach(item => {
+//                         let tempObj = result.filter(element => item.name.includes(element.element))
+//                         .map((element) => ({
+//                             "non_element_name": element.element,
+//                             "price": element.secondary_price_usd_drc, 
+//                             "element_value": item.value
+//                         }));
 //                         tempElementSymbols.push(tempObj);
 //                     })
     
 //                     const elementSymbols = [].concat(...tempElementSymbols);
     
-//                     elementSymbols.sort((a, b) => b.element_value - a.element_value);
+//                     // elementSymbols.sort((a, b) => b.element_value - a.element_value);
     
 //                     resolve(elementSymbols);
 //                 }
@@ -766,5 +689,158 @@ async function getElementSymbolAndPrices(tempElements, tempNonElements, country)
 //         }
 //     });
 // }
+
+// Refactored function 25.12.24
+async function getElementSymbolAndPrices(tempElements, tempNonElements, country, Type) {
+    return new Promise((resolve, reject) => {
+        const queries = {
+            "Rwanda": `SELECT prices.element, elem.element_name, prices.main_price_rwf, prices.secondary_price_rwf, elem.element_symbol 
+                        FROM service_prices prices 
+                        LEFT JOIN elements elem ON prices.element = elem.element_name;`,
+            "DRC": `SELECT prices.element, prices.main_price_usd_drc, prices.secondary_price_usd_drc, elem.element_symbol 
+                    FROM service_prices prices 
+                    LEFT JOIN elements elem ON prices.element = elem.element_name;`,
+            "default": `SELECT prices.element, prices.main_price_usd, prices.secondary_price_usd, elem.element_symbol 
+                        FROM service_prices prices 
+                        LEFT JOIN elements elem ON prices.element = elem.element_name;`
+        };
+
+        const query = queries[country] || queries["default"];
+        const priceKeys = {
+            "Rwanda": { main: "main_price_rwf", secondary: "secondary_price_rwf" },
+            "DRC": { main: "main_price_usd_drc", secondary: "secondary_price_usd_drc" },
+            "default": { main: "main_price_usd", secondary: "secondary_price_usd" }
+        };
+        const prices = priceKeys[country] || priceKeys["default"];
+
+        const specialTypes = [
+            {Type: 'Tantalum_Concentrate (Ta2O5)', formattedType: 'Tantalum Concentrate', Symbols: 'Ta', firstElement: 'Tantalum'},
+            {Type: 'Tantalum_Concentrate (Ta2O5 + Nb2O5)', formattedType: 'Tantalum Concentrate', Symbols: 'Ta + Nb', firstElement: 'Tantalum', secondaryElement: 'Niobium'},
+            {Type: 'Niobium_Concentrate (Nb2O5)', formattedType: 'Niobium Concentrate', Symbols: 'Nb', firstElement: 'Niobium'},
+            {Type: 'Niobium_Concentrate (Nb2O5 + Ta2O5)', formattedType: 'Niobium Concentrate', Symbols: 'Nb + Ta', firstElement: 'Niobium', secondaryElement: 'Tantalum'},
+            {Type: 'Tungsten_Concentrate', formattedType: 'Tungsten Concentrate', Symbols: 'W', firstElement: 'Tungsten'},
+            {Type: 'Tin_Concentrate', formattedType: 'Tin Concentrate', Symbols: 'Sn', firstElement: 'Tin'},
+            {Type: 'Beryllium_Concentrate', formattedType: 'Beryllium Concentrate', Symbols: 'Be', firstElement: 'Beryllium'},
+            {Type: 'Lithium_Concentrate', formattedType: 'Lithium Concentrate', Symbols: 'Li', firstElement: 'Lithium'},
+            {Type: 'Unidentified', formattedType: 'Unidentified', Symbols: 'Non', firstElement: ''}
+        ];
+
+        pool.query(query, (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+
+            console.log("Printing temp elements (728): ", tempElements);
+
+
+            const processItems = (items, isNonElement = false) => {
+                return items.map((item, index) => {
+                    console.log("Processing item: ", item); // Log each item being processed
+                    
+                    // console.table(result);
+                    const matchingElements = result.filter(el => {
+                        const specialType = specialTypes.find(special => special.Type === item.name);
+                        // console.log("specialType: ", specialType);
+            
+                        if (specialType) {
+                            // Exclude firstElement and secondaryElement from matching
+                            if(specialType.Type === "Tantalum_Concentrate (Ta2O5 + Nb2O5)" || specialType.Type === "Niobium_Concentrate (Nb2O5 + Ta2O5)"){
+                                if (el.element !== specialType.firstElement && el.element !== specialType.secondaryElement) {
+                                    return item.name.includes(el.element);
+                                }
+                                return false;
+                            } else if (specialType.Type !== "Tantalum_Concentrate (Ta2O5 + Nb2O5)" || specialType.Type !== "Niobium_Concentrate (Nb2O5 + Ta2O5)") {
+                                if (el.element === specialType.firstElement) {
+                                    return item.name.includes(el.element);
+                                }
+                                return false;
+                            }
+                        }
+            
+                        // Fallback if specialType is undefined
+                        // console.log(`Fallback matching element: ${el.element} with item: ${item.name}`);
+                        return item.name.includes(el.element);
+                    });
+            
+                    console.log("Matching elements for item: ", item.name, matchingElements);
+            
+                    // If no matching elements are found, still return the item
+                    if (matchingElements.length === 0) {
+                        console.log(`No matches found for ${item.name}, adding fallback.`);
+                        return [
+                            {
+                                [isNonElement ? "non_element_name" : "element_name"]: item.name,
+                                element_symbol: isNonElement ? undefined : 'Non',
+                                price: 0,
+                                element_value: item.value || 0,
+                            },
+                        ];
+                    }
+            
+                    return matchingElements.map(el => {
+                        let element_symbol = el.element_symbol;
+                        const specialType = specialTypes.find(special => special.Type === Type);
+            
+                        if (specialType && el.element === specialType.Type) {
+                            el.element = specialType.formattedType;
+                            element_symbol = specialType.Symbols;
+                        }
+            
+                        return {
+                            [isNonElement ? "non_element_name" : "element_name"]: el.element,
+                            element_symbol: isNonElement ? undefined : element_symbol,
+                            price: (specialTypes.includes(Type)) 
+                                ? el[prices.main] 
+                                : (isNonElement 
+                                    ? el[prices.main] || 0 // Ensure fallback for non_elements
+                                    : el[index === 0 ? prices.main : prices.secondary]),
+                            element_value: item.value,
+                        };
+                    });
+                }).flat();
+            };
+            
+
+            const filterSpecialTypeElements = () => {
+                const specialType = specialTypes.find(special => special.Type === Type);
+
+                if(specialType){
+                    tempElements.unshift({ name: Type }); // Push Type to temp elements to first position
+    
+                    // Check if "Full_scan" is in tempNonElements.name
+                    if (tempNonElements.some(nonElement => nonElement.name.includes("Full_scan") || nonElement.name.includes("Semi_quantitative"))) {
+                        // If "Full_scan" exists, return only the Type element
+                        return [{ name: Type }];
+                    }
+
+                    // Otherwise, return filtered tempElements excluding the first and secondary elements of the specialType
+                    return tempElements.filter(el => {
+                        return el.name !== specialType.firstElement && el.name !== specialType.secondaryElement;
+                    });
+                } else if (!specialType || specialType === undefined){
+                    console.log("Printing tempElements (813): ", tempElements);
+                    return tempElements;
+                }
+
+            };
+
+            const filteredTempElements = filterSpecialTypeElements();
+            console.log("Printing filteredTempElements (762): ", filteredTempElements);
+            console.log("Printing filteredTempElements.slice(1) (763): ", filteredTempElements.slice(1));
+
+            console.log("Printing tempNonElements (765): ", tempNonElements);
+
+            const elementSymbols = [
+                ...processItems([filteredTempElements[0]]),
+                ...processItems(filteredTempElements.slice(1)),
+                ...processItems(tempNonElements, true)
+            ];
+
+            console.log("Printing final elementSymbols: ", elementSymbols);
+
+            resolve(elementSymbols);
+        });
+    });
+}
 
 module.exports = { generateInvoice };

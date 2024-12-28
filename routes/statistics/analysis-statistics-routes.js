@@ -38,7 +38,8 @@ router.get('/getAllCompaniesAnalysisStatistics', async (req, res) => {
             data.forEach(item => {
 
                 const companyName = item.company ? item.company : `${item.name} ${item.surname}`;
-                const materialType = item.Type.replace(/\s+/g, '_'); //replacing spaces with underscores
+                // const materialType = item.Type.replace(/\s+/g, '_'); //replacing spaces with underscores
+                const materialType = item.Type;
 
                 // Try to find the existing object for the company
                 let companyObj = findCompanyObject(companyName);
@@ -89,18 +90,15 @@ router.get('/getAllCompaniesAnalysisStatistics', async (req, res) => {
 
             // Define a mapping of properties to rename
             const propertyMapping = {
-                Tantalum: 'Tantalum',
-                Tungsten: 'Tungsten',
-                Cassiterite: 'Tin',
-                Shielitte: 'Tungsten',
-                Monozite: 'Monozite',
-                Spodumene: 'Lithium',
-                Beryl: 'Beryllium',
-                Columbite: 'Niobium',
+                'Tantalum_Concentrate (Ta2O5)': 'Tantalum',
+                'Tantalum_Concentrate (Ta2O5 + Nb2O5)': 'Tantalum',
+                Tungsten_Concentrate: 'Tungsten',
+                Tin_Concentrate: 'Tin',
+                Lithium_Concentrate: 'Lithium',
+                Beryllium_Concentrate: 'Beryllium',
+                'Niobium_Concentrate (Nb2O5)': 'Niobium',
+                'Niobium_Concentrate (Nb2O5 + Ta2O5)': 'Niobium',
                 Unidentified: 'Unidentified',
-                "Tantalite_Concentrate": 'Tantalum',
-                "Wolframite_Concentrate": 'Tungsten',
-                "Cassiterite_Concentrate": 'Tin'
             };
 
             let new_analysisStatistics = renameAndCombineProperties(analysisStatistics, propertyMapping);
@@ -153,7 +151,8 @@ router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
             data.forEach(item => {
 
                 const companyName = item.company ? item.company : `${item.name} ${item.surname}`;
-                const materialType = item.Type.replace(/\s+/g, '_'); //replacing spaces with underscores
+                // const materialType = item.Type.replace(/\s+/g, '_'); //replacing spaces with underscores
+                const materialType = item.Type;
 
                 // Try to find the existing object for the company
                 let companyObj = findCompanyObject(companyName);
@@ -172,6 +171,8 @@ router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
                 // Increment the material count
                 companyObj[materialType]++;
             });
+
+            console.table(data);
 
             let query;
             if(month !== undefined){
@@ -212,18 +213,15 @@ router.get('/getAllCompaniesAnalysisStatisticsByMonth', async (req, res) => {
 
             // Define a mapping of properties to rename
             const propertyMapping = {
-                Tantalum: 'Tantalum',
-                Tungsten: 'Tungsten',
-                Cassiterite: 'Tin',
-                Shielitte: 'Tungsten',
-                Monozite: 'Monozite',
-                Spodumene: 'Lithium',
-                Beryl: 'Beryllium',
-                Columbite: 'Niobium',
+                'Tantalum_Concentrate (Ta2O5)': 'Tantalum',
+                'Tantalum_Concentrate (Ta2O5 + Nb2O5)': 'Tantalum',
+                Tungsten_Concentrate: 'Tungsten',
+                Tin_Concentrate: 'Tin',
+                Lithium_Concentrate: 'Lithium',
+                Beryllium_Concentrate: 'Beryllium',
+                'Niobium_Concentrate (Nb2O5)': 'Niobium',
+                'Niobium_Concentrate (Nb2O5 + Ta2O5)': 'Niobium',
                 Unidentified: 'Unidentified',
-                "Tantalite_Concentrate": 'Tantalum',
-                "Wolframite_Concentrate": 'Tungsten',
-                "Cassiterite_Concentrate": 'Tin'
             };
             
             let new_analysisStatistics = renameAndCombineProperties(analysisStatistics, propertyMapping);
@@ -340,7 +338,7 @@ function renameAndCombineProperties(input, mapping) {
 //         console.log("Printing statistic: ", statistic);
 //         console.log(statistic.Tantalum);
 //         console.log("Printing Tantalum: ", statistic.Tantalum);
-//         statistic.total_analysis = statistic.Tantalum + statistic.Tungsten + statistic.Tin + statistic.Niobium + statistic.Monozite + statistic.Lithium + statistic.Beryllium + statistic.Unidentified;
+//         statistic.total_analysis = statistic.Tantalum + statistic.Tungsten + statistic.Tin + statistic.Niobium + statistic.Monazite + statistic.Lithium + statistic.Beryllium + statistic.Unidentified;
 //         console.log(statistic.total_analysis);
 //     })
 
