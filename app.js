@@ -66,7 +66,10 @@ app.use(require('./routes/statistics/sample-statistics-routes.js'));
 app.use(require('./routes/regenerateServiceContract-routes.js'));
 
 // Test generating invoice
-app.use(require('./routes/testGenerateInvoice-routes.js'));
+// app.use(require('./routes/testGenerateInvoice-routes.js'));
+
+// Download Instructions: 
+app.use(require('./routes/download-instructions-route.js'));
 
 // === Frontend: ===
 // =================
