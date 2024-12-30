@@ -66,7 +66,7 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
             // console.log("Printing result[0] (66): ", result[0]);
 
             for (const [key, value] of Object.entries(result[0])) {
-                if (value !== null && key !== 'Sample_No' && key !== 'date_of_lab' && key !== 'year' && key !== 'result_id') {
+                if (value !== null && key !== 'Sample_No' && key !== 'date_of_lab' && key !== 'year' && key !== 'result_id' && key !== 'amount_of_material_remaining') {
                     newObj[`res.${key}`] = value;
                     resultsArray.push({name: key, value: value});      
                 }

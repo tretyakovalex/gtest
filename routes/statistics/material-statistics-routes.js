@@ -8,7 +8,8 @@ const { pool } = require('../../configs/mysql');
 
 router.get('/getAllMaterialStatistics', async (req, res) => {
     try {
-        const query = `SELECT Type, SUM(Sample_weight) AS total_sample_weight, SUM(amount_of_material_remaining) AS total_material_remaining FROM registration GROUP BY Type`;
+        const query = `SELECT reg.Type, SUM(reg.Sample_weight) AS total_sample_weight, SUM(res.amount_of_material_remaining) AS total_material_remaining 
+FROM                    registration AS reg INNER JOIN results res ON reg.Sample_No = res.Sample_No AND reg.year = res.year GROUP BY reg.Type;`;
 
         pool.query(query, async (err, data) => {
             if(err){
@@ -89,9 +90,9 @@ router.get('/getAllMaterialStatisticsByMonth', async (req, res) => {
         console.log("year: ", year);
         console.log("month: ", month);
         if(month){
-            query = `SELECT Type, SUM(Sample_weight) AS total_sample_weight, SUM(amount_of_material_remaining) AS total_material_remaining FROM registration WHERE YEAR(Date) = ${year} AND MONTH(Date) = ${month} GROUP BY Type`;
+            query = `SELECT reg.Type, SUM(reg.Sample_weight) AS total_sample_weight, SUM(res.amount_of_material_remaining) AS total_material_remaining FROM registration AS reg INNER JOIN results res ON reg.Sample_No = res.Sample_No AND reg.year = res.year WHERE YEAR(Date) = ${year} AND MONTH(Date) = ${month} GROUP BY Type`;
         } else if (!month || month === undefined){
-            query = `SELECT Type, SUM(Sample_weight) AS total_sample_weight, SUM(amount_of_material_remaining) AS total_material_remaining FROM registration WHERE YEAR(Date) = ${year} GROUP BY Type;`;
+            query = `SELECT reg.Type, SUM(reg.Sample_weight) AS total_sample_weight, SUM(res.amount_of_material_remaining) AS total_material_remaining FROM registration AS reg INNER JOIN results res ON reg.Sample_No = res.Sample_No AND reg.year = res.year WHERE YEAR(Date) = ${year} GROUP BY Type;`;
         }
         
         pool.query(query, async (err, data) => {
@@ -165,18 +166,22 @@ router.get('/getAllMaterialStatisticsByMonth', async (req, res) => {
 
 router.get('/exportMaterialStatisticsData', async (req, res) => {
     let query = `SELECT 
-            CASE 
-                WHEN cust.company IS NOT NULL AND cust.company != '' THEN cust.company 
-                ELSE CONCAT(cust.name, ' ', cust.surname) 
-            END AS customer_name,
-            reg.Date, 
-            reg.Type, 
-            reg.Sample_weight, 
-            reg.amount_of_material_remaining, 
-            reg.Sample_No,
-            year 
-        FROM registration reg 
-        INNER JOIN customers cust ON cust.customer_id = reg.customer_id;`
+                    CASE 
+                        WHEN cust.company IS NOT NULL AND cust.company != '' THEN cust.company 
+                        ELSE CONCAT(cust.name, ' ', cust.surname) 
+                    END AS customer_name,
+                    reg.Date, 
+                    reg.Type, 
+                    reg.Sample_weight, 
+                    res.amount_of_material_remaining, 
+                    reg.Sample_No,
+                    reg.year 
+                FROM 
+                    registration reg
+                INNER JOIN 
+                    customers cust ON cust.customer_id = reg.customer_id
+                INNER JOIN 
+                    results res ON reg.Sample_No = res.Sample_No AND reg.year = res.year;`
 
     pool.query(query, async (err, data) => {
         if(err){
