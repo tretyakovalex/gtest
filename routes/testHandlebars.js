@@ -169,7 +169,7 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
 
                 // console.log("Printing customerData:", customerData[0]);
                 
-                let elementsAndPrices = await getElementSymbolAndPrices(tempElements, tempNonElements, customerData[0].country, registration[0].Type);
+                let elementsAndPrices = await getElementSymbolAndPrices(tempElements, tempNonElements, customerData[0].country, registration[0].Type, registration[0].remove_main_element_price_and_analysis);
 
                 let internal_calibration = false;
                 if(customerData[0].internal_calibration !== null && Buffer.isBuffer(customerData[0].internal_calibration) && customerData[0].internal_calibration.equals(new Buffer.from([0x01]))){
@@ -214,17 +214,19 @@ async function generateInvoice(Sample_No, date, certNumVersion, year){
                 elementSymbols = elementSymbols.replace(/, $/, '');
 
                 
-                let unit_price = "";
+                // let unit_price = "";
+                let unit_price = 0;
                 elementsAndPrices.slice(1).forEach((item) => {
                     if(elementsAndPrices.length === 1 && item.element_symbol !== undefined){
                         unit_price = item.price
                     } else if (elementsAndPrices.length > 1 && item.element_symbol !== undefined) {
-                        unit_price += `${item.price}, `
+                        // unit_price += `${item.price}, `
+                        unit_price += item.price
                     }
                 });
                 unit_price = unit_price.toString().replace(/, $/, '');
 
-                // console.log("Printing unit price: ", unit_price);
+                console.log("Printing unit price (227): ", unit_price);
 
 
                 // let sub_total = await calcSubTotal(total_price);
@@ -691,7 +693,7 @@ async function selectSampleManagementFee(total_price) {
 // }
 
 // Refactored function 25.12.24
-async function getElementSymbolAndPrices(tempElements, tempNonElements, country, Type) {
+async function getElementSymbolAndPrices(tempElements, tempNonElements, country, Type, remove_main_element_price_and_analysis) {
     return new Promise((resolve, reject) => {
         const queries = {
             "Rwanda": `SELECT prices.element, elem.element_name, prices.main_price_rwf, prices.secondary_price_rwf, elem.element_symbol 
@@ -725,6 +727,8 @@ async function getElementSymbolAndPrices(tempElements, tempNonElements, country,
             {Type: 'Unidentified', formattedType: 'Unidentified', Symbols: 'Non', firstElement: ''}
         ];
 
+        console.log("remove_main_element_price_and_analysis (728): ", remove_main_element_price_and_analysis);
+
         pool.query(query, (err, result) => {
             if (err) {
                 return reject(err);
@@ -743,6 +747,7 @@ async function getElementSymbolAndPrices(tempElements, tempNonElements, country,
                         // console.log("specialType: ", specialType);
             
                         if (specialType) {
+                            
                             // Exclude firstElement and secondaryElement from matching
                             if(specialType.Type === "Tantalum_Concentrate (Ta2O5 + Nb2O5)" || specialType.Type === "Niobium_Concentrate (Nb2O5 + Ta2O5)"){
                                 if (el.element !== specialType.firstElement && el.element !== specialType.secondaryElement) {
@@ -777,7 +782,7 @@ async function getElementSymbolAndPrices(tempElements, tempNonElements, country,
                         ];
                     }
             
-                    return matchingElements.map(el => {
+                    return matchingElements.map((el, elIndex) => {
                         let element_symbol = el.element_symbol;
                         const specialType = specialTypes.find(special => special.Type === Type);
             
@@ -785,17 +790,33 @@ async function getElementSymbolAndPrices(tempElements, tempNonElements, country,
                             el.element = specialType.formattedType;
                             element_symbol = specialType.Symbols;
                         }
-            
+
+                        console.log("el.element === specialType?.Type (794): ", el.element, item.name === specialType?.Type);
+                        const price = remove_main_element_price_and_analysis && (item.name === specialType?.Type)
+                            ? 0 // (Skipped because `remove_main_element_price_and_analysis` is false)
+                            : (item.name === specialType?.Type)
+                                ? el[prices.main] // (Skipped because `el.element` is not in `specialTypes`)
+                                : isNonElement
+                                    ? el[prices.main] || 0 // (Skipped because `isNonElement` is false)
+                                    : el[prices.secondary]; // Final fallback
+
                         return {
                             [isNonElement ? "non_element_name" : "element_name"]: el.element,
                             element_symbol: isNonElement ? undefined : element_symbol,
-                            price: (specialTypes.includes(Type)) 
-                                ? el[prices.main] 
-                                : (isNonElement 
-                                    ? el[prices.main] || 0 // Ensure fallback for non_elements
-                                    : el[index === 0 ? prices.main : prices.secondary]),
+                            price,
                             element_value: item.value,
                         };
+            
+                        // return {
+                        //     [isNonElement ? "non_element_name" : "element_name"]: el.element,
+                        //     element_symbol: isNonElement ? undefined : element_symbol,
+                        //     price: (specialTypes.includes(Type)) 
+                        //         ? el[prices.main] 
+                        //         : (isNonElement 
+                        //             ? el[prices.main] || 0 // Ensure fallback for non_elements
+                        //             : el[index === 0 ? prices.main : prices.secondary]),
+                        //     element_value: item.value,
+                        // };
                     });
                 }).flat();
             };

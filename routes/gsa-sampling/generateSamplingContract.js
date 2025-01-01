@@ -61,7 +61,7 @@ async function generateSamplingContract(data){
             "file_name": file_name
         };
 
-        // console.log("Printing certificateData: ", contractData);
+        console.log("Printing certificateData: ", contractData);
 
         console.log("About to send data to generate contract in external api");
 
@@ -248,7 +248,7 @@ async function getCustomerData(Sample_No, year){
 
 async function getRegistrationData(Sample_No, year){
     return new Promise((resolve, reject) => {
-        const query = `SELECT reg.Date, reg.Sampling_date, reg.Sample_weight, reg.Customer_sample_name, reg.gsa_sample_id, reg.Approved_Quotation_Value, reg.Approx_days FROM registration reg WHERE Sample_No=? AND year=${year};`
+        const query = `SELECT reg.Date, reg.Sampling_date, reg.Sample_weight, reg.Customer_sample_name, reg.gsa_sample_id, reg.Approved_Quotation_Value, reg.Approx_days, reg.remove_main_element_price_and_analysis FROM registration reg WHERE Sample_No=? AND year=${year};`
         pool.query(query, [Sample_No], async (err, registration) => {
             if(err){
                 console.error(err);
@@ -258,6 +258,7 @@ async function getRegistrationData(Sample_No, year){
 
             registration[0].Date = await formatDate(registration[0].Date);
             registration[0].Sampling_date = await formatDate(registration[0].Sampling_date);
+            registration[0].remove_main_element_price_and_analysis = toBoolean(registration[0].remove_main_element_price_and_analysis); // Converting to legible boolean value (1, 0) -> (true, false)
 
             resolve(registration);
         })
@@ -389,11 +390,12 @@ async function getMeasurementServices(Sample_No, year){
             // ================================================
 
             // === Add main element ===
+            console.log("Printing registration[0].remove_main_element_price_and_analysis (393): ", registration[0].remove_main_element_price_and_analysis);
             for(const item of compoundSymbols){
-                if(registration[0].Type === item.compound_name && registration[0].Type !== "Unidentified"){
+                if(registration[0].Type === item.compound_name && registration[0].Type !== "Unidentified" && (registration[0].remove_main_element_price_and_analysis === false)){
                     console.log(item);
                     filteredMeasurementServices.push(item.compound_abbreviation);
-                }
+                } 
             }
             // ========================
 
@@ -427,6 +429,20 @@ async function getMeasurementServices(Sample_No, year){
             for(const item of elementsAndSymbols){
                 if(measurementServices.includes(item.element_name) && !filteredMeasurementServices.includes(item.element_symbol)){
                     filteredMeasurementServices.push(item.element_symbol);
+                }
+            }
+
+            
+            for(const item of compoundSymbols){
+                if (registration[0].Type === item.compound_name && registration[0].Type !== "Unidentified" && (registration[0].remove_main_element_price_and_analysis === 1)){
+                    // The main element will be explicitly removed from measurementServices if remove_main_element_price_and_analysis === true
+                    console.log("Printing main element that needs to be removed (438): ", item);
+                    console.log(item);
+                    filteredMeasurementServices = filteredMeasurementServices.filter(
+                        filteredItem => filteredItem !== item.compound_abbreviation
+                    );
+    
+                    console.log("Priting filteredMeasurementServices (444): ", filteredMeasurementServices);
                 }
             }
 
@@ -550,6 +566,11 @@ async function getMethodData(data){
             resolve(method_data);
         })
     });
+}
+
+// funky boolean conversion function:
+function toBoolean(value) {
+    return value === 1; // Converts 1 to true, and other values to false
 }
 
 module.exports = { generateSamplingContract };
